@@ -33,7 +33,6 @@ bars:
     widgets:
       left:
         [
-          "ai_chat",
           "media",
           "cava"
         ]
@@ -88,7 +87,6 @@ widgets:
       options:
         label_workspace_btn: "\u25cf"
         label_workspace_active_btn: "\u25cf"
-        switch_workspace_animation: true
         btn_shadow:
           enabled: false
 
@@ -459,6 +457,9 @@ widgets:
         on_left: "do_nothing"
         on_right: "do_nothing"
 
+  # NOTE: AiChatWidget was removed upstream in YASB 2.0.x (breaking change).
+  # Kept here for reference / older YASB installs. Not included in the bar
+  # layout above since it fails to build on current YASB versions.
   ai_chat:
     type: "yasb.ai_chat.AiChatWidget"
     options:
@@ -495,7 +496,7 @@ widgets:
           copilot_cli_url: "http://localhost:4321"
         - provider: "Gemini"
           api_endpoint: "https://generativelanguage.googleapis.com/v1beta/openai"
-          credential: "AIzaSyBt65Ej1W7ttD0jJ47jYUWngQOycg8zwPE"
+          credential: "YOUR_GEMINI_API_KEY"
           models:
             - name: "models/gemini-2.5-flash"
               label: "Gemini 2.5 Flash"
