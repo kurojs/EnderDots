@@ -12,10 +12,9 @@ bars:
       duration: 400
     alignment:
       position: "top"
-      center: true
+      align: "center"
     blur_effect:
       enabled: true
-      acrylic: true
       dark_mode: true
       round_corners: false
       border_color: None
@@ -33,150 +32,74 @@ bars:
     widgets:
       left:
         [
-          "windows_workspaces",
-          "media",
-          "cava"
+          "github"
         ]
       center:
         [
-          "clock"
+          "windows_workspaces",
+          "cava"
         ]
       right:
         [
           "cpu",
           "gpu",
           "memory",
-          "volume",
-          "apps",
           "power_menu"
         ]
 
 widgets:
-  # task_view:
-  #   type: "yasb.custom.CustomWidget"
-  #   options:
-  #     label: "<span>\ue62a</span>"
-  #     label_alt: "<span>\ue62a</span>"
-  #     class_name: "task-view-widget"
-  #     callbacks:
-  #       on_left: "exec explorer.exe shell:::{3080F90E-D7AD-11D9-BD98-0000947B0257}"
-  #       on_middle: "do_nothing"
-  #       on_right: "do_nothing"
-
-  home:
-      type: "yasb.home.HomeWidget"
+  github:
+      type: "yasb.github.GithubWidget"
       options:
-        label: "<span>\ue62a</span>"
-        system_menu: true
-        power_menu: true
-        blur: true
-        border_color: "system"
-        round_corners_type: "normal"
-        menu_labels:
-          about: "\ue66A  About This PC"
-          system: "\uF423  System Settings"
-          task_manager: "\uf437  Task Manager"
-          hibernate: "\uf28e  Hibernate"
-          sleep: "\u23fe  Sleep"
-          restart: "\uead2  Restart"
-          shutdown: "\uf011  Shutdown"
-          lock: "\uea75  Lock"
-          logout: "\udb80\udf43  Logout"
-        menu_list:
-          - { title: "\uE617  User Home", path: "~" }
-          - { title: "\udb80\udd20  Download", path: "~\\Downloads" }
-          - { title: "\udb80\ude1a  Documents", path: "~\\Documents" }
-          - { title: "\uf03e  Pictures", path: "~\\Pictures" }
+        label: "<span>\ue708</span>"
+        label_alt: "GitHub {data}"
+        tooltip: true
+        update_interval: 300
+        token: ""
+        max_notification: 20
+        only_unread: true
+        max_field_size: 54
+        menu:
+          blur: true
+          round_corners: true
+          round_corners_type: "normal"
+          border_color: "System"
+          alignment: "left"
+          direction: "down"
+          offset_top: 6
+          offset_left: 0
+          show_categories: true
 
   windows_workspaces:
       type: "yasb.windows_desktops.WorkspaceWidget"
       options:
         label_workspace_btn: "\u25cf"
         label_workspace_active_btn: "\u25cf"
-        btn_shadow:
-          enabled: false
 
-  taskbar:
-      type: "yasb.taskbar.TaskbarWidget"
+  cava:
+      type: "yasb.cava.CavaWidget"
       options:
-        icon_size: 16
-        animation:
-          enabled: true
-        preview:
-          enabled: true
-          width: 250
-          delay: 400
-          padding: 12
+        bar_height: 22
+        min_bar_height: 2
+        bars_number: 20
+        bar_width: 3
+        bar_spacing: 2
+        bar_type: "bars_mirrored"
+        foreground: "#9d5cff"
+        gradient: 1
+        gradient_color_1: "#3a0068"
+        gradient_color_2: "#9d5cff"
+        gradient_color_3: "#c99bff"
+        framerate: 60
+        sensitivity: 100
+        noise_reduction: 77
+        monstercat: 1
+        hide_empty: false
+        sleep_timer: 5
+        edge_fade: [8, 8]
         callbacks:
-          on_middle: "close_app"
-
-  media:
-      type: "yasb.media.MediaWidget"
-      options:
-        label: "{title}"
-        label_alt: "{title} - {artist}"
-        hide_empty: true
-        callbacks:
-          on_left: "toggle_media_menu"
-          on_middle: "do_nothing"
-          on_right: "toggle_label"
-        max_field_size:
-          label: 45
-          label_alt: 80
-        show_thumbnail: false
-        controls_only: false
-        controls_left: false
-        thumbnail_alpha: 80
-        thumbnail_padding: 8
-        thumbnail_corner_radius: 16
-        icons:
-          prev_track: "\udb81\udcae"
-          next_track: "\udb81\udcad"
-          play: "\udb81\udc0a"
-          pause: "\udb80\udfe4"
-        media_menu:
-          blur: true
-          round_corners: true
-          round_corners_type: "normal"
-          alignment: "right"
-          direction: "down"
-          offset_top: 6
-          offset_left: 10
-          thumbnail_corner_radius: 8
-          thumbnail_size: 120
-          max_title_size: 80
-          max_artist_size: 20
-          show_source: true
-          show_volume_slider: true
-        media_menu_icons:
-          play: "\ue768"
-          pause: "\ue769"
-          prev_track: "\ue892"
-          next_track: "\ue893"
-        label_shadow:
-          enabled: true
-          color: "black"
-          radius: 3
-          offset: [1, 1]
-
-  clock:
-      type: "yasb.clock.ClockWidget"
-      options:
-        label: "<span>\uf017</span> {%a %d %b %H:%M}"
-        label_alt: "{%A %d %B %Y %H:%M:%S}"
-        # locale: 'en_EN'  # Language for date, you can set your own, example fr_FR
-        timezones: []  # Looking up time zone info from registry
-        # timezones: ["America/Montreal"]
-        calendar:
-          blur: true
-          round_corners: true
-          round_corners_type: "normal"
-          border_color: "system"
-          alignment: "center"
-          direction: "down"
-          show_holidays: true
-          show_week_numbers: true
-          holiday_color: "#FF6464"
+          on_left: "do_nothing"
+          on_right: "reload_cava"
 
   cpu:
       type: "yasb.cpu.CpuWidget"
@@ -185,30 +108,20 @@ widgets:
         label_alt: "<span>\ueea1</span> {info[histograms][cpu_percent]}"
         update_interval: 1000
         histogram_icons:
-          - "\u2581"  # 0%
-          - "\u2581"  # 10%
-          - "\u2582"  # 20%
-          - "\u2583"  # 30%
-          - "\u2584"  # 40%
-          - "\u2585"  # 50%
-          - "\u2586"  # 60%
-          - "\u2587"  # 70%
-          - "\u2588"  # 80%+
+          - "\u2581"
+          - "\u2581"
+          - "\u2582"
+          - "\u2583"
+          - "\u2584"
+          - "\u2585"
+          - "\u2586"
+          - "\u2587"
+          - "\u2588"
         histogram_num_columns: 8
         callbacks:
           on_left: "do_nothing"
           on_middle: "exec cmd /c Taskmgr"
           on_right: "toggle_label"
-        container_padding:
-          top: 0
-          left: 0
-          bottom: 0
-          right: 0
-        label_shadow:
-          enabled: false
-          color: "black"
-          radius: 5
-          offset: [ 0, 0 ]
 
   gpu:
       type: "yasb.gpu.GpuWidget"
@@ -221,15 +134,15 @@ widgets:
           medium: 50
           high: 90
         histogram_icons:
-          - "\u2581"  # 0%
-          - "\u2581"  # 10%
-          - "\u2582"  # 20%
-          - "\u2583"  # 30%
-          - "\u2584"  # 40%
-          - "\u2585"  # 50%
-          - "\u2586"  # 60%
-          - "\u2587"  # 70%
-          - "\u2588"  # 80%+
+          - "\u2581"
+          - "\u2581"
+          - "\u2582"
+          - "\u2583"
+          - "\u2584"
+          - "\u2585"
+          - "\u2586"
+          - "\u2587"
+          - "\u2588"
         histogram_num_columns: 8
         callbacks:
           on_left: "do_nothing"
@@ -250,168 +163,6 @@ widgets:
           low: 25
           medium: 50
           high: 90
-        histogram_icons:
-          - "\u2581"  # 0%
-          - "\u2581"  # 10%
-          - "\u2582"  # 20%
-          - "\u2583"  # 30%
-          - "\u2584"  # 40%
-          - "\u2585"  # 50%
-          - "\u2586"  # 60%
-          - "\u2587"  # 70%
-          - "\u2588"  # 80%+
-        label_shadow:
-          enabled: true
-          color: "black"
-          radius: 3
-          offset: [ 1, 1 ]
-
-  traffic:
-      type: "yasb.traffic.TrafficWidget"
-      options:
-        label: "<span class='download'>\uea9a {download_speed}</span><span class='upload'>{upload_speed} \ueaa1</span>"
-        label_alt: "<span class='download'>\uea9a {download_speed}</span><span class='upload'>{upload_speed} \ueaa1</span>"
-        update_interval: 1000
-        hide_if_offline: true
-        speed_unit: "bytes"
-        max_label_length_align: "center"
-        menu:
-          blur: true
-          round_corners: true
-          round_corners_type: "normal"
-          border_color: "system"
-          alignment: "center"
-          direction: "down"
-        callbacks:
-          on_left: "toggle_menu"
-          on_middle: "exec cmd.exe /c start ms-settings:network-status"
-          on_right: "do_nothing"
-        label_shadow:
-          enabled: false
-          color: "black"
-          radius: 3
-          offset: [ 1, 1 ]
-
-  volume:
-      type: "yasb.volume.VolumeWidget"
-      options:
-        label: "<span>{icon}</span> {level}"
-        label_alt: "{volume}"
-        mute_text: "Mute"
-        volume_icons:
-          - "\ue74f"  # Icon for muted
-          - "\ue992"  # Icon for 0-10% volume
-          - "\ue993"  # Icon for 11-30% volume
-          - "\ue994"  # Icon for 31-60% volume
-          - "\ue995"  # Icon for 61-100% volume
-        callbacks:
-          on_left: "toggle_volume_menu"
-          on_middle: "exec cmd.exe /c start ms-settings:sound"
-          on_right: "toggle_mute"
-        audio_menu:
-          blur: true
-          round_corners: true
-          round_corners_type: "normal"
-          border_color: "system"
-          alignment: "center"
-          direction: "down"
-
-  microphone:
-      type: "yasb.microphone.MicrophoneWidget"
-      options:
-        label: "<span>{icon}</span> {level}"
-        label_alt: "<span>{icon}</span>"
-        mute_text: "Mute"
-        icons:
-          normal: "\ue720"
-          muted: "\uf12e"
-        mic_menu:
-          blur: true
-          round_corners: true
-          round_corners_type: "normal"
-          border_color: "system"
-          alignment: "right"
-          direction: "down"
-        callbacks:
-          on_left: "toggle_mic_menu"
-          on_middle: "exec cmd.exe /c start ms-settings:sound"
-          on_right: "toggle_mute"
-        label_shadow:
-          enabled: true
-          color: "black"
-          radius: 3
-          offset: [ 1, 1 ]
-
-  disk:
-      type: "yasb.disk.DiskWidget"
-      options:
-        label: "<span>\uf473</span> Disks"
-        label_alt: "<span>\uf473</span> {volume_label} {space[used][gb]} / {space[total][gb]}"
-        volume_label: "C"
-        decimal_display: 1
-        update_interval: 60
-        group_label:
-          volume_labels: ["C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"] 
-          show_label_name: true
-          blur: true
-          round_corners: true
-          round_corners_type: "normal"
-          border_color: "system"
-          alignment: "center"
-          direction: "down"
-        callbacks:
-          on_left: "toggle_group"
-          on_middle: "do_nothing"
-          on_right: "toggle_label"
-        disk_thresholds:
-          low: 25
-          medium: 50
-          high: 90
-
-  apps:
-      type: "yasb.applications.ApplicationsWidget"
-      options:
-        label: "{data}"
-        app_list:
-          # - { icon: "\uf0a2", launch: "notification_center" }
-          # - { icon: "\ueb51", launch: "quick_settings" }
-          - { icon: "\uf46a", launch: "cmd /c start ms-settings:windowsupdate" }
-          # - { icon: "\uf422", launch: "search" }
-          - { icon: "\ueb03", launch: "cmd /c Taskmgr", name: "Task Manager" }
-          - { icon: "\uf489", launch: "wt", name: "Windows Terminal" }
-          - { icon: "\udb82\ude1e", launch: "cmd /c code", name: "VS Code" }
-          - { icon: "\uf1b6", launch: "C:/Program Files (x86)/Steam/Steam.exe", name: "Steam" }
-        container_padding:
-          top: 0
-          left: 8
-          bottom: 0
-          right: 8
-
-  cava:
-      type: "yasb.cava.CavaWidget"
-      options:
-        bar_height: 24
-        min_bar_height: 2
-        bars_number: 16
-        bar_width: 3
-        bar_spacing: 1
-        bar_type: "bars_mirrored"
-        foreground: "#6633bb"
-        gradient: 1
-        gradient_color_1: "#1a0044"
-        gradient_color_2: "#6633bb"
-        gradient_color_3: "#8844dd"
-        framerate: 60
-        sensitivity: 100
-        noise_reduction: 77
-        monstercat: 1
-        hide_empty: false
-        sleep_timer: 5
-        edge_fade: [8, 8]
-        callbacks:
-          on_left: "do_nothing"
-          on_right: "reload_cava"
-
   power_menu:
       type: "yasb.power_menu.PowerMenuWidget"
       options:
@@ -419,8 +170,8 @@ widgets:
         uptime: true
         blur: false
         blur_background: true
-        animation_duration: 300  # Milliseconds
-        button_row: 3  # Number of buttons in row, min 1 max 5
+        animation_duration: 300
+        button_row: 3
         buttons:
           lock: ["\uea75", "Lock"]
           signout: ["\udb80\udf43", "Sign out"]
@@ -428,95 +179,3 @@ widgets:
           restart: ["\uead2", "Restart"]
           hibernate: ["\uf28e", "Hibernate"]
           cancel: ["\udb81\udf3a", "Cancel"]
-
-  matrix:
-    type: "yasb.custom.CustomWidget"
-    options:
-      label: "{data}"
-      label_alt: "{data}"
-      label_placeholder: ""
-      class_name: "matrix-widget"
-      exec_options:
-        run_cmd: "C:/Users/kuuro/AppData/Local/Microsoft/WindowsApps/PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0/python.exe C:/Users/kuuro/.config/yasb/scripts/matrix.py"
-        run_interval: 2000
-        return_format: "string"
-        use_shell: false
-        hide_empty: false
-      callbacks:
-        on_left: "do_nothing"
-        on_right: "do_nothing"
-
-  heart:
-    type: "yasb.custom.CustomWidget"
-    options:
-      # Change the icon path below (in the label) to any PNG/ICO you prefer
-      label: "<img src='file:///C:/Users/kuuro/.config/yasb/scripts/gif.ico' width='22' height='22'/>"
-      label_alt: "<img src='file:///C:/Users/kuuro/.config/yasb/scripts/gif.ico' width='22' height='22'/>"
-      class_name: "heart-widget"
-      exec_options:
-        run_once: true
-        run_cmd: "powershell -NoProfile -Command \"exit\""
-        return_format: "string"
-        use_shell: false
-        hide_empty: false
-      callbacks:
-        on_left: "do_nothing"
-        on_right: "do_nothing"
-
-  # NOTE: AiChatWidget was removed upstream in YASB 2.0.x (breaking change).
-  # Kept here for reference / older YASB installs. Not included in the bar
-  # layout above since it fails to build on current YASB versions.
-  ai_chat:
-    type: "yasb.ai_chat.AiChatWidget"
-    options:
-      label: "<img src='file:///C:/Users/kuuro/.config/yasb/scripts/gif.ico' width='24' height='24'/>"
-      chat:
-        blur: true
-        round_corners: true
-        round_corners_type: "normal"
-        border_color: "system"
-        alignment: "left"
-        direction: "down"
-        offset_left: 0
-        offset_top: 6
-      icons:
-        attach: "\uf0c6"
-        send: "\uf1d8"
-        stop: "\uf04d"
-        clear: "\udb81\udf3a"
-        assistant: "\udb81\ude74"
-        float_on: "\udb84\udcac"
-        float_off: "\udb84\udca9"
-        close: "\uf00d"
-        copy: "\uebcc"
-        copy_check: "\uf00c"
-      start_floating: false
-      callbacks:
-        on_left: "toggle_chat"
-      keybindings:
-        - keys: "alt+a"
-          action: "toggle_chat"
-      providers:
-        - provider: "GitHub Copilot"
-          provider_type: "copilot"
-          copilot_cli_url: "http://localhost:4321"
-        - provider: "Gemini"
-          api_endpoint: "https://generativelanguage.googleapis.com/v1beta/openai"
-          credential: "YOUR_GEMINI_API_KEY"
-          models:
-            - name: "models/gemini-2.5-flash"
-              label: "Gemini 2.5 Flash"
-              default: true
-              max_tokens: 8192
-
-  jp_date:
-    type: "yasb.clock.ClockWidget"
-    options:
-      label: "{%Y年%m月%d日 %A}"
-      label_alt: "{%Y年%m月%d日 %A}"
-      locale: "ja_JP"
-      timezones: []
-      class_name: "jp-date-widget"
-      callbacks:
-        on_left: "do_nothing"
-        on_right: "do_nothing"
