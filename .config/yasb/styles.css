@@ -1,93 +1,695 @@
+:root {
+    --text:              #e6e6f0;
+    --text-dim:          #b9b9c9;
+    --text-faint:        #8a8a9a;
+    --surface:           rgba(255, 255, 255, 0.06);
+    --surface-hover:     rgba(255, 255, 255, 0.11);
+    --border:            rgba(255, 255, 255, 0.09);
+    --border-hover:      rgba(255, 255, 255, 0.16);
+    --panel:             rgba(18, 18, 26, 0.94);
+    --bar-bg:            rgba(0, 0, 0, 0.667);
+
+    /* color zones */
+    --green:             #56f29c;
+    --green-dim:         rgba(86, 242, 156, 0.35);
+    --green-hi:          #7cffba;
+    --purple:            #9d5cff;
+    --purple-hi:         #c99bff;
+    --purple-dark:       #3a0068;
+    --pink:              #ff5cb4;
+    --pink-hi:           #ffc2e4;
+    --red:               #ff5a5a;
+    --red-hi:            #ff9d9d;
+
+    /* perf status colors */
+    --status-medium:     #ffd166;
+    --status-high:       #ffa94d;
+    --status-critical:   #ff6b6b;
+
+    /* fonts */
+    --font-text:         "JetBrainsMono NFP", "JetBrainsMono NF", "Cascadia Mono", "Consolas";
+    --font-bidi:         "Segoe UI", "Segoe UI Variable";
+    --font-icons:        "Segoe Fluent Icons", "Segoe MDL2 Assets";
+}
+
 * {
-    font-family: "Segoe Fluent Icons", "JetBrainsMono NFP", "Segoe UI";
+    font-family: "JetBrainsMono NFP", "JetBrainsMono NF", "Segoe UI", "Segoe Fluent Icons", "Segoe MDL2 Assets";
     font-size: 13px;
 }
 
+/* ===================================================================
+   BAR
+   =================================================================== */
 .yasb-bar {
-    background-color: rgba(0, 0, 0, 0.667);
+    background-color: var(--bar-bg);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 /* Generic glass pill for every widget container */
 .widget-container {
-    background-color: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.09);
+    background-color: var(--surface);
+    border: 1px solid var(--border);
     border-radius: 14px;
     margin: 5px 4px;
     padding: 0 10px;
 }
 .widget-container:hover {
-    background-color: rgba(255, 255, 255, 0.10);
-    border: 1px solid rgba(255, 255, 255, 0.16);
+    background-color: var(--surface-hover);
+    border: 1px solid var(--border-hover);
 }
 
 .label {
-    color: #e6e6f0;
+    color: var(--text);
+}
+.label.alt {
+    color: var(--text-dim);
 }
 .icon {
-    color: #b9b9c9;
+    color: var(--text-dim);
+    font-family: "JetBrainsMono NFP", "JetBrainsMono NF", "Segoe UI", "Segoe Fluent Icons", "Segoe MDL2 Assets";
     margin-right: 4px;
 }
 
-/* ===== GitHub (left) ===== */
-.github-widget .widget-container {
-    background-color: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.09);
-    border-radius: 16px;
-    padding: 0 10px;
+/* ===================================================================
+   TOOLTIP
+   =================================================================== */
+.tooltip {
+    background-color: rgba(22, 22, 30, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 8px;
+    padding: 5px 9px;
+    color: var(--text);
+    font-size: 12px;
 }
-.github-widget .label {
-    font-size: 15px;
-    color: #dcdce6;
-}
-.github-widget .widget-container:hover {
-    background-color: rgba(255, 255, 255, 0.11);
+.tooltip.dark {
+    background-color: rgba(14, 14, 20, 0.97);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    color: var(--text);
 }
 
-/* ===== Windows Workspaces (center, green glass — matches cava/media style) ===== */
-.windows-desktops .widget-container {
-    background-color: rgba(86, 242, 156, 0.08);
-    border: 1px solid rgba(86, 242, 156, 0.20);
-    border-radius: 16px;
-    padding: 0 6px;
+/* ===================================================================
+   CONTEXT MENU (bar + workspaces + submenus)
+   =================================================================== */
+QMenu {
+    background-color: rgba(24, 24, 33, 0.97);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    padding: 6px;
 }
-.windows-desktops .widget-container:hover {
-    background-color: rgba(86, 242, 156, 0.14);
-    border: 1px solid rgba(86, 242, 156, 0.32);
+QMenu::item {
+    padding: 6px 24px 6px 12px;
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 12px;
 }
-.windows-desktops .ws-btn {
-    color: rgba(86, 242, 156, 0.35);
-    font-size: 11px;
-    padding: 0 4px;
+QMenu::item:selected {
+    background-color: rgba(90, 110, 255, 0.28);
+    color: #ffffff;
+}
+QMenu::item:disabled {
+    color: var(--text-faint);
+}
+QMenu::separator {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 5px 8px;
+}
+QMenu::icon {
+    margin-left: 8px;
+}
+
+.menu-checkbox {
+    padding: 4px 0;
+}
+.checkbox {
+    background: transparent;
+    color: var(--text);
+    font-size: 12px;
+    spacing: 8px;
+}
+.checkbox::indicator {
+    width: 14px;
+    height: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 4px;
+    background: transparent;
+}
+.checkbox::indicator:checked {
+    background-color: var(--green);
+    border-color: var(--green);
+}
+.checkbox::indicator:hover {
+    border-color: rgba(255, 255, 255, 0.45);
+}
+
+/* ===================================================================
+   COPILOT (right — power button that opens the popup, neutral glass)
+   =================================================================== */
+.copilot-widget .widget-container {
+    background-color: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 14px;
+}
+.copilot-widget .widget-container:hover {
+    background-color: rgba(255, 255, 255, 0.11);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+/* ===================================================================
+   ACTIVE WINDOW (left — bare icon + app name, no bubble)
+   =================================================================== */
+.active-window-widget .widget-container {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    margin: 0 6px 0 10px;
+}
+.active-window-widget .widget-container:hover {
+    background-color: transparent;
     border: none;
 }
-.windows-desktops .ws-btn.active {
-    color: #56f29c;
+.active-window-widget .label {
+    font-family: "なぎの", "Segoe UI", sans-serif;
+    font-size: 20px;
+    color: var(--text);
 }
 
-/* ===== Cava (center, purple) ===== */
+/* ===================================================================
+   COPILOT MENU (usage popup — rich glass)
+   =================================================================== */
+.copilot-menu {
+    background-color: rgba(10, 10, 16, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    min-width: 380px;
+}
+.copilot-menu .header {
+    color: var(--text);
+    font-size: 14px;
+    font-weight: bold;
+    padding: 12px 14px 10px 14px;
+}
+.copilot-menu .section {
+    background-color: transparent;
+}
+.copilot-menu .section-title {
+    color: var(--text);
+    font-size: 12px;
+    font-weight: bold;
+}
+.copilot-menu .reset-date {
+    color: var(--text-faint);
+    font-size: 10px;
+}
+.copilot-menu .progress-bar {
+    background-color: rgba(255, 255, 255, 0.10);
+    border-radius: 4px;
+}
+.copilot-menu .progress-bar .fill {
+    background-color: var(--purple);
+    border-radius: 4px;
+}
+.copilot-menu .progress-bar.warning .fill {
+    background-color: #e8c46a;
+}
+.copilot-menu .progress-bar.critical .fill {
+    background-color: var(--red);
+}
+.copilot-menu .usage-count,
+.copilot-menu .usage-percent {
+    color: var(--text-dim);
+    font-size: 11px;
+}
+.copilot-menu .stat-row .stat-label {
+    color: var(--text-faint);
+    font-size: 11px;
+}
+.copilot-menu .stat-row .stat-value {
+    color: var(--text);
+    font-size: 11px;
+}
+.copilot-menu .stat-row.total .stat-label,
+.copilot-menu .stat-row.total .stat-value {
+    color: var(--purple-hi);
+    font-weight: bold;
+}
+.copilot-menu .model-name {
+    color: var(--text);
+    font-size: 11px;
+}
+.copilot-menu .model-count {
+    color: var(--text-faint);
+    font-size: 10px;
+}
+.copilot-menu .usage-chart {
+    color: var(--purple-hi);
+    min-height: 80px;
+}
+.copilot-menu .empty-icon {
+    color: var(--text-dim);
+    font-size: 18px;
+}
+.copilot-menu .empty-message {
+    color: var(--text-dim);
+    font-size: 12px;
+}
+.copilot-menu .error-icon {
+    color: var(--red-hi);
+    font-size: 18px;
+}
+.copilot-menu .error-message {
+    color: var(--text);
+    font-size: 12px;
+}
+
+/* ===================================================================
+   WINDOWS WORKSPACES (center, one bubble per workspace)
+   =================================================================== */
+.windows-desktops .widget-container {
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0 4px;
+}
+.windows-desktops .widget-container:hover {
+    background-color: transparent;
+    border: none;
+}
+/* Borderless glass dots — the tiny 1px outline was the pixelation source;
+   now every desktop is a soft filled circle and the active one glows. */
+.windows-desktops .ws-btn {
+    color: rgba(86, 242, 156, 0.40);
+    font-size: 13px;
+    line-height: 1;
+    min-width: 30px;
+    max-width: 30px;
+    height: 30px;
+    padding: 0;
+    margin: 0 3px;
+    border: none;
+    border-radius: 15px;
+    background-color: rgba(86, 242, 156, 0.07);
+}
+.windows-desktops .ws-btn:hover {
+    color: rgba(86, 242, 156, 0.75);
+    background-color: rgba(86, 242, 156, 0.18);
+}
+.windows-desktops .ws-btn.active {
+    color: var(--green-hi);
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+        stop: 0 rgba(86, 242, 156, 0.30),
+        stop: 1 rgba(86, 242, 156, 0.10));
+}
+.windows-desktops .ws-btn:focus {
+    outline: none;
+}
+
+/* Rename desktop popup */
+.windows-desktops-popup {
+    background-color: var(--panel);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 12px;
+}
+.windows-desktops-popup-container {
+    background-color: transparent;
+}
+.popup-title {
+    color: var(--text);
+    font-size: 14px;
+    font-weight: bold;
+}
+.popup-description {
+    color: var(--text-dim);
+    font-size: 12px;
+}
+.rename-input {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 8px;
+    padding: 5px 9px;
+    color: var(--text);
+    font-size: 12px;
+}
+.rename-input:focus {
+    border: 1px solid var(--green);
+}
+.windows-desktops-popup-footer {
+    background-color: transparent;
+}
+.button.save {
+    background-color: var(--green);
+    border: none;
+    border-radius: 8px;
+    color: #0b120e;
+    font-weight: bold;
+    font-size: 12px;
+    padding: 6px 16px;
+}
+.button.save:hover {
+    background-color: var(--green-hi);
+}
+.button.save:disabled {
+    background-color: rgba(255, 255, 255, 0.10);
+    color: var(--text-faint);
+}
+.button.cancel {
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 12px;
+    padding: 6px 16px;
+}
+.button.cancel:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* ===================================================================
+   AUDIO GROUP (center, purple) — shared pill for Cava + Media
+   =================================================================== */
+.audio-group {
+    background-color: rgba(157, 92, 255, 0.08);
+    border: 1px solid rgba(157, 92, 255, 0.22);
+    border-radius: 16px;
+    margin: 5px 4px;
+    padding: 0 4px;
+}
+.audio-group:hover {
+    background-color: rgba(157, 92, 255, 0.15);
+    border: 1px solid rgba(157, 92, 255, 0.36);
+}
+.audio-group .cava-widget .widget-container,
+.audio-group .media-lite-widget .widget-container {
+    background-color: transparent;
+    border: none;
+    margin: 0;
+    padding: 0 4px;
+}
+.audio-group .media-lite-widget .thumbnail {
+    color: var(--purple-hi);
+    font-size: 14px;
+}
+.audio-group .media-lite-widget .label {
+    color: var(--purple-hi);
+    font-size: 13px;
+}
+
+/* The media widget itself stays invisible in the pill; its frame area next to
+   cava is the clickable zone that opens the media popup. */
+
+/* ===================================================================
+   CAVA (inside audio group, purple)
+   =================================================================== */
 .cava-widget .widget-container {
     background-color: rgba(157, 92, 255, 0.08);
-    border: 1px solid rgba(157, 92, 255, 0.20);
+    border: 1px solid rgba(157, 92, 255, 0.22);
     border-radius: 16px;
 }
 
-/* ===== Right side pills ===== */
+/* ===================================================================
+   VOLUME (right — green glass pill, native widget, system volume:
+   scroll = up/down, left click = mixer popup, right click = mute)
+   =================================================================== */
+.spotify-widget .widget-container {
+    background-color: rgba(29, 185, 84, 0.08);
+    border: 1px solid rgba(29, 185, 84, 0.22);
+    border-radius: 14px;
+}
+.spotify-widget .widget-container:hover {
+    background-color: rgba(29, 185, 84, 0.15);
+    border: 1px solid rgba(29, 185, 84, 0.36);
+}
+.volume-widget .label {
+    font-family: "なぎの", "JetBrainsMono NFP", "JetBrainsMono NF", "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI", sans-serif;
+    font-size: 17px;
+    color: var(--green-hi);
+}
+.volume-widget.muted .label {
+    color: var(--green-dim);
+}
+.volume-widget .icon {
+    color: var(--green-hi);
+}
+
+/* ===================================================================
+   PERF WIDGETS (right, pink) + status thresholds
+   =================================================================== */
 .cpu-widget .widget-container,
 .gpu-widget .widget-container,
 .memory-widget .widget-container {
-    background-color: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.09);
+    background-color: rgba(255, 92, 180, 0.08);
+    border: 1px solid rgba(255, 92, 180, 0.22);
     border-radius: 14px;
+}
+.cpu-widget .widget-container:hover,
+.gpu-widget .widget-container:hover,
+.memory-widget .widget-container:hover {
+    background-color: rgba(255, 92, 180, 0.15);
+    border: 1px solid rgba(255, 92, 180, 0.36);
+}
+.cpu-widget .label,
+.gpu-widget .label,
+.memory-widget .label,
+.cpu-widget .label.alt,
+.gpu-widget .label.alt,
+.memory-widget .label.alt {
+    font-family: "なぎの", "JetBrainsMono NFP", "JetBrainsMono NF", "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI", sans-serif;
+    font-size: 17px;
+    color: var(--pink-hi);
 }
 
-.power-menu-widget .widget-container {
-    background-color: rgba(255, 90, 90, 0.10);
-    border: 1px solid rgba(255, 90, 90, 0.22);
-    border-radius: 14px;
+/* Threshold classes exist, but the user wants a constant pink label: the perf
+   widgets never switch color. */
+.cpu-widget .status-medium,
+.cpu-widget .status-high,
+.cpu-widget .status-critical,
+.gpu-widget .status-medium,
+.gpu-widget .status-high,
+.gpu-widget .status-critical,
+.memory-widget .status-medium,
+.memory-widget .status-high,
+.memory-widget .status-critical {
+    color: var(--pink-hi);
 }
-.power-menu-widget .label {
-    color: #ff9d9d;
+
+/* ===================================================================
+   STAT POPUPS (CPU / GPU / Memory)
+   =================================================================== */
+.cpu-popup,
+.gpu-popup,
+.memory-popup {
+    background-color: var(--panel);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 12px;
 }
-.power-menu-widget:hover .widget-container {
-    background-color: rgba(255, 90, 90, 0.20);
+.cpu-popup .header,
+.gpu-popup .header,
+.memory-popup .header {
+    color: var(--text);
+    font-size: 14px;
+    font-weight: bold;
+    padding: 2px 4px 6px 4px;
+}
+.cpu-popup .text,
+.gpu-popup .text,
+.memory-popup .text {
+    color: var(--text-dim);
+    font-size: 12px;
+}
+.pin-btn {
+    background-color: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    color: var(--text-dim);
+    font-size: 12px;
+    padding: 2px 8px;
+}
+.pin-btn:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: var(--text);
+}
+.pin-btn.pinned {
+    background-color: rgba(255, 92, 180, 0.18);
+    border: 1px solid rgba(255, 92, 180, 0.45);
+    color: var(--pink-hi);
+}
+
+.graph-container {
+    background-color: rgba(0, 0, 0, 0.28);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 6px;
+    margin: 2px 0 8px 0;
+}
+.graph-title {
+    color: var(--text-dim);
+    font-size: 11px;
+    padding: 0 2px 4px 2px;
+}
+
+/* graph lines: `color` drives the palette foreground role */
+.cpu-graph,
+.gpu-graph,
+.memory-graph {
+    color: var(--pink);
+}
+.cpu-graph-grid,
+.gpu-graph-grid,
+.memory-graph-grid {
+    color: rgba(255, 255, 255, 0.10);
+}
+
+.stats {
+    background-color: transparent;
+    spacing: 4px;
+}
+.stat-item {
+    background-color: rgba(255, 255, 255, 0.04);
+    border-radius: 8px;
+    padding: 5px 10px;
+}
+.stat-label {
+    color: var(--text-faint);
+    font-size: 11px;
+}
+.stat-value {
+    color: var(--pink-hi);
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* ===================================================================
+   MEDIA LITE POPUP (right-click / left-click menu)
+   =================================================================== */
+.media-lite-menu {
+    background-color: var(--panel);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 14px;
+}
+.artwork-background {
+    background-color: transparent;
+    border: none;
+    border-radius: 12px;
+}
+.media-lite-menu .header {
+    background-color: transparent;
+    padding: 0 0 4px 0;
+}
+.media-lite-menu .source {
+    color: var(--text-faint);
+    font-size: 11px;
+}
+.media-lite-menu .thumbnail {
+    border-radius: 12px;
+    background-color: rgba(0, 0, 0, 0.30);
+}
+.media-lite-menu .title {
+    color: var(--text);
+    font-size: 15px;
+    font-weight: bold;
+}
+.media-lite-menu .artist {
+    color: var(--text-dim);
+    font-size: 12px;
+}
+.media-lite-menu .controls {
+    background-color: transparent;
+    spacing: 4px;
+}
+
+/* control buttons: shuffle / prev / play / next / repeat */
+.media-lite-menu .btn {
+    color: var(--text-dim);
+    font-size: 15px;
+    padding: 3px 4px;
+}
+.media-lite-menu .btn:hover {
+    color: var(--text);
+}
+.media-lite-menu .btn.active {
+    color: var(--purple-hi);
+}
+.media-lite-menu .btn.disabled {
+    color: rgba(255, 255, 255, 0.20);
+}
+
+/* timeline */
+.media-timeline-container {
+    background-color: transparent;
+    padding: 2px 0;
+}
+.playback-time {
+    color: var(--text-faint);
+    font-size: 10px;
+    padding: 0 4px;
+}
+
+/* ===================================================================
+   SLIDERS (progress + volume)
+   =================================================================== */
+QSlider {
+    height: 14px;
+}
+QSlider::groove:horizontal {
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.12);
+    margin: 0 2px;
+}
+QSlider::sub-page:horizontal {
+    background: var(--purple);
+    border-radius: 2px;
+}
+QSlider::add-page:horizontal {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 2px;
+}
+QSlider::handle:horizontal {
+    width: 10px;
+    height: 10px;
+    margin: -3px 0;
+    border-radius: 5px;
+    background: var(--purple-hi);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+}
+QSlider::handle:horizontal:hover {
+    background: #ffffff;
+}
+
+/* volume */
+.volume-hover {
+    background-color: transparent;
+}
+.volume-button {
+    color: var(--text-dim);
+    font-size: 14px;
+    padding: 2px 4px;
+}
+.volume-button:hover {
+    color: var(--text);
+}
+.volume-button.muted {
+    color: var(--red-hi);
+}
+.volume-button.unavailable {
+    color: var(--text-faint);
+}
+.volume-slider-popup {
+    background-color: var(--panel);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+    padding: 8px 10px;
+}
+.volume-slider {
+    color: var(--purple);
+}
+
+/* ===================================================================
+   POWER MENU OVERLAY (unused after power menu removal)
+   =================================================================== */
+.power-menu-overlay {
+    background-color: rgba(0, 0, 0, 0.45);
 }

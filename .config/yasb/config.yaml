@@ -1,7 +1,6 @@
-watch_stylesheet: true
+﻿watch_stylesheet: true
 watch_config: true
 debug: false
-
 bars:
   status-bar:
     enabled: true
@@ -32,50 +31,86 @@ bars:
     widgets:
       left:
         [
-          "github"
+          "active_window"
         ]
       center:
         [
           "windows_workspaces",
-          "cava"
+          "audio_group"
         ]
       right:
         [
+          "volume",
           "cpu",
           "gpu",
           "memory",
-          "power_menu"
+          "copilot"
         ]
-
 widgets:
-  github:
-      type: "yasb.github.GithubWidget"
+  active_window:
+      type: "yasb.active_window.ActiveWindowWidget"
       options:
-        label: "<span>\ue708</span>"
-        label_alt: "GitHub {data}"
-        tooltip: true
-        update_interval: 300
-        token: ""
-        max_notification: 20
-        only_unread: true
-        max_field_size: 54
-        menu:
-          blur: true
-          round_corners: true
-          round_corners_type: "normal"
-          border_color: "System"
-          alignment: "left"
-          direction: "down"
-          offset_top: 6
-          offset_left: 0
-          show_categories: true
+        label: "{win[app_name]}"
+        label_icon: true
+        label_icon_size: 22
+        max_length: 40
+        callbacks:
+          on_left: "do_nothing"
+          on_middle: "do_nothing"
+          on_right: "do_nothing"
 
+  copilot:
+      type: "yasb.copilot.CopilotWidget"
+      options:
+        label: '<span><img src="file:///C:/Users/kuuro/.config/yasb/icons/power.png" height="22"/></span>'
+        label_alt: '<span><img src="file:///C:/Users/kuuro/.config/yasb/icons/power.png" height="22"/></span>'
+        token: ""
+        plan: "pro"
+        tooltip: false
+        update_interval: 120
   windows_workspaces:
       type: "yasb.windows_desktops.WorkspaceWidget"
       options:
-        label_workspace_btn: "\u25cf"
-        label_workspace_active_btn: "\u25cf"
-
+        label_workspace_btn: "{name}"
+        label_workspace_active_btn: "{name}"
+  audio_group:
+      type: "yasb.grouper.GrouperWidget"
+      options:
+        class_name: "audio-group"
+        widgets: [ "cava", "media" ]
+  media:
+      type: "yasb.media_lite.MediaWidget"
+      options:
+        show_thumbnail: false
+        show_title: false
+        show_artist: false
+        scrolling_label: false
+        image_size: 20
+        max_label_size: 1
+        tooltip: true
+        callbacks:
+          on_left: "toggle_media_menu"
+          on_middle: "do_nothing"
+          on_right: "do_nothing"
+        media_menu:
+          blur: true
+          artwork_background: true
+          artwork_blur_radius: 24
+          artwork_dim: 0.55
+          round_corners: true
+          round_corners_type: "normal"
+          border_color: "System"
+          alignment: "center"
+          direction: "down"
+          offset_top: 6
+          offset_left: 0
+          image_size: 160
+          thumbnail_corner_radius: 12
+          icons:
+            play: "\ue768"
+            pause: "\ue769"
+            volume: "\ue767"
+            mute: "\ue994"
   cava:
       type: "yasb.cava.CavaWidget"
       options:
@@ -94,13 +129,12 @@ widgets:
         sensitivity: 100
         noise_reduction: 77
         monstercat: 1
-        hide_empty: false
+        hide_empty: true
         sleep_timer: 5
         edge_fade: [8, 8]
         callbacks:
           on_left: "do_nothing"
           on_right: "reload_cava"
-
   cpu:
       type: "yasb.cpu.CpuWidget"
       options:
@@ -122,7 +156,6 @@ widgets:
           on_left: "do_nothing"
           on_middle: "exec cmd /c Taskmgr"
           on_right: "toggle_label"
-
   gpu:
       type: "yasb.gpu.GpuWidget"
       options:
@@ -148,7 +181,6 @@ widgets:
           on_left: "do_nothing"
           on_middle: "exec cmd /c Taskmgr"
           on_right: "toggle_label"
-
   memory:
       type: "yasb.memory.MemoryWidget"
       options:
@@ -163,19 +195,18 @@ widgets:
           low: 25
           medium: 50
           high: 90
-  power_menu:
-      type: "yasb.power_menu.PowerMenuWidget"
+  volume:
+      type: "yasb.volume.VolumeWidget"
       options:
-        label: "\ue7e8"
-        uptime: true
-        blur: false
-        blur_background: true
-        animation_duration: 300
-        button_row: 3
-        buttons:
-          lock: ["\uea75", "Lock"]
-          signout: ["\udb80\udf43", "Sign out"]
-          shutdown: ["\uf011", "Shut Down"]
-          restart: ["\uead2", "Restart"]
-          hibernate: ["\uf28e", "Hibernate"]
-          cancel: ["\udb81\udf3a", "Cancel"]
+        class_name: "spotify"
+        label: '<span><img src="file:///C:/Users/kuuro/.config/yasb/icons/spotify.svg" height="18"/></span> {level}'
+        label_alt: '<span><img src="file:///C:/Users/kuuro/.config/yasb/icons/spotify.svg" height="18"/></span> {level}'
+        tooltip: true
+        scroll_step: 4
+        audio_menu:
+          show_apps: true
+          show_apps_expanded: false
+          alignment: "right"
+          direction: "down"
+
+

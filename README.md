@@ -201,41 +201,45 @@ Window border highlighting via [tacky-borders](https://github.com/lukeyou05/tack
 
 ---
 
-### YASB — `home/user/AppData/Roaming/yasb/`
+### YASB — `.config/yasb/`
 
-Status bar configuration for [YASB](https://github.com/amnweb/yasb) using the Fluent Onyx v2 theme.
+Status bar configuration for [YASB](https://github.com/amnweb/yasb) — custom "Kuro glass" theme: translucent glassy pills, per-widget accent colors, `なぎの` typography.
+
+**Requires the `なぎの` font.**
+
+**Install location:** `%USERPROFILE%\.config\yasb\`
+
+```powershell
+# 1. Install YASB
+winget install --scope machine AmN.yasb
+
+# 2. Copy the config (icons included)
+Copy-Item .config\yasb\* "$env:USERPROFILE\.config\yasb\" -Recurse
+
+# 3. Reload the running bar (or start YASB)
+& "$env:ProgramFiles\YASB\yasbc.exe" reload
+```
+
+> **Note:** image paths inside `config.yaml` are absolute (`C:/Users/kuuro/.config/yasb/icons/`) — adjust them if your username differs.
 
 Bar layout:
 
 | Left | Center | Right |
 |------|--------|-------|
-| AI Chat, Virtual desktops, Media player, Cava visualizer | — | CPU usage, GPU temperature, App launchers |
+| Active window title | Virtual desktops, Audio group (Cava + media) | Volume, CPU, GPU, Memory, Power |
 
-Widgets configured (not all active by default):
+Widgets:
 
-- `ai_chat` — AI chat popup supporting multiple providers; configured with GitHub Copilot and Gemini 2.5 Flash (via OpenAI-compatible Google AI Studio endpoint)
-- `windows_workspaces` — virtual desktop switcher
-- `media` — current playing track with popup media menu
-- `cava` — audio visualizer (mirrored bars, purple gradient)
-- `cpu` — CPU usage percentage with histogram
-- `gpu` — GPU temperature and VRAM usage
-- `memory` — RAM and swap usage
-- `clock` — date/time with calendar popup
-- `volume` — system volume with audio device menu
-- `microphone` — microphone level and mute toggle
-- `traffic` — network upload/download speed
-- `disk` — disk usage grouped by drive letter
-- `apps` — quick launch icons (Windows Update, Task Manager, Terminal, VS Code, Steam)
-- `power_menu` — lock, sign out, shutdown, restart, hibernate
+- `active_window` — app icon + app name in `なぎの`
+- `windows_workspaces` — borderless glass circles showing each desktop's name (right-click → **Rename** to set kanji such as 一, 二, 三); the active one glows with a green gradient
+- `audio_group` — single purple pill wrapping Cava + Media
+- `cava` — mirrored audio visualizer, purple gradient
+- `media` — invisible in the bar; the click zone that opens the media popup
+- `volume` — native system volume widget: scroll up/down, left click = mixer popup (per-app sliders), right click = mute; green pill with Spotify icon + `%`
+- `cpu` / `gpu` / `memory` — pink perf widgets with icons, alternate histograms and thresholds
+- `copilot` — power icon; opens the GitHub Copilot usage popup
 
-Style uses Windows 11 Fluent design tokens — dark acrylic background, Segoe UI Variable typography, system accent color.
-
-**Install location:** `%APPDATA%\yasb\`
-
-**Scripts:**
-
-- `scripts/fix_winaero.ps1` — fixes WinAero Tweaker compatibility
-- `scripts/last_commit.ps1` — displays last git commit info as a widget label
+Icons: `icons/spotify.svg` (vector, crisp at any size) and `icons/power.png`. Everything else is handled by YASB itself — no helper scripts required.
 
 ---
 
@@ -274,6 +278,12 @@ AutoHotkey v2 scripts for Windows keybindings.
     starship.toml        Starship prompt config
   tacky-borders/
     config.yaml          Tacky Borders window border config
+  yasb/
+    config.yaml          YASB bar config (Kuro glass theme)
+    styles.css           YASB stylesheet
+    icons/
+      power.png          Power button (opens Copilot usage popup)
+      spotify.svg        Volume icon (system volume widget, vector)
 home/
   .wezterm.lua           WezTerm terminal config (default shell: Nushell)
   AppData/
@@ -286,11 +296,6 @@ home/
         Microsoft/
           Windows Terminal Preview/
             settings.json  Windows Terminal Preview config
-      Roaming/
-        yasb/
-          config.yaml      YASB bar config
-          styles.css       YASB stylesheet (Fluent Onyx v2)
-          scripts/         Helper PowerShell scripts
     Documents/
       autohotkey-scripts/
         quake.ahk          AutoHotkey v2 keybindings
