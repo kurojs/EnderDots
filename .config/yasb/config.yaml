@@ -129,7 +129,7 @@ widgets:
         sensitivity: 100
         noise_reduction: 77
         monstercat: 1
-        hide_empty: true
+        hide_empty: false
         sleep_timer: 5
         edge_fade: [8, 8]
         callbacks:
