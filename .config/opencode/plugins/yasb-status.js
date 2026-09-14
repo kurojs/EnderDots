@@ -74,8 +74,9 @@ export const YasbStatus = async () => {
   const frame = () => {
     const color = RGB[active.color] || RGB["#c99bff"]
     return (
+      `<span style="font-family: 'なぎの', 'Segoe UI Emoji'; font-size: 20px">` +
       `${active.emoji} <span style="color: ${active.color}">${active.label}</span>` +
-      ` <span style="font-size: 9px">${sweep(color)}</span>`
+      `</span> <span style="font-size: 13px">${sweep(color)}</span>`
     )
   }
 
@@ -130,10 +131,10 @@ export const YasbStatus = async () => {
   const setIdle = async () => {
     stopAnim()
     active = null
-    await write("🟣 York")
+    await write(`<span style="font-family: 'なぎの', 'Segoe UI Emoji'; font-size: 20px">🟣 York</span>`)
   }
 
-  await write("🟣 York")
+  await write(`<span style="font-family: 'なぎの', 'Segoe UI Emoji'; font-size: 20px">🟣 York</span>`)
 
   return {
     "tool.execute.before": async (input) => {

@@ -191,7 +191,6 @@ QMenu::icon {
 }
 .opencode-widget .label {
     font-family: "なぎの", "JetBrainsMono NFP", "JetBrainsMono NF", "Segoe UI Emoji", "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI", sans-serif;
-    font-size: 13px;
     color: var(--text-dim);
 }
 
