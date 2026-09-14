@@ -31,7 +31,7 @@ bars:
     widgets:
       left:
         [
-          "active_window"
+          "opencode_status"
         ]
       center:
         [
@@ -54,6 +54,23 @@ widgets:
         label_icon: true
         label_icon_size: 22
         max_length: 40
+        callbacks:
+          on_left: "do_nothing"
+          on_middle: "do_nothing"
+          on_right: "do_nothing"
+
+  opencode_status:
+      type: "yasb.custom.CustomWidget"
+      options:
+        class_name: "opencode"
+        label: "{data}"
+        label_alt: "{data}"
+        tooltip: true
+        tooltip_label: "opencode activity"
+        exec_options:
+          run_cmd: "cmd /c type C:\\Users\\kuuro\\.config\\yasb\\opencode_state.txt"
+          run_interval: 250
+          return_format: "string"
         callbacks:
           on_left: "do_nothing"
           on_middle: "do_nothing"

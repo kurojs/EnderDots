@@ -175,6 +175,27 @@ QMenu::icon {
 }
 
 /* ===================================================================
+   OPENCODE STATUS (left — purple glass pill, live tool activity polled
+   from opencode_state.txt; the state file is written by the opencode
+   plugin at ~/.config/opencode/plugins/yasb-status.js and contains a
+   rich-text frame: emoji + tool name + purple sweep with fading trail)
+   =================================================================== */
+.opencode-widget .widget-container {
+    background-color: rgba(157, 92, 255, 0.10);
+    border: 1px solid rgba(157, 92, 255, 0.28);
+    border-radius: 14px;
+}
+.opencode-widget .widget-container:hover {
+    background-color: rgba(157, 92, 255, 0.18);
+    border: 1px solid rgba(157, 92, 255, 0.42);
+}
+.opencode-widget .label {
+    font-family: "なぎの", "JetBrainsMono NFP", "JetBrainsMono NF", "Segoe UI Emoji", "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI", sans-serif;
+    font-size: 13px;
+    color: var(--text-dim);
+}
+
+/* ===================================================================
    COPILOT MENU (usage popup — rich glass)
    =================================================================== */
 .copilot-menu {

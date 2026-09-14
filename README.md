@@ -226,11 +226,11 @@ Bar layout:
 
 | Left | Center | Right |
 |------|--------|-------|
-| Active window title | Virtual desktops, Audio group (Cava + media) | Volume, CPU, GPU, Memory, Power |
+| OpenCode activity | Virtual desktops, Audio group (Cava + media) | Volume, CPU, GPU, Memory, Power |
 
 Widgets:
 
-- `active_window` — app icon + app name in `なぎの`
+- `opencode_status` — live OpenCode tool activity: a fixed-size bubble bounces right to left, its glow peaking at the bar's center and shrinking toward the edges (like cava). `💭 thinking` (purple), each tool runs with its own color (read=amber, write=green, bash=green, task=blue, search=lilac, web=teal); idle shows `🟣 York`. Feeds off `opencode_state.txt`, written by the OpenCode plugin at `.config/opencode/plugins/yasb-status.js` (`tool.execute.before` / `session.status` / `session.idle` hooks, Bun runtime; restart OpenCode to load it)
 - `windows_workspaces` — borderless glass circles showing each desktop's name (right-click → **Rename** to set kanji such as 一, 二, 三); the active one glows with a green gradient
 - `audio_group` — single purple pill wrapping Cava + Media
 - `cava` — mirrored audio visualizer, purple gradient
@@ -273,6 +273,9 @@ AutoHotkey v2 scripts for Windows keybindings.
 ```
 .config/
   nvim-windows/          Neovim config (Windows)
+  opencode/
+    plugins/
+      yasb-status.js     OpenCode plugin → feeds YASB opencode_status widget
   routine-notify/        RoutineNotify schedule backup (PLAN 2026)
   starship/
     starship.toml        Starship prompt config
