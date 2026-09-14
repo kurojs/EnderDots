@@ -69,7 +69,7 @@ widgets:
         tooltip_label: "opencode activity"
         exec_options:
           run_cmd: "cmd /c type C:\\Users\\kuuro\\.config\\yasb\\opencode_state.txt"
-          run_interval: 250
+          run_interval: 100
           return_format: "string"
         callbacks:
           on_left: "do_nothing"
