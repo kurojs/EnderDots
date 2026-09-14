@@ -60,17 +60,23 @@ widgets:
           on_right: "do_nothing"
 
   opencode_status:
-      type: "yasb.custom.CustomWidget"
+      type: "yasb.opencode.OpenCodeWidget"
       options:
-        class_name: "opencode"
-        label: "{data}"
-        label_alt: "{data}"
-        tooltip: true
-        tooltip_label: "opencode activity"
-        exec_options:
-          run_cmd: "cmd /c type C:\\Users\\kuuro\\.config\\yasb\\opencode_state.txt"
-          run_interval: 100
-          return_format: "string"
+        class_name: "opencode-widget"
+        state_file: "C:\\Users\\kuuro\\.config\\yasb\\opencode_state.json"
+        poll_interval: 250
+        anim_interval: 33
+        columns: 16
+        bar_width: 3
+        bar_spacing: 2
+        bar_height: 16
+        sigma: 1.5
+        trail: 2.0
+        envelope: 6.5
+        step: 0.5
+        min_alpha: 0.15
+        font_family: "なぎの"
+        font_size: 20
         callbacks:
           on_left: "do_nothing"
           on_middle: "do_nothing"
