@@ -19,7 +19,7 @@ class SweepBar(QFrame):
         self.config = config
         self.position = config.columns - 1
         self.direction = -1
-        self.color = QColor("#8b5cf6")
+        self.color = QColor("#8080C0")
         width = config.columns * (config.bar_width + config.bar_spacing) - config.bar_spacing
         self.setFixedSize(width, config.bar_height)
         self.setProperty("class", "opencode-sweep")
@@ -96,12 +96,10 @@ class OpenCodeWidget(BaseWidget):
         r, g, b = color_obj.red(), color_obj.green(), color_obj.blue()
         base_bg = f"rgba({r}, {g}, {b}, 0.10)"
         hover_bg = f"rgba({r}, {g}, {b}, 0.18)"
-        border = f"rgba({r}, {g}, {b}, 0.28)"
-        border_hover = f"rgba({r}, {g}, {b}, 0.42)"
         self._widget_container.setStyleSheet(
             f"""
-            QFrame#opencode-widget-container {{ background-color: {base_bg}; border: 1px solid {border}; border-radius: 14px; }}
-            QFrame#opencode-widget-container:hover {{ background-color: {hover_bg}; border: 1px solid {border_hover}; }}
+            QFrame#opencode-widget-container {{ background-color: {base_bg}; border: none; border-radius: 2px; }}
+            QFrame#opencode-widget-container:hover {{ background-color: {hover_bg}; }}
             """
         )
 
@@ -111,7 +109,7 @@ class OpenCodeWidget(BaseWidget):
     def _apply_state(self, state: dict):
         emoji = state.get("emoji", "🟣")
         label = state.get("label", "York")
-        color = state.get("color", "#c4b5fd")
+        color = state.get("color", "#9C9CD4")
         key = ("active", emoji, label, color)
         if key == self._last_state:
             return
@@ -132,9 +130,12 @@ class OpenCodeWidget(BaseWidget):
         if key == self._last_state:
             return
         self._last_state = key
-        self._stop_bounce()
-        self._reset_container_color()
-        self._label.setText(self._label_html("🟣", "York", "#c4b5fd"))
+        self._apply_container_color("#9CC8C8")
+        self._sweep.color = QColor("#9CC8C8")
+        self._sweep.position = self.config.columns - 1
+        self._sweep.direction = -1
+        self._start_bounce()
+        self._label.setText(self._label_html("🟣", "York", "#9CC8C8"))
 
     def _start_bounce(self):
         if not self._anim_running:

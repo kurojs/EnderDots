@@ -9,13 +9,13 @@
     --panel:             rgba(18, 18, 26, 0.94);
     --bar-bg:            rgba(0, 0, 0, 0.667);
 
-    /* color zones */
-    --green:             #56f29c;
-    --green-dim:         rgba(86, 242, 156, 0.35);
-    --green-hi:          #7cffba;
-    --purple:            #9d5cff;
-    --purple-hi:         #c99bff;
-    --purple-dark:       #3a0068;
+    /* color zones (kurox navy) */
+    --green:             #9CC8C8;
+    --green-dim:         rgba(64, 128, 128, 0.35);
+    --green-hi:          #B8DCDD;
+    --purple:            #8080C0;
+    --purple-hi:         #9C9CD4;
+    --purple-dark:       #262F55;
     --pink:              #ff5cb4;
     --pink-hi:           #ffc2e4;
     --red:               #ff5a5a;
@@ -50,7 +50,7 @@
     background-color: var(--surface);
     border: 1px solid var(--border);
     border-radius: 14px;
-    margin: 5px 4px;
+    margin: 0 4px;
     padding: 0 10px;
 }
 .widget-container:hover {
@@ -187,12 +187,11 @@ QMenu::icon {
    =================================================================== */
 .opencode-widget .widget-container {
     background-color: rgba(157, 92, 255, 0.10);
-    border: 1px solid rgba(157, 92, 255, 0.28);
-    border-radius: 14px;
+    border: none;
+    border-radius: 2px;
 }
 .opencode-widget .widget-container:hover {
     background-color: rgba(157, 92, 255, 0.18);
-    border: 1px solid rgba(157, 92, 255, 0.42);
 }
 .opencode-widget .label {
     font-family: "なぎの", "JetBrainsMono NFP", "JetBrainsMono NF", "Segoe UI Emoji", "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI", sans-serif;
@@ -357,14 +356,13 @@ QMenu::icon {
    =================================================================== */
 .audio-group {
     background-color: rgba(157, 92, 255, 0.08);
-    border: 1px solid rgba(157, 92, 255, 0.22);
-    border-radius: 16px;
+    border: none;
+    border-radius: 2px;
     margin: 5px 4px;
     padding: 0 4px;
 }
 .audio-group:hover {
     background-color: rgba(157, 92, 255, 0.15);
-    border: 1px solid rgba(157, 92, 255, 0.36);
 }
 .audio-group .cava-widget .widget-container,
 .audio-group .media-lite-widget .widget-container {
@@ -390,8 +388,8 @@ QMenu::icon {
    =================================================================== */
 .cava-widget .widget-container {
     background-color: rgba(157, 92, 255, 0.08);
-    border: 1px solid rgba(157, 92, 255, 0.22);
-    border-radius: 16px;
+    border: none;
+    border-radius: 2px;
 }
 
 /* ===================================================================
@@ -400,29 +398,67 @@ QMenu::icon {
    =================================================================== */
 .spotify-volume-widget .widget-container,
 .spotify-widget .widget-container {
-    background-color: rgba(30, 215, 96, 0.08);
-    border: 1px solid rgba(30, 215, 96, 0.22);
-    border-radius: 14px;
+    background-color: rgba(64, 128, 128, 0.08);
+    border: none;
+    border-radius: 2px;
 }
 .spotify-volume-widget .widget-container:hover,
 .spotify-widget .widget-container:hover {
-    background-color: rgba(30, 215, 96, 0.15);
-    border: 1px solid rgba(30, 215, 96, 0.36);
+    background-color: rgba(64, 128, 128, 0.15);
 }
 .spotify-volume-widget .label,
 .spotify-widget .label {
     font-family: "Monocraft", "なぎの", "JetBrainsMono NFP", "JetBrainsMono NF", "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI", sans-serif;
-    font-size: 17px;
-    color: #8fd9ab;
+    font-size: 16px;
+    color: #9CC8C8;
+    padding: 0 10px;
 }
 .spotify-volume-widget .label.alt,
 .spotify-widget .label.alt {
-    color: #8fd9ab;
+    color: #9CC8C8;
 }
 .spotify-volume-widget .icon,
 .spotify-widget .icon {
     font-size: 20px;
-    color: #1ed760;
+    color: #408080;
+}
+
+/* ===================================================================
+   WORKSPACES (center — minimalist teal, one numbered button per
+   virtual desktop, active one gets a green glass pill)
+   =================================================================== */
+.workspaces .widget-container {
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0 6px;
+}
+.workspaces .widget-container:hover {
+    background-color: transparent;
+    border: none;
+}
+.workspaces .ws-btn {
+    color: rgba(156, 200, 200, 0.4);
+    background-color: transparent;
+    border: none;
+    border-radius: 2px;
+    min-width: 32px;
+    min-height: 32px;
+    max-width: 32px;
+    max-height: 32px;
+    padding: 0;
+    margin: 0 3px;
+    font-family: "Monocraft", "なぎの", "JetBrainsMono NFP", "JetBrainsMono NF", "Segoe UI", sans-serif;
+    font-size: 17px;
+    line-height: 1;
+}
+.workspaces .ws-btn:hover {
+    color: rgba(156, 200, 200, 0.75);
+    background-color: rgba(64, 128, 128, 0.10);
+}
+.workspaces .ws-btn.active {
+    color: #9CC8C8;
+    background-color: rgba(64, 128, 128, 0.16);
 }
 
 /* ===================================================================
@@ -430,72 +466,69 @@ QMenu::icon {
    =================================================================== */
 /* CPU: magenta (pill liked; icon softened) */
 .cpu-widget .widget-container {
-    background-color: rgba(139, 92, 246, 0.08);
-    border: 1px solid rgba(139, 92, 246, 0.22);
-    border-radius: 14px;
+    background-color: rgba(128, 128, 192, 0.08);
+    border: none;
+    border-radius: 2px;
 }
 .cpu-widget .widget-container:hover {
-    background-color: rgba(139, 92, 246, 0.15);
-    border: 1px solid rgba(139, 92, 246, 0.36);
+    background-color: rgba(128, 128, 192, 0.15);
 }
 .cpu-widget .label,
 .cpu-widget .label.alt {
     font-family: "Monocraft", "なぎの", "JetBrainsMono NFP", "JetBrainsMono NF", "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI", sans-serif;
     font-size: 17px;
-    color: #c4b5fd;
+    color: #9C9CD4;
 }
 .cpu-widget .icon {
     font-size: 20px;
-    color: #a78bfa;
+    color: #9C9CD4;
 }
 .cpu-widget .status-medium,
 .cpu-widget .status-high,
 .cpu-widget .status-critical {
-    color: #c4b5fd;
+    color: #9C9CD4;
 }
 
 /* GPU / temp (right — same magenta glass as CPU) */
 .gpu-widget .widget-container {
-    background-color: rgba(139, 92, 246, 0.08);
-    border: 1px solid rgba(139, 92, 246, 0.22);
-    border-radius: 14px;
+    background-color: rgba(128, 128, 192, 0.08);
+    border: none;
+    border-radius: 2px;
 }
 .gpu-widget .widget-container:hover {
-    background-color: rgba(139, 92, 246, 0.15);
-    border: 1px solid rgba(139, 92, 246, 0.36);
+    background-color: rgba(128, 128, 192, 0.15);
 }
 .gpu-widget .label,
 .gpu-widget .label.alt {
     font-family: "Monocraft", "なぎの", "JetBrainsMono NFP", "JetBrainsMono NF", "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI", sans-serif;
     font-size: 17px;
-    color: #c4b5fd;
+    color: #9C9CD4;
 }
 .gpu-widget .status-medium,
 .gpu-widget .status-high,
 .gpu-widget .status-critical {
-    color: #c4b5fd;
+    color: #9C9CD4;
 }
 
 /* Memory (right — same magenta glass as CPU/GPU) */
 .memory-widget .widget-container {
-    background-color: rgba(139, 92, 246, 0.08);
-    border: 1px solid rgba(139, 92, 246, 0.22);
-    border-radius: 14px;
+    background-color: rgba(128, 128, 192, 0.08);
+    border: none;
+    border-radius: 2px;
 }
 .memory-widget .widget-container:hover {
-    background-color: rgba(139, 92, 246, 0.15);
-    border: 1px solid rgba(139, 92, 246, 0.36);
+    background-color: rgba(128, 128, 192, 0.15);
 }
 .memory-widget .label,
 .memory-widget .label.alt {
     font-family: "Monocraft", "なぎの", "JetBrainsMono NFP", "JetBrainsMono NF", "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI", sans-serif;
     font-size: 17px;
-    color: #c4b5fd;
+    color: #9C9CD4;
 }
 .memory-widget .status-medium,
 .memory-widget .status-high,
 .memory-widget .status-critical {
-    color: #c4b5fd;
+    color: #9C9CD4;
 }
 
 /* ===================================================================

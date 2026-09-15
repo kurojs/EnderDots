@@ -36,6 +36,7 @@ bars:
         ]
       center:
         [
+          "workspaces"
         ]
       right:
         [
@@ -99,7 +100,7 @@ widgets:
         bar_width: 3
         bar_spacing: 2
         bar_type: "bars_mirrored"
-        foreground: "#8b5cf6"
+        foreground: "#8080C0"
         gradient: 0
         framerate: 60
         sensitivity: 100
@@ -175,8 +176,8 @@ widgets:
       type: "yasb.spotify_volume.SpotifyVolumeWidget"
       options:
         class_name: "spotify"
-        label: "{level}"
-        label_alt: "{level}"
+        label: "Spotify"
+        label_alt: "Spotify"
         tooltip: true
         scroll_step: 4
         process: "Spotify.exe"
@@ -189,5 +190,14 @@ widgets:
         callbacks:
           on_left: "toggle_mute"
           on_right: "toggle_label"
+  workspaces:
+      type: "yasb.workspaces.WorkspacesWidget"
+      options:
+        label_workspace_btn: "{kanji}"
+        label_workspace_active_btn: "{kanji}"
+        callbacks:
+          on_left: "activate_workspace"
+          on_middle: "do_nothing"
+          on_right: "do_nothing"
 
 
