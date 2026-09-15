@@ -207,20 +207,33 @@ Status bar configuration for [YASB](https://github.com/amnweb/yasb) — custom "
 
 **Requires the `なぎの` font.**
 
+**Requires the `opencode_status` widget, which only exists in the source checkout — the winget/installed `YASB.exe` does NOT include it and will error with `unknown type "yasb.opencode.OpenCodeWidget"`.**
+
 **Install location:** `%USERPROFILE%\.config\yasb\`
 
 ```powershell
-# 1. Install YASB
-winget install --scope machine AmN.yasb
-
-# 2. Copy the config (icons included)
+# 1. Copy the config (icons included)
 Copy-Item .config\yasb\* "$env:USERPROFILE\.config\yasb\" -Recurse
 
-# 3. Reload the running bar (or start YASB)
-& "$env:ProgramFiles\YASB\yasbc.exe" reload
+# 2. Source checkout (the custom widget lives here, not in the installed app)
+#    Clone amnweb/yasb, create a venv, then drop the two patched widget files
+#    from .config/yasb/opencode-widget/src/ into the matching paths:
+#      src/core/widgets/yasb/opencode.py
+#      src/core/validation/widgets/yasb/opencode.py
+git clone https://github.com/amnweb/yasb C:\Users\kuuro\Documents\Work\yasb
+cd C:\Users\kuuro\Documents\Work\yasb
+py -3.14 -m venv .venv
+.\.venv\Scripts\pip install -r requirements.txt
+
+# 3. Start YASB from source, hidden (no console window)
+wscript.exe .config\yasb\opencode-widget\yasb-launcher.vbs
 ```
 
 > **Note:** image paths inside `config.yaml` are absolute (`C:/Users/kuuro/.config/yasb/icons/`) — adjust them if your username differs.
+>
+> The installed `YASB.lnk` in the Start Menu must be repointed at `wscript.exe ""...yasb-launcher.vbs""` (admin/UAC required to edit it in ProgramData). The `YASB.lnk` itself is NOT versioned — re-run this setup after a fresh Windows install.
+
+**Autostart:** `...\Startup\YASB-hidden.vbs` runs `wscript yasb-launcher.vbs` — starts the source bar hidden at login with no console. `yasb-launcher.vbs` is a singleton guard: if a `pythonw.exe` already runs `src/main.py` it does nothing (no double bars).
 
 Bar layout:
 
@@ -230,7 +243,7 @@ Bar layout:
 
 Widgets:
 
-- `opencode_status` — live OpenCode tool activity: a fixed-size bubble bounces right to left, its glow peaking at the bar's center and shrinking toward the edges (like cava). `💭 thinking` (purple), each tool runs with its own color (read=amber, write=green, bash=green, task=blue, search=lilac, web=teal); idle shows `🟣 York`. Feeds off `opencode_state.txt`, written by the OpenCode plugin at `.config/opencode/plugins/yasb-status.js` (`tool.execute.before` / `session.status` / `session.idle` hooks, Bun runtime; restart OpenCode to load it)
+- `opencode_status` — live OpenCode tool activity: a fixed-size bubble bounces right to left, its glow peaking at the bar's center and shrinking toward the edges (like cava). `💭 thinking` (purple), each tool runs with its own color (read=amber, write=green, bash=green, task=blue, search=lilac, web=teal); idle shows `🟣 York`. The **widget** (`opencode-widget/`) draws its own QPainter animation — the plugin only writes state JSON. Feeds off `opencode_state.json`, written by the OpenCode plugin at `.config/opencode/plugins/yasb-status.js` (`tool.execute.before` / `session.status` / `session.idle` hooks, Bun runtime; restart OpenCode to load it). The plugin writes atomically (`tmp` + `rename`) so the bar never reads a half-written file
 - `windows_workspaces` — borderless glass circles showing each desktop's name (right-click → **Rename** to set kanji such as 一, 二, 三); the active one glows with a green gradient
 - `audio_group` — single purple pill wrapping Cava + Media
 - `cava` — mirrored audio visualizer, purple gradient
@@ -284,6 +297,11 @@ AutoHotkey v2 scripts for Windows keybindings.
   yasb/
     config.yaml          YASB bar config (Kuro glass theme)
     styles.css           YASB stylesheet
+    opencode-widget/     Custom opencode_status widget source (patch files + launcher)
+      yasb-launcher.vbs    Launches the source bar hidden (singleton guard)
+      yasb-status.js       OpenCode plugin (mirrors the state file)
+      yasb-hidden.cmd      Legacy hidden start (see yasb-launcher.vbs)
+      src/                 Patched widget + validation files → overlaid onto the source checkout
     icons/
       power.png          Power button (opens Copilot usage popup)
       spotify.svg        Volume icon (system volume widget, vector)
