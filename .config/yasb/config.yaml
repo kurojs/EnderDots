@@ -31,12 +31,11 @@ bars:
     widgets:
       left:
         [
-          "opencode_status"
+          "opencode_status",
+          "cava"
         ]
       center:
         [
-          "windows_workspaces",
-          "audio_group"
         ]
       right:
         [
@@ -91,49 +90,6 @@ widgets:
         plan: "pro"
         tooltip: false
         update_interval: 120
-  windows_workspaces:
-      type: "yasb.windows_desktops.WorkspaceWidget"
-      options:
-        label_workspace_btn: "{name}"
-        label_workspace_active_btn: "{name}"
-  audio_group:
-      type: "yasb.grouper.GrouperWidget"
-      options:
-        class_name: "audio-group"
-        widgets: [ "cava", "media" ]
-  media:
-      type: "yasb.media_lite.MediaWidget"
-      options:
-        show_thumbnail: false
-        show_title: false
-        show_artist: false
-        scrolling_label: false
-        image_size: 20
-        max_label_size: 1
-        tooltip: true
-        callbacks:
-          on_left: "toggle_media_menu"
-          on_middle: "do_nothing"
-          on_right: "do_nothing"
-        media_menu:
-          blur: true
-          artwork_background: true
-          artwork_blur_radius: 24
-          artwork_dim: 0.55
-          round_corners: true
-          round_corners_type: "normal"
-          border_color: "System"
-          alignment: "center"
-          direction: "down"
-          offset_top: 6
-          offset_left: 0
-          image_size: 160
-          thumbnail_corner_radius: 12
-          icons:
-            play: "\ue768"
-            pause: "\ue769"
-            volume: "\ue767"
-            mute: "\ue994"
   cava:
       type: "yasb.cava.CavaWidget"
       options:
@@ -144,10 +100,7 @@ widgets:
         bar_spacing: 2
         bar_type: "bars_mirrored"
         foreground: "#8b5cf6"
-        gradient: 1
-        gradient_color_1: "#3b0764"
-        gradient_color_2: "#8b5cf6"
-        gradient_color_3: "#c4b5fd"
+        gradient: 0
         framerate: 60
         sensitivity: 100
         noise_reduction: 77

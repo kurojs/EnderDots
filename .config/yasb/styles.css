@@ -288,46 +288,8 @@ QMenu::icon {
 }
 
 /* ===================================================================
-   WINDOWS WORKSPACES (center, one bubble per workspace)
+   WINDOWS WORKSPACES (removed from bar — widget not configured)
    =================================================================== */
-.windows-desktops .widget-container {
-    background-color: transparent;
-    border: none;
-    border-radius: 0;
-    padding: 0 4px;
-}
-.windows-desktops .widget-container:hover {
-    background-color: transparent;
-    border: none;
-}
-/* Borderless glass dots — the tiny 1px outline was the pixelation source;
-   now every desktop is a soft filled circle and the active one glows. */
-.windows-desktops .ws-btn {
-    color: rgba(86, 242, 156, 0.40);
-    font-size: 13px;
-    line-height: 1;
-    min-width: 30px;
-    max-width: 30px;
-    height: 30px;
-    padding: 0;
-    margin: 0 3px;
-    border: none;
-    border-radius: 15px;
-    background-color: rgba(86, 242, 156, 0.07);
-}
-.windows-desktops .ws-btn:hover {
-    color: rgba(86, 242, 156, 0.75);
-    background-color: rgba(86, 242, 156, 0.18);
-}
-.windows-desktops .ws-btn.active {
-    color: var(--green-hi);
-    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
-        stop: 0 rgba(86, 242, 156, 0.30),
-        stop: 1 rgba(86, 242, 156, 0.10));
-}
-.windows-desktops .ws-btn:focus {
-    outline: none;
-}
 
 /* Rename desktop popup */
 .windows-desktops-popup {
