@@ -1,6 +1,8 @@
 import logging
+import math
+import time
 
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtWidgets import QPushButton, QSizePolicy
 
 from core.utils.utilities import refresh_widget_style
@@ -10,6 +12,11 @@ from core.widgets.services.windows_desktops.service import WindowsDesktopService
 
 
 KANJI = ["", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十"]
+
+
+_PULSE_PERIOD = 1.6
+_PULSE_MIN = 0.10
+_PULSE_MAX = 0.26
 
 
 class WorkspacesWidget(BaseWidget):
@@ -25,6 +32,11 @@ class WorkspacesWidget(BaseWidget):
 
         self._workspace_buttons: list[QPushButton] = []
         self._curr_index = self._svc.get_current_desktop().number
+
+        self._pulse_timer = QTimer(self)
+        self._pulse_timer.setInterval(40)
+        self._pulse_timer.timeout.connect(self._pulse_tick)
+        self._pulse_start = 0.0
 
         self.register_callback("activate_workspace", self._cb_activate_workspace)
         self.callback_left = config.callbacks.on_left
@@ -57,7 +69,27 @@ class WorkspacesWidget(BaseWidget):
     def _style(self, btn: QPushButton, active: bool):
         cls = "ws-btn active" if active else "ws-btn"
         btn.setProperty("class", cls)
+        if active:
+            self._pulse_start = time.monotonic()
+            if not self._pulse_timer.isActive():
+                self._pulse_timer.start()
+            self._apply_pulse_style(btn)
+        else:
+            btn.setStyleSheet("")
         refresh_widget_style(btn)
+
+    def _apply_pulse_style(self, btn: QPushButton):
+        phase = time.monotonic() - self._pulse_start
+        t = (math.sin(phase * (2 * math.pi) / _PULSE_PERIOD) + 1) / 2
+        alpha = _PULSE_MIN + t * (_PULSE_MAX - _PULSE_MIN)
+        btn.setStyleSheet(
+            f"QPushButton {{ color: #9CC8C8; background-color: rgba(64, 128, 128, {alpha:.3f}); border: none; border-radius: 2px; }}"
+        )
+
+    def _pulse_tick(self):
+        for btn, desktop in zip(self._workspace_buttons, self._svc.get_desktops()):
+            if desktop.number == self._curr_index:
+                self._apply_pulse_style(btn)
 
     def _rebuild(self):
         self._clear()
