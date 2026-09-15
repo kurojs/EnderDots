@@ -19,7 +19,7 @@ class SweepBar(QFrame):
         self.config = config
         self.position = config.columns - 1
         self.direction = -1
-        self.color = QColor("#9d5cff")
+        self.color = QColor("#8b5cf6")
         width = config.columns * (config.bar_width + config.bar_spacing) - config.bar_spacing
         self.setFixedSize(width, config.bar_height)
         self.setProperty("class", "opencode-sweep")
@@ -111,7 +111,7 @@ class OpenCodeWidget(BaseWidget):
     def _apply_state(self, state: dict):
         emoji = state.get("emoji", "🟣")
         label = state.get("label", "York")
-        color = state.get("color", "#c99bff")
+        color = state.get("color", "#c4b5fd")
         key = ("active", emoji, label, color)
         if key == self._last_state:
             return
@@ -134,7 +134,7 @@ class OpenCodeWidget(BaseWidget):
         self._last_state = key
         self._stop_bounce()
         self._reset_container_color()
-        self._label.setText(self._label_html("🟣", "York", "#c99bff"))
+        self._label.setText(self._label_html("🟣", "York", "#c4b5fd"))
 
     def _start_bounce(self):
         if not self._anim_running:

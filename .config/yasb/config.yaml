@@ -143,11 +143,11 @@ widgets:
         bar_width: 3
         bar_spacing: 2
         bar_type: "bars_mirrored"
-        foreground: "#9d5cff"
+        foreground: "#8b5cf6"
         gradient: 1
-        gradient_color_1: "#3a0068"
-        gradient_color_2: "#9d5cff"
-        gradient_color_3: "#c99bff"
+        gradient_color_1: "#3b0764"
+        gradient_color_2: "#8b5cf6"
+        gradient_color_3: "#c4b5fd"
         framerate: 60
         sensitivity: 100
         noise_reduction: 77

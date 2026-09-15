@@ -1,4 +1,4 @@
-// yasb-status
+﻿// yasb-status
 // Mirrors opencode activity into a state file the YASB bar widget reads.
 // This plugin writes ONLY the state (mode, emoji, label, color) and only when
 // it CHANGES. The YASB widget (src/core/widgets/yasb/opencode.py) owns the
@@ -7,16 +7,16 @@
 const STATE = "C:/Users/kuuro/.config/yasb/opencode_state.json"
 
 const TOOLS = {
-  read: ["🍫", "read", "#ff9e64"],
-  write: ["🐙", "write", "#7cffba"],
-  edit: ["🐙", "write", "#7cffba"],
-  bash: ["🟢", "bash", "#7cffba"],
-  task: ["🤖", "task", "#7cc4ff"],
-  list: ["👾", "search", "#ffb86b"],
-  glob: ["👾", "search", "#ffb86b"],
-  grep: ["👾", "search", "#ffb86b"],
-  webfetch: ["🌐", "web", "#5eead4"],
-  websearch: ["🌐", "web", "#5eead4"],
+  read: ["梱", "read", "#ff9e64"],
+  write: ["杉", "write", "#7cffba"],
+  edit: ["杉", "write", "#7cffba"],
+  bash: ["泙", "bash", "#7cffba"],
+  task: ["多", "task", "#7cc4ff"],
+  list: ["太", "search", "#ffb86b"],
+  glob: ["太", "search", "#ffb86b"],
+  grep: ["太", "search", "#ffb86b"],
+  webfetch: ["笘・, "web", "#5eead4"],
+  websearch: ["笘・, "web", "#5eead4"],
 }
 
 import { writeFile, rename } from "fs/promises"
@@ -43,13 +43,13 @@ export const YasbStatus = async () => {
   }
 
   const state = (mode, emoji, label, color) => write({ mode, emoji, label, color })
-  const setThinking = () => state("active", "💭", "thinking", "#9d5cff")
-  const setWriting = (label = "writing") => state("active", "✍️", label, "#f472b6")
-  const setError = (label = "error") => state("active", "❌", label, "#f7768e")
-  const setAsking = () => state("active", "🔐", "asking", "#ffd75f")
-  const setCompacting = () => state("active", "🧹", "compacting", "#c99bff")
+  const setThinking = () => state("active", "遜", "thinking", "#8b5cf6")
+  const setWriting = (label = "writing") => state("active", "笨搾ｸ・, label, "#f472b6")
+  const setError = (label = "error") => state("active", "・", label, "#f7768e")
+  const setAsking = () => state("active", "柏", "asking", "#ffd75f")
+  const setCompacting = () => state("active", "ｧｹ", "compacting", "#c99bff")
   const setTool = (tool) => {
-    const [emoji, label, color] = TOOLS[tool] || ["⚙️", tool, "#c99bff"]
+    const [emoji, label, color] = TOOLS[tool] || ["太", "tool", "#c4b5fd"]
     state("active", emoji, label, color)
   }
   const setIdle = () => write({ mode: "idle" })
