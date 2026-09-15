@@ -27,13 +27,13 @@
     --status-critical:   #ff6b6b;
 
     /* fonts */
-    --font-text:         "JetBrainsMono NFP", "JetBrainsMono NF", "Cascadia Mono", "Consolas";
+    --font-text:         "Monocraft", "JetBrainsMono NFP", "JetBrainsMono NF", "Cascadia Mono", "Consolas";
     --font-bidi:         "Segoe UI", "Segoe UI Variable";
-    --font-icons:        "Segoe Fluent Icons", "Segoe MDL2 Assets";
+    --font-icons:        "Monocraft", "Segoe Fluent Icons", "Segoe MDL2 Assets";
 }
 
 * {
-    font-family: "JetBrainsMono NFP", "JetBrainsMono NF", "Segoe UI", "Segoe Fluent Icons", "Segoe MDL2 Assets";
+    font-family: "Monocraft", "JetBrainsMono NFP", "JetBrainsMono NF", "Segoe UI", "Segoe Fluent Icons", "Segoe MDL2 Assets";
     font-size: 13px;
 }
 
@@ -143,16 +143,21 @@ QMenu::icon {
 }
 
 /* ===================================================================
-   COPILOT (right — power button that opens the popup, neutral glass)
+   COPILOT (right — power button that opens the popup, no pill)
    =================================================================== */
 .copilot-widget .widget-container {
-    background-color: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.10);
-    border-radius: 14px;
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0 6px;
 }
 .copilot-widget .widget-container:hover {
-    background-color: rgba(255, 255, 255, 0.11);
-    border: 1px solid rgba(255, 255, 255, 0.16);
+    background-color: transparent;
+    border: none;
+}
+.copilot-widget .icon {
+    font-size: 20px;
 }
 
 /* ===================================================================
@@ -428,69 +433,107 @@ QMenu::icon {
 }
 
 /* ===================================================================
-   VOLUME (right — green glass pill, native widget, system volume:
-   scroll = up/down, left click = mixer popup, right click = mute)
+   VOLUME (right — Spotify-green glass pill, custom Spotify volume
+   widget: scroll = Spotify app volume, left click = mute toggle)
    =================================================================== */
+.spotify-volume-widget .widget-container,
 .spotify-widget .widget-container {
-    background-color: rgba(29, 185, 84, 0.08);
-    border: 1px solid rgba(29, 185, 84, 0.22);
+    background-color: rgba(30, 215, 96, 0.08);
+    border: 1px solid rgba(30, 215, 96, 0.22);
     border-radius: 14px;
 }
+.spotify-volume-widget .widget-container:hover,
 .spotify-widget .widget-container:hover {
-    background-color: rgba(29, 185, 84, 0.15);
-    border: 1px solid rgba(29, 185, 84, 0.36);
+    background-color: rgba(30, 215, 96, 0.15);
+    border: 1px solid rgba(30, 215, 96, 0.36);
 }
-.volume-widget .label {
-    font-family: "なぎの", "JetBrainsMono NFP", "JetBrainsMono NF", "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI", sans-serif;
+.spotify-volume-widget .label,
+.spotify-widget .label {
+    font-family: "Monocraft", "なぎの", "JetBrainsMono NFP", "JetBrainsMono NF", "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI", sans-serif;
     font-size: 17px;
-    color: var(--green-hi);
+    color: #8fd9ab;
 }
-.volume-widget.muted .label {
-    color: var(--green-dim);
+.spotify-volume-widget .label.alt,
+.spotify-widget .label.alt {
+    color: #8fd9ab;
 }
-.volume-widget .icon {
-    color: var(--green-hi);
+.spotify-volume-widget .icon,
+.spotify-widget .icon {
+    font-size: 20px;
+    color: #1ed760;
 }
 
 /* ===================================================================
-   PERF WIDGETS (right, pink) + status thresholds
+   PERF WIDGETS (right — one color per pill: magenta, orange, yellow)
    =================================================================== */
-.cpu-widget .widget-container,
-.gpu-widget .widget-container,
-.memory-widget .widget-container {
-    background-color: rgba(255, 92, 180, 0.08);
-    border: 1px solid rgba(255, 92, 180, 0.22);
+/* CPU: magenta (pill liked; icon softened) */
+.cpu-widget .widget-container {
+    background-color: rgba(255, 63, 164, 0.08);
+    border: 1px solid rgba(255, 63, 164, 0.22);
     border-radius: 14px;
 }
-.cpu-widget .widget-container:hover,
-.gpu-widget .widget-container:hover,
-.memory-widget .widget-container:hover {
-    background-color: rgba(255, 92, 180, 0.15);
-    border: 1px solid rgba(255, 92, 180, 0.36);
+.cpu-widget .widget-container:hover {
+    background-color: rgba(255, 63, 164, 0.15);
+    border: 1px solid rgba(255, 63, 164, 0.36);
 }
 .cpu-widget .label,
-.gpu-widget .label,
-.memory-widget .label,
-.cpu-widget .label.alt,
-.gpu-widget .label.alt,
-.memory-widget .label.alt {
-    font-family: "なぎの", "JetBrainsMono NFP", "JetBrainsMono NF", "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI", sans-serif;
+.cpu-widget .label.alt {
+    font-family: "Monocraft", "なぎの", "JetBrainsMono NFP", "JetBrainsMono NF", "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI", sans-serif;
     font-size: 17px;
-    color: var(--pink-hi);
+    color: #ffa4d4;
 }
-
-/* Threshold classes exist, but the user wants a constant pink label: the perf
-   widgets never switch color. */
+.cpu-widget .icon {
+    font-size: 20px;
+    color: #ff80c0;
+}
 .cpu-widget .status-medium,
 .cpu-widget .status-high,
-.cpu-widget .status-critical,
+.cpu-widget .status-critical {
+    color: #ffa4d4;
+}
+
+/* GPU / temp (right — same magenta glass as CPU) */
+.gpu-widget .widget-container {
+    background-color: rgba(255, 63, 164, 0.08);
+    border: 1px solid rgba(255, 63, 164, 0.22);
+    border-radius: 14px;
+}
+.gpu-widget .widget-container:hover {
+    background-color: rgba(255, 63, 164, 0.15);
+    border: 1px solid rgba(255, 63, 164, 0.36);
+}
+.gpu-widget .label,
+.gpu-widget .label.alt {
+    font-family: "Monocraft", "なぎの", "JetBrainsMono NFP", "JetBrainsMono NF", "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI", sans-serif;
+    font-size: 17px;
+    color: #ffa4d4;
+}
 .gpu-widget .status-medium,
 .gpu-widget .status-high,
-.gpu-widget .status-critical,
+.gpu-widget .status-critical {
+    color: #ffa4d4;
+}
+
+/* Memory (right — same magenta glass as CPU/GPU) */
+.memory-widget .widget-container {
+    background-color: rgba(255, 63, 164, 0.08);
+    border: 1px solid rgba(255, 63, 164, 0.22);
+    border-radius: 14px;
+}
+.memory-widget .widget-container:hover {
+    background-color: rgba(255, 63, 164, 0.15);
+    border: 1px solid rgba(255, 63, 164, 0.36);
+}
+.memory-widget .label,
+.memory-widget .label.alt {
+    font-family: "Monocraft", "なぎの", "JetBrainsMono NFP", "JetBrainsMono NF", "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI", sans-serif;
+    font-size: 17px;
+    color: #ffa4d4;
+}
 .memory-widget .status-medium,
 .memory-widget .status-high,
 .memory-widget .status-critical {
-    color: var(--pink-hi);
+    color: #ffa4d4;
 }
 
 /* ===================================================================
@@ -550,10 +593,14 @@ QMenu::icon {
 }
 
 /* graph lines: `color` drives the palette foreground role */
-.cpu-graph,
-.gpu-graph,
+.cpu-graph {
+    color: #58c4ff;
+}
+.gpu-graph {
+    color: #ff9646;
+}
 .memory-graph {
-    color: var(--pink);
+    color: #ffd166;
 }
 .cpu-graph-grid,
 .gpu-graph-grid,
@@ -575,7 +622,7 @@ QMenu::icon {
     font-size: 11px;
 }
 .stat-value {
-    color: var(--pink-hi);
+    color: var(--text);
     font-size: 13px;
     font-weight: bold;
 }

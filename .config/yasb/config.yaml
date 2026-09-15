@@ -161,8 +161,8 @@ widgets:
   cpu:
       type: "yasb.cpu.CpuWidget"
       options:
-        label: "<span>\ueea1</span> {info[percent][total]}%"
-        label_alt: "<span>\ueea1</span> {info[histograms][cpu_percent]}"
+        label: "{info[percent][total]}%"
+        label_alt: "{info[histograms][cpu_percent]}"
         update_interval: 1000
         histogram_icons:
           - "\u2581"
@@ -182,8 +182,8 @@ widgets:
   gpu:
       type: "yasb.gpu.GpuWidget"
       options:
-        label: "<span>\uf4bc</span> {info[temp]}°C"
-        label_alt: "<span>\uf4bc</span> {info[temp]}°C | {info[mem_used]} / {info[mem_total]}"
+        label: "{info[temp]}°C"
+        label_alt: "{info[temp]}°C | {info[mem_used]} / {info[mem_total]}"
         update_interval: 2000
         gpu_thresholds:
           low: 25
@@ -207,8 +207,8 @@ widgets:
   memory:
       type: "yasb.memory.MemoryWidget"
       options:
-        label: "<span>\uefc5</span> {virtual_mem_used} / {virtual_mem_total}"
-        label_alt: "<span>\uf4bc</span> VIRT: {virtual_mem_percent}% SWAP: {swap_mem_percent}%"
+        label: "{virtual_mem_used} / {virtual_mem_total}"
+        label_alt: "VIRT: {virtual_mem_percent}% SWAP: {swap_mem_percent}%"
         update_interval: 5000
         callbacks:
           on_left: "do_nothing"
@@ -219,17 +219,22 @@ widgets:
           medium: 50
           high: 90
   volume:
-      type: "yasb.volume.VolumeWidget"
+      type: "yasb.spotify_volume.SpotifyVolumeWidget"
       options:
         class_name: "spotify"
-        label: '<span><img src="file:///C:/Users/kuuro/.config/yasb/icons/spotify.svg" height="18"/></span> {level}'
-        label_alt: '<span><img src="file:///C:/Users/kuuro/.config/yasb/icons/spotify.svg" height="18"/></span> {level}'
+        label: "{level}"
+        label_alt: "{level}"
         tooltip: true
         scroll_step: 4
-        audio_menu:
-          show_apps: true
-          show_apps_expanded: false
-          alignment: "right"
-          direction: "down"
+        process: "Spotify.exe"
+        icons:
+          muted: "\uf1f6"
+          "10": "\uf1bc"
+          "30": "\uf1bc"
+          "60": "\uf1bc"
+          "100": "\uf1bc"
+        callbacks:
+          on_left: "toggle_mute"
+          on_right: "toggle_label"
 
 
