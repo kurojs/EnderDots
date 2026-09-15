@@ -203,11 +203,11 @@ Window border highlighting via [tacky-borders](https://github.com/lukeyou05/tack
 
 ### YASB — `.config/yasb/`
 
-Status bar configuration for [YASB](https://github.com/amnweb/yasb) — custom "Kuro glass" theme: translucent glassy pills, per-widget accent colors, `なぎの` typography.
+Status bar configuration for [YASB](https://github.com/amnweb/yasb) — custom "Kurox Navy" theme: squared borderless glass pills that fill the full bar height, Kanagawa-adjacent periwinkle (`#8080C0`/`#9C9CD4`) + teal (`#408080`/`#9CC8C8`) accents, `なぎの` typography.
 
 **Requires the `なぎの` font.**
 
-**Requires the `opencode_status` widget, which only exists in the source checkout — the winget/installed `YASB.exe` does NOT include it and will error with `unknown type "yasb.opencode.OpenCodeWidget"`.**
+**Requires two custom widgets that only exist in the source checkout — the winget/installed `YASB.exe` does NOT include them and will error with `unknown type "yasb.opencode.OpenCodeWidget"` / `unknown type "yasb.workspaces.WorkspacesWidget"`.**
 
 **Install location:** `%USERPROFILE%\.config\yasb\`
 
@@ -215,11 +215,13 @@ Status bar configuration for [YASB](https://github.com/amnweb/yasb) — custom "
 # 1. Copy the config (icons included)
 Copy-Item .config\yasb\* "$env:USERPROFILE\.config\yasb\" -Recurse
 
-# 2. Source checkout (the custom widget lives here, not in the installed app)
-#    Clone amnweb/yasb, create a venv, then drop the two patched widget files
-#    from .config/yasb/opencode-widget/src/ into the matching paths:
+# 2. Source checkout (the custom widgets live here, not in the installed app)
+#    Clone amnweb/yasb, create a venv, then drop the patched widget + validation
+#    files from .config/yasb/opencode-widget/src/ into the matching paths:
 #      src/core/widgets/yasb/opencode.py
 #      src/core/validation/widgets/yasb/opencode.py
+#      src/core/widgets/yasb/workspaces.py
+#      src/core/validation/widgets/yasb/workspaces.py
 git clone https://github.com/amnweb/yasb C:\Users\kuuro\Documents\Work\yasb
 cd C:\Users\kuuro\Documents\Work\yasb
 py -3.14 -m venv .venv
@@ -239,20 +241,18 @@ Bar layout:
 
 | Left | Center | Right |
 |------|--------|-------|
-| OpenCode activity | Virtual desktops, Audio group (Cava + media) | Volume, CPU, GPU, Memory, Power |
+| OpenCode activity, Cava | Workspaces (kanji) | Volume, CPU, GPU, Memory, Power |
 
 Widgets:
 
-- `opencode_status` — live OpenCode tool activity: a fixed-size bubble bounces right to left, its glow peaking at the bar's center and shrinking toward the edges (like cava). `💭 thinking` (purple), each tool runs with its own color (read=amber, write=green, bash=green, task=blue, search=lilac, web=teal); idle shows `🟣 York`. The **widget** (`opencode-widget/`) draws its own QPainter animation — the plugin only writes state JSON. Feeds off `opencode_state.json`, written by the OpenCode plugin at `.config/opencode/plugins/yasb-status.js` (`tool.execute.before` / `session.status` / `session.idle` hooks, Bun runtime; restart OpenCode to load it). The plugin writes atomically (`tmp` + `rename`) so the bar never reads a half-written file
-- `windows_workspaces` — borderless glass circles showing each desktop's name (right-click → **Rename** to set kanji such as 一, 二, 三); the active one glows with a green gradient
-- `audio_group` — single purple pill wrapping Cava + Media
-- `cava` — mirrored audio visualizer, purple gradient
-- `media` — invisible in the bar; the click zone that opens the media popup
-- `volume` — native system volume widget: scroll up/down, left click = mixer popup (per-app sliders), right click = mute; green pill with Spotify icon + `%`
-- `cpu` / `gpu` / `memory` — pink perf widgets with icons, alternate histograms and thresholds
+- `opencode_status` — live OpenCode tool activity: a fixed-size bubble bounces right to left, its glow peaking at the bar's center and shrinking toward the edges (like cava). `👻 thinking` / `🧹 compacting` share periwinkle `#9C9CD4`, each tool runs with its own color (read=amber, write/bash=teal, task=blue, search=amber, web=dark teal), idle (`🟣 York`) turns teal `#9CC8C8` and starts the bounce animation. The **widget** (`opencode-widget/`) draws its own QPainter animation — the plugin only writes state JSON. Feeds off `opencode_state.json`, written by the OpenCode plugin at `.config/opencode/plugins/yasb-status.js` (`tool.execute.before` / `session.status` / `session.idle` hooks, Bun runtime; restart OpenCode to load it). The plugin writes atomically (`tmp` + `rename`) so the bar never reads a half-written file
+- `workspaces` — minimalist teal workspace switcher: one squared button per Windows virtual desktop showing the kanji numeral (一 二 三 …); the active one gets a green glass block. Left-click switches desktop, tooltip shows the desktop name
+- `cava` — mirrored audio visualizer, periwinkle bars
+- `volume` — Spotify volume control: scroll up/down adjusts Spotify.exe volume, left click = mute, right click = toggles label; teal pill showing static `Spotify` text (no icon, no level)
+- `cpu` / `gpu` / `memory` — periwinkle perf widgets with icons, alternate histograms and thresholds
 - `copilot` — power icon; opens the GitHub Copilot usage popup
 
-Icons: `icons/spotify.svg` (vector, crisp at any size) and `icons/power.png`. Everything else is handled by YASB itself — no helper scripts required.
+Icons: `icons/power.png` (power button, opens the Copilot usage popup). `icons/spotify.svg` is legacy — the volume widget now renders the text label `Spotify` instead.
 
 ---
 
@@ -295,16 +295,16 @@ AutoHotkey v2 scripts for Windows keybindings.
   tacky-borders/
     config.yaml          Tacky Borders window border config
   yasb/
-    config.yaml          YASB bar config (Kuro glass theme)
+    config.yaml          YASB bar config (Kurox Navy theme)
     styles.css           YASB stylesheet
-    opencode-widget/     Custom opencode_status widget source (patch files + launcher)
+    opencode-widget/     Custom widget source (patch files + launcher)
       yasb-launcher.vbs    Launches the source bar hidden (singleton guard)
       yasb-status.js       OpenCode plugin (mirrors the state file)
       yasb-hidden.cmd      Legacy hidden start (see yasb-launcher.vbs)
       src/                 Patched widget + validation files → overlaid onto the source checkout
     icons/
       power.png          Power button (opens Copilot usage popup)
-      spotify.svg        Volume icon (system volume widget, vector)
+      spotify.svg        Legacy volume icon (unused — widget shows "Spotify" text)
 home/
   .wezterm.lua           WezTerm terminal config (default shell: Nushell)
   AppData/
