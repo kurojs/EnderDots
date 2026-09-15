@@ -468,72 +468,72 @@ QMenu::icon {
    =================================================================== */
 /* CPU: magenta (pill liked; icon softened) */
 .cpu-widget .widget-container {
-    background-color: rgba(255, 63, 164, 0.08);
-    border: 1px solid rgba(255, 63, 164, 0.22);
+    background-color: rgba(139, 92, 246, 0.08);
+    border: 1px solid rgba(139, 92, 246, 0.22);
     border-radius: 14px;
 }
 .cpu-widget .widget-container:hover {
-    background-color: rgba(255, 63, 164, 0.15);
-    border: 1px solid rgba(255, 63, 164, 0.36);
+    background-color: rgba(139, 92, 246, 0.15);
+    border: 1px solid rgba(139, 92, 246, 0.36);
 }
 .cpu-widget .label,
 .cpu-widget .label.alt {
     font-family: "Monocraft", "なぎの", "JetBrainsMono NFP", "JetBrainsMono NF", "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI", sans-serif;
     font-size: 17px;
-    color: #ffa4d4;
+    color: #c4b5fd;
 }
 .cpu-widget .icon {
     font-size: 20px;
-    color: #ff80c0;
+    color: #a78bfa;
 }
 .cpu-widget .status-medium,
 .cpu-widget .status-high,
 .cpu-widget .status-critical {
-    color: #ffa4d4;
+    color: #c4b5fd;
 }
 
 /* GPU / temp (right — same magenta glass as CPU) */
 .gpu-widget .widget-container {
-    background-color: rgba(255, 63, 164, 0.08);
-    border: 1px solid rgba(255, 63, 164, 0.22);
+    background-color: rgba(139, 92, 246, 0.08);
+    border: 1px solid rgba(139, 92, 246, 0.22);
     border-radius: 14px;
 }
 .gpu-widget .widget-container:hover {
-    background-color: rgba(255, 63, 164, 0.15);
-    border: 1px solid rgba(255, 63, 164, 0.36);
+    background-color: rgba(139, 92, 246, 0.15);
+    border: 1px solid rgba(139, 92, 246, 0.36);
 }
 .gpu-widget .label,
 .gpu-widget .label.alt {
     font-family: "Monocraft", "なぎの", "JetBrainsMono NFP", "JetBrainsMono NF", "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI", sans-serif;
     font-size: 17px;
-    color: #ffa4d4;
+    color: #c4b5fd;
 }
 .gpu-widget .status-medium,
 .gpu-widget .status-high,
 .gpu-widget .status-critical {
-    color: #ffa4d4;
+    color: #c4b5fd;
 }
 
 /* Memory (right — same magenta glass as CPU/GPU) */
 .memory-widget .widget-container {
-    background-color: rgba(255, 63, 164, 0.08);
-    border: 1px solid rgba(255, 63, 164, 0.22);
+    background-color: rgba(139, 92, 246, 0.08);
+    border: 1px solid rgba(139, 92, 246, 0.22);
     border-radius: 14px;
 }
 .memory-widget .widget-container:hover {
-    background-color: rgba(255, 63, 164, 0.15);
-    border: 1px solid rgba(255, 63, 164, 0.36);
+    background-color: rgba(139, 92, 246, 0.15);
+    border: 1px solid rgba(139, 92, 246, 0.36);
 }
 .memory-widget .label,
 .memory-widget .label.alt {
     font-family: "Monocraft", "なぎの", "JetBrainsMono NFP", "JetBrainsMono NF", "Segoe Fluent Icons", "Segoe MDL2 Assets", "Segoe UI", sans-serif;
     font-size: 17px;
-    color: #ffa4d4;
+    color: #c4b5fd;
 }
 .memory-widget .status-medium,
 .memory-widget .status-high,
 .memory-widget .status-critical {
-    color: #ffa4d4;
+    color: #c4b5fd;
 }
 
 /* ===================================================================
