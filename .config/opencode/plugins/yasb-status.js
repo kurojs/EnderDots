@@ -6,19 +6,6 @@
 // Each message state (thinking / tool / error / asking / idle) has its own color.
 const STATE = "C:/Users/kuuro/.config/yasb/opencode_state.json"
 
-const RGB = {
-  "#9d5cff": [157, 92, 255], // thinking purple
-  "#ff9e64": [255, 158, 100], // read orange
-  "#ffb86b": [255, 184, 107], // search amber-orange
-  "#7cffba": [124, 255, 186], // write/bash green
-  "#7cc4ff": [124, 196, 255], // task blue
-  "#f472b6": [244, 114, 182], // writing pink
-  "#5eead4": [94, 234, 212], // web teal
-  "#f7768e": [247, 118, 142], // error red
-  "#ffd75f": [255, 215, 95], // asking yellow
-  "#c99bff": [201, 155, 255], // compacting lilac
-}
-
 const TOOLS = {
   read: ["🍫", "read", "#ff9e64"],
   write: ["🐙", "write", "#7cffba"],
@@ -105,6 +92,9 @@ export const YasbStatus = async () => {
       if (type === "session.next.tool.failed" || type === "session.next.step.failed") setError()
       if (type === "permission.asked" || type === "permission.v2.asked") setAsking()
       if (type === "permission.replied" || type === "permission.v2.replied") setThinking()
+    },
+    "experimental.session.compacting": async () => {
+      setCompacting()
     },
   }
 }
