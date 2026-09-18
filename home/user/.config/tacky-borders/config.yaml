@@ -5,6 +5,9 @@ watch_config_changes: True
 # NOTE: Changes require an application restart to take effect.
 enable_logging: True
 
+# enable_ipc_server: Handle runtime IPC commands sent through the CLI.
+enable_ipc_server: True
+
 # rendering_backend: Type of renderer. Supported values:
 #   - V2: A more complex, feature-rich renderer. Available in v1.2.0 and above.
 #   - Legacy: A simpler, more limited renderer. Available in v0.1.0 and above.
@@ -67,6 +70,7 @@ global:
   #         active_color: "#ffffff"
   #         OR
   #         active_color: "accent"
+  #       The supported hex formats are: #RGB, #RGBA, #RRGGBB, #RRGGBBAA
   #   - Gradient: Define colors and direction
   #       Example:
   #         active_color:
@@ -79,11 +83,18 @@ global:
   #             start: [0.0, 1.0]
   #             end: [1.0, 0.0]
   #       NOTE: [0.0, 0.0] = top-left, [1.0, 1.0] = bottom-right
+  #   - Theme-aware: Define separate colors for dark/light Windows system themes
+  #       Example:
+  #         active_color:
+  #           dark: "#ffffff"
+  #           light: "#000000"
+  #       Each value (dark/light) can be a hex code, "accent", or a gradient.
+  #       Borders automatically update when the system theme changes.
   active_color:
-    colors: ["#6b3fa0", "#9b59d0", "#3ddc84"]
+    colors: ["#7C3AED", "#8B5CF6", "#22C55E"]
     direction: 45deg
 
-  inactive_color: "transparent"
+  inactive_color: "#5b4b80"
 
   # komorebi_colors: Additional integration for komorebi's special window kinds
   #   - active_color is used for komorebi's "Single" window kind
@@ -126,10 +137,6 @@ global:
         easing: EaseInOutQuad
 
     inactive:
-      - type: Spiral
-        duration: 1800
-        easing: Linear
-
       - type: Fade
         duration: 200
         easing: EaseInOutQuad
