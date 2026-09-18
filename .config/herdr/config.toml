@@ -1,0 +1,51 @@
+onboarding = false
+
+# Shared Herdr settings managed by Gentleman.Dots.
+
+[keys]
+# Match tmux/Zellij-style prefix muscle memory.
+prefix = "ctrl+a"
+
+# Move between agents in the sidebar.
+# Avoid Herdr's built-in prefix+shift+j/k pane-swap bindings.
+previous_agent = "prefix+alt+k"
+next_agent = "prefix+alt+j"
+
+# Jump straight to agent N (1..9) as listed in the sidebar.
+# Use Ctrl after the prefix: Alt+number is owned by skhd/yabai spaces,
+# and Shift+number did not reach Herdr reliably in the current terminal setup.
+focus_agent = "prefix+ctrl+1..9"
+
+# Gentleman-Cute recolored to Kurox Navy: pink -> purple (#8080C0/#9C9CD4),
+# green -> teal green (#408080). Black surfaces go \"transparent\" so the host
+# terminal opacity shows through (Herdr themes do not support alpha channels).
+
+[theme]
+# One Dark supplies stable token defaults for values Herdr does not customize.
+name = "one-dark"
+
+[theme.custom]
+panel_bg = "transparent"
+surface0 = "#1C2422"
+surface1 = "#232C29"
+surface_dim = "#171D1B"
+overlay0 = "#5C6170"
+overlay1 = "#94A3B8"
+text = "#F3F6F9"
+subtext0 = "#94A3B8"
+accent = "#8080C0"
+mauve = "#9C9CD4"
+green = "#408080"
+yellow = "#408080"
+red = "#FCA5A5"
+blue = "#A9C7EE"
+teal = "#408080"
+peach = "#F2B86D"
+
+[ui]
+accent = "#8080C0"
+show_agent_labels_on_pane_borders = true
+
+status_indicators = "dots"
+[ui.toast]
+delivery = "system"
