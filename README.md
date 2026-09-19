@@ -328,5 +328,6 @@ home/
 - [Nushell](https://www.nushell.sh/) - Modern structured data shell
 - [Starship](https://starship.rs/) - Minimal cross-shell prompt
 - [WTQ](https://github.com/flyingpie/windows-terminal-quake) - Quake-style drop-down mode for any terminal
+- [Komorebi](https://github.com/LGUG2Z/komorebi) - Tiling window manager for Windows
 - [Clawd on Desk](https://github.com/rullerzhou-afk/clawd-on-desk) - Desktop AI companion
 - [Zifang](https://petdex.dev/pets/zifang) - Virtual pet
