@@ -16,31 +16,12 @@ EnderDots is a comprehensive collection of dotfiles featuring a modern desktop e
 
 ## Showcase
 
-### Japanese Reading Setup
-![E-book Reader](https://i.imgur.com/LrV4rAh.png)
-*A powerful setup for reading and language study.*
-- **[Vicinae](https://github.com/vicinaehq/vicinae)**: A fast, extensible Raycast-like application launcher and productivity tool.
-- **[ttu ebook-reader](https://github.com/ttu-ttu/ebook-reader)**: A clean, highly customizable browser-based e-book reader optimized for Japanese text.
-
-### Terminal Experience
-![Warp Terminal](https://i.imgur.com/DARAOms.png)
-*Next-generation terminal workflow.*
-- **[Warp](https://www.warp.dev/)**: A modern, GPU-accelerated terminal with built-in AI assistance, intuitive text editing, and collaborative workflows.
-
-### OpenCode Development
-![OpenCode Configuration](https://i.imgur.com/zRyTk7E.png)
-*AI-first IDE configuration.*
-- **OpenCode**: A deeply customized AI-native code editor optimized for fast iterations and seamless agent integrations.
-
-### Neovim Workflow
-![Neovim Configuration](https://i.imgur.com/xWJMQya.png)
-*Keyboard-centric, high-performance editing.*
-- **[Neovim](https://neovim.io/)**: A highly personalized, LazyVim-based setup integrating AI coding assistants and full LSP support for multiple languages.
-
-### Desktop Overview
-![EnderDots Overview](https://i.imgur.com/VxegBjU.png)
-*The complete EnderDots experience.*
-- **EnderDots Environment**: A unified look at the tiling window management, aesthetic consistency, and active tools running simultaneously.
+<table>
+  <tr>
+    <td><img src="https://i.imgur.com/qDmIpgK.png" alt="EnderDots showcase" /></td>
+    <td><img src="https://i.imgur.com/WA6sIgQ.png" alt="EnderDots showcase" /></td>
+  </tr>
+</table>
 
 ---
 
