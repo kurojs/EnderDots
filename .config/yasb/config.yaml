@@ -64,6 +64,7 @@ widgets:
       options:
         class_name: "opencode-widget"
         state_file: "C:\\Users\\kuuro\\.config\\yasb\\opencode_state.json"
+        pi_state_file: "C:\\Users\\kuuro\\.config\\yasb\\pi_state.json"
         poll_interval: 250
         anim_interval: 33
         columns: 16
@@ -188,7 +189,7 @@ widgets:
           "60": "\uf1bc"
           "100": "\uf1bc"
         callbacks:
-          on_left: "toggle_mute"
+          on_left: "toggle_play_pause"
           on_right: "toggle_label"
   workspaces:
       type: "yasb.workspaces.WorkspacesWidget"
