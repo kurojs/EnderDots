@@ -1,0 +1,17 @@
+{
+  "name": "pi-status",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Pi extension that mirrors agent lifecycle state to pi_state.json for the yasb opencode-status widget.",
+  "type": "module",
+  "keywords": [
+    "pi-package",
+    "pi-extension"
+  ],
+  "license": "MIT",
+  "pi": {
+    "extensions": [
+      "./extension.ts"
+    ]
+  }
+}
