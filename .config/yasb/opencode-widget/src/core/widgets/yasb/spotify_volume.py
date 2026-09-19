@@ -8,6 +8,7 @@ from PyQt6.QtGui import QWheelEvent
 from core.utils.tooltip import set_tooltip
 from core.validation.widgets.yasb.spotify_volume import SpotifyVolumeConfig
 from core.widgets.base import BaseWidget
+from core.widgets.services.media.media import WindowsMedia
 from core.widgets.services.volume.service import AudioOutputService
 
 
@@ -24,11 +25,13 @@ class SpotifyVolumeWidget(BaseWidget):
             self._parsed_thresholds = sorted([int(k) for k in self.config.icons.keys() if k.isdigit()])
 
         self._service = AudioOutputService()
+        self.media = WindowsMedia()
         self._init_container()
         self.build_widget_label(self.config.label, self.config.label_alt)
 
         self.register_callback("toggle_label", self._toggle_label)
         self.register_callback("toggle_mute", self.toggle_mute)
+        self.register_callback("toggle_play_pause", self.toggle_play_pause)
 
         self.callback_left = self.config.callbacks.on_left
         self.callback_right = self.config.callbacks.on_right
@@ -160,6 +163,9 @@ class SpotifyVolumeWidget(BaseWidget):
             self._update_label()
         except Exception as e:
             logging.error("Failed to toggle Spotify mute: %s", e)
+
+    def toggle_play_pause(self):
+        _ = self.media.play_pause()
 
     def wheelEvent(self, event: QWheelEvent):
         delta = -event.angleDelta().y() if self.config.invert_wheel else event.angleDelta().y()

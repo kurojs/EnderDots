@@ -4,7 +4,7 @@ from core.validation.widgets.base_model import CallbacksConfig, CustomBaseModel
 
 
 class SpotifyVolumeCallbacksConfig(CallbacksConfig):
-    on_left: str = "toggle_mute"
+    on_left: str = "toggle_play_pause"
     on_right: str = "do_nothing"
 
 
