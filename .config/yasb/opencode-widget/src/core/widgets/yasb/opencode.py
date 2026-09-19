@@ -165,19 +165,55 @@ class OpenCodeWidget(BaseWidget):
             sweep.direction = -1
         sweep.update()
 
-    def _update_state(self):
-        path = Path(self.config.state_file)
-        if not path.exists():
-            return
+    def _read_state(self, path: Path) -> tuple[dict | None, float | None]:
+        """Read an agent state file. Returns (state, mtime) or (None, None) when absent or corrupt."""
         try:
+            if not path.exists():
+                return None, None
             raw = path.read_text(encoding="utf-8-sig")
             state = json.loads(raw)
-        except json.JSONDecodeError:
-            return
+            if not isinstance(state, dict) or "mode" not in state:
+                return None, None
+            return state, path.stat().st_mtime
+        except (json.JSONDecodeError, OSError):
+            # Corrupt or unreadable files contribute as an idle state.
+            return None, None
         except Exception as e:
             logging.exception("[opencode] failed to read state file: %s", e)
-            return
-        if state.get("mode") == "idle":
+            return None, None
+
+    def _merge_state(
+        self,
+        opencode: dict | None,
+        pi: dict | None,
+        opencode_mtime: float | None,
+        pi_mtime: float | None,
+    ) -> dict | None:
+        """Merge the opencode and pi agent states (None == idle contributor).
+
+        1. Both active -> the most recently modified file wins.
+        2. One active -> the active one wins.
+        3. Both idle or absent -> York idle (None).
+        """
+        opencode_active = opencode is not None and opencode.get("mode") != "idle"
+        pi_active = pi is not None and pi.get("mode") != "idle"
+        if opencode_active and pi_active:
+            if opencode_mtime is not None and (pi_mtime is None or opencode_mtime >= pi_mtime):
+                return opencode
+            return pi
+        if opencode_active:
+            return opencode
+        if pi_active:
+            return pi
+        return None
+
+    def _update_state(self):
+        opencode_state, opencode_mtime = self._read_state(Path(self.config.state_file))
+        pi_state, pi_mtime = None, None
+        if self.config.pi_state_file:
+            pi_state, pi_mtime = self._read_state(Path(self.config.pi_state_file))
+        merged = self._merge_state(opencode_state, pi_state, opencode_mtime, pi_mtime)
+        if merged is not None:
+            self._apply_state(merged)
+        else:
             self._idle()
-            return
-        self._apply_state(state)
