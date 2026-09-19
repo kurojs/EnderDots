@@ -1,17 +1,8 @@
-# ender4-dots — Windows
-
 Personal Windows dotfiles. This branch contains configuration for the Windows desktop environment only.
 
 ## Showcase
 
-![Desktop overview](https://i.imgur.com/KAikG2F.png)
-![YASB bar](https://i.imgur.com/UpSq95u.png)
-![Neovim](https://i.imgur.com/APgbrPl.png)
-![Windows Terminal](https://i.imgur.com/gR7DBLp.png)
-
-<sub>AI Chat panel — work in progress</sub>
-
-![AI Chat panel](https://i.imgur.com/VAHQQAz.png)
+<img src="https://i.imgur.com/qDmIpgK.png" alt="EnderDots showcase" width="700" />
 
 ---
 
@@ -337,3 +328,5 @@ home/
 - [Nushell](https://www.nushell.sh/) - Modern structured data shell
 - [Starship](https://starship.rs/) - Minimal cross-shell prompt
 - [WTQ](https://github.com/flyingpie/windows-terminal-quake) - Quake-style drop-down mode for any terminal
+- [Clawd on Desk](https://github.com/rullerzhou-afk/clawd-on-desk) - Desktop AI companion
+- [Zifang](https://petdex.dev/pets/zifang) - Virtual pet
