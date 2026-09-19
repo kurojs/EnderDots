@@ -7,6 +7,7 @@ class OpenCodeConfig(CustomBaseModel):
     class_name: str = "opencode-widget"
     state_file: str
     pi_state_file: str | None = None
+    stale_timeout: int = Field(default=8000, ge=500, le=300000)
     poll_interval: int = Field(default=250, ge=50)
     anim_interval: int = Field(default=33, ge=16)
     columns: int = Field(default=16, ge=1, le=64)

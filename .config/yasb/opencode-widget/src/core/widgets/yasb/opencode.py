@@ -1,6 +1,7 @@
 import json
 import logging
 import math
+import time
 from pathlib import Path
 
 from PyQt6.QtCore import Qt, QTimer
@@ -166,15 +167,27 @@ class OpenCodeWidget(BaseWidget):
         sweep.update()
 
     def _read_state(self, path: Path) -> tuple[dict | None, float | None]:
-        """Read an agent state file. Returns (state, mtime) or (None, None) when absent or corrupt."""
+        """Read an agent state file. Returns (state, mtime) or (None, None) when absent or corrupt.
+
+        A state that claims to be active on disk but whose file was NOT modified
+        within ``stale_timeout`` is treated as idle: it means the owning process
+        died (or was killed) before it could emit an explicit idle event. Without
+        this guard the widget would stay stuck showing "writing"/"active" forever
+        after a forced close.
+        """
         try:
             if not path.exists():
                 return None, None
+            mtime = path.stat().st_mtime
+            stale = (time.time() - mtime) * 1000 > self.config.stale_timeout
             raw = path.read_text(encoding="utf-8-sig")
             state = json.loads(raw)
             if not isinstance(state, dict) or "mode" not in state:
                 return None, None
-            return state, path.stat().st_mtime
+            if stale and state.get("mode") != "idle":
+                # Stale active state => owning process no longer writing. Contribute as idle.
+                return None, None
+            return state, mtime
         except (json.JSONDecodeError, OSError):
             # Corrupt or unreadable files contribute as an idle state.
             return None, None

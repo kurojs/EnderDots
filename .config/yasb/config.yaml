@@ -65,6 +65,7 @@ widgets:
         class_name: "opencode-widget"
         state_file: "C:\\Users\\kuuro\\.config\\yasb\\opencode_state.json"
         pi_state_file: "C:\\Users\\kuuro\\.config\\yasb\\pi_state.json"
+        stale_timeout: 8000
         poll_interval: 250
         anim_interval: 33
         columns: 16
