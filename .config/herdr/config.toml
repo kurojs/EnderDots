@@ -16,9 +16,7 @@ next_agent = "prefix+alt+j"
 # and Shift+number did not reach Herdr reliably in the current terminal setup.
 focus_agent = "prefix+ctrl+1..9"
 
-# Gentleman-Cute recolored to Kurox Navy: pink -> purple (#8080C0/#9C9CD4),
-# green -> teal green (#408080). Black surfaces go \"transparent\" so the host
-# terminal opacity shows through (Herdr themes do not support alpha channels).
+# Gentleman-Cute profile.
 
 [theme]
 # One Dark supplies stable token defaults for values Herdr does not customize.
@@ -35,8 +33,8 @@ text = "#F3F6F9"
 subtext0 = "#94A3B8"
 accent = "#8080C0"
 mauve = "#9C9CD4"
-green = "#408080"
-yellow = "#408080"
+green = "#86EFAC"
+yellow = "#86EFAC"
 red = "#FCA5A5"
 blue = "#A9C7EE"
 teal = "#408080"
