@@ -85,11 +85,16 @@ export default {
     await setIdle()
 
     // Subscribe to events
-    const unsubscribe = ctx.event.subscribe((event) => {
-      if (event.type === "session.step.started") {
+    // Subscribe to events.
+    // opencode v2.0.10 delivers events via ctx.event.subscribe as an
+    // AsyncIterable (documented form: subscribe({ signal }): AsyncIterable<OpenCodeEvent>).
+    // Consume it with for await and abort() the controller to stop on cleanup.
+    const controller = new AbortController()
+    const handleEvent = (event) => {
+      if (event.type === "session.next.step.started") {
         cancelThinking()
         setThinking()
-      } else if (event.type === "session.step.failed" || event.type === "session.error") {
+      } else if (event.type === "session.next.step.failed" || event.type === "session.error") {
         cancelThinking()
         setError()
       } else if (event.type === "session.idle") {
@@ -99,7 +104,26 @@ export default {
         cancelThinking()
         setCompacting()
       }
-    })
+    }
+
+    const candidate = ctx.event.subscribe({ signal: controller.signal })
+    let unsubscribe = () => controller.abort()
+    if (candidate && typeof candidate[Symbol.asyncIterator] === "function") {
+      // Primary: async-iterable event stream (documented v2 API).
+      void (async () => {
+        try {
+          for await (const event of candidate) handleEvent(event)
+        } catch (err) {
+          if (err?.name !== "AbortError") console.error("[yasb-status] event stream error:", err)
+        }
+      })()
+    } else {
+      // Fallback: runtimes that still deliver events through the callback form.
+      try {
+        const cbUnsub = ctx.event.subscribe((event) => handleEvent(event))
+        if (typeof cbUnsub === "function") unsubscribe = cbUnsub
+      } catch (_) {}
+    }
 
     // Register tool hooks
     const disposeBefore = ctx.tool.hook("execute.before", (call) => {
