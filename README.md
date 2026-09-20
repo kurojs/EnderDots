@@ -236,7 +236,7 @@ Bar layout:
 
 Widgets:
 
-- `opencode_status` — live OpenCode tool activity: a fixed-size bubble bounces right to left, its glow peaking at the bar's center and shrinking toward the edges (like cava). `👻 thinking` / `🧹 compacting` share periwinkle `#9C9CD4`, each tool runs with its own color (read=amber, write/bash=teal, task=blue, search=amber, web=dark teal), idle (`🟣 York`) turns teal `#9CC8C8` and starts the bounce animation. The **widget** (`opencode-widget/`) draws its own QPainter animation — the plugin only writes state JSON. Feeds off `opencode_state.json`, written by the OpenCode plugin at `.config/opencode/plugins/yasb-status.js` (`tool.execute.before` / `session.status` / `session.idle` hooks, Bun runtime; restart OpenCode to load it). The plugin writes atomically (`tmp` + `rename`) so the bar never reads a half-written file
+- `opencode_status` — live OpenCode tool activity: a fixed-size bubble bounces right to left, its glow peaking at the bar's center and shrinking toward the edges (like cava). `💭 thinking` (`#9d5cff`), `🧹 compacting` (`#c99bff`), each tool runs with its own color (read=amber, write/bash=green, task=blue, search=amber, web=teal), idle (`🟣 York`) turns teal `#9CC8C8` and starts the bounce animation. The **widget** (`opencode-widget/`) draws its own QPainter animation — the plugin only writes state JSON. Feeds off `opencode_state.json`, written by the OpenCode v2 plugin at `.config/opencode/plugins/yasb-status.js` (`ctx.event.subscribe` + `ctx.tool.hook("execute.before"/"execute.after")`; restart OpenCode to load it). The plugin writes atomically (`tmp` + `rename`) so the bar never reads a half-written file, and holds each tool state on screen ~1.5s before sliding back to `thinking` so fast tools stay visible at 250ms polling
 - `workspaces` — minimalist teal workspace switcher: one squared button per Windows virtual desktop showing the kanji numeral (一 二 三 …); the active one gets a green glass block. Left-click switches desktop, tooltip shows the desktop name
 - `cava` — mirrored audio visualizer, periwinkle bars
 - `volume` — Spotify volume control: scroll up/down adjusts Spotify.exe volume, left click = mute, right click = toggles label; teal pill showing static `Spotify` text (no icon, no level)
@@ -279,7 +279,7 @@ AutoHotkey v2 scripts for Windows keybindings.
   nvim-windows/          Neovim config (Windows)
   opencode/
     plugins/
-      yasb-status.js     OpenCode plugin → feeds YASB opencode_status widget
+      yasb-status.js     OpenCode v2 plugin → feeds YASB opencode_status widget
   routine-notify/        RoutineNotify schedule backup (PLAN 2026)
   starship/
     starship.toml        Starship prompt config
@@ -290,7 +290,7 @@ AutoHotkey v2 scripts for Windows keybindings.
     styles.css           YASB stylesheet
     opencode-widget/     Custom widget source (patch files + launcher)
       yasb-launcher.vbs    Launches the source bar hidden (singleton guard)
-      yasb-status.js       OpenCode plugin (mirrors the state file)
+      yasb-status.js       OpenCode v1 plugin (legacy, mirrors the state file)
       yasb-hidden.cmd      Legacy hidden start (see yasb-launcher.vbs)
       src/                 Patched widget + validation files → overlaid onto the source checkout
     icons/
