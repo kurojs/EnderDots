@@ -1,0 +1,28 @@
+# Kuromy - Pure Black, Cool Gray & Spotify Green (Borderless Edition)
+# Pure black background, cool gray text, Spotify green primary, and subtle secondary purple
+
+[meta]
+version = 1
+name = "kuromy-green"
+description = "Clean borderless theme with pure black background, cool gray text, Spotify green primary, and subtle purple"
+variant = "dark"
+
+[colors.core]
+background = "#000000"           # Pure pitch black background
+foreground = "#d4d8dc"           # Cool neutral light gray (Zero yellow, crisp & soft)
+secondary_background = "#0e1410" # Subtle deep dark layer with a hint of green (no borders)
+border = "transparent"           # Borders completely removed
+accent = "#1db954"               # Primary accent: Full Spotify Green
+
+[colors.accents]
+green = "#1db954"                # Full Spotify green
+magenta = "#6b52a8"              # Muted secondary purple
+orange = "#e09060"               # Muted warm orange
+purple = "#7c59cf"               # Subtle secondary purple accent
+red = "#e05252"                  # Soft clean red
+yellow = "#e0cb73"               # Muted warm yellow
+cyan = "#1db954"                 # Mapped to Spotify green
+
+[colors.list.item.selection]
+background = "#122418"           # Deep dark-green selection background
+secondary_background = "#1b3825" # Highlighted item background

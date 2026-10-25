@@ -9,76 +9,98 @@
 // Learn more about configuration at https://docs.vicinae.com/config
 
 {
-  "$schema": "https://vicinae.com/schemas/config.json",
-  "close_on_focus_loss": false,
-  "favicon_service": "twenty",
-  "search_files_in_root": false,
-  "font": {
-    "rendering": "qt",
-    "normal": {
-      "family": "なぎの",
-      "size": 20
-    }
-  },
-  "theme": {
-    "dark": {
-      "name": "vicinae-dark"
-    }
-  },
-  "telemetry": {
-    "system_info": true
-  },
-  "launcher_window": {
-    "opacity": 0.5,
-    "client_side_decorations": {
-      "enabled": true
-    },
-    "size": {
-      "width": 1160,
-      "height": 640
-    },
-    "layer_shell": {
-      "enabled": true
-    }
-  },
-  "favorites": [
-    "@dagimg-dot/store.vicinae.player-pilot:player-pilot",
-    "@rithvikvibhu/store.vicinae.arch-packages:search-arch-packages",
-    "@kuro/kotoba:kotoba",
-    "@vimtor/store.raycast.video-downloader:index",
-    "@talha_balaj/store.raycast.image-search:search-images",
-    "@kuro/jotoba-anki:jotoba",
-    "@thomaslombart/store.raycast.github:my-issues",
-    "@timrogers/store.raycast.github-copilot:copilot-usage",
-    "@maggie/store.raycast.todo-list:index",
-    "@josephschmitt/store.raycast.gif-search:search",
-    "@clnhs/store.raycast.jotoba:index"
-  ],
-  "providers": {
-    "@kuro/kotoba": {
-      "entrypoints": {
-        "kotoba": {
-          "preferences": {
-            "addAudioNote": false,
-            "ankiPort": "8765",
-            "autoLoadText": false,
-            "elevenlabsAiVoiceId": "Vt0Vg2uCO8fyNxSNCHTb",
-            "elevenlabsVoiceId": "QsAQbwLjj42cienasfhu",
-            "geminiAiLanguage": "Spanish",
-            "geminiCustomPrompt": "",
-            "geminiModel": "gemini-2.5-flash",
-            "showFurigana": true,
-            "userLanguage": "Spanish"
-          }
-        }
+   "$schema": "https://vicinae.com/schemas/config.json",
+   "close_on_focus_loss": false,
+   "favicon_service": "twenty",
+   "search_files_in_root": false,
+   "global_shortcuts": {
+      "toggle": "alt+X"
+   },
+   "font": {
+      "rendering": "native",
+      "normal": {
+         "family": "JetBrainsMonoNL Nerd Font",
+         "size": 24
       }
-    },
-    "clipboard": {
-      "enabled": false,
-      "preferences": {
-        "monitoring": false
+   },
+   "theme": {
+      "dark": {
+         "name": "kuromy",
+         "icon_theme": "Breeze"
       }
-    }
-  }
+   },
+   "telemetry": {
+      "system_info": true
+   },
+   "launcher_window": {
+      "opacity": 0.5,
+      "client_side_decorations": {
+         "enabled": false,
+         "border_width": 1
+      },
+      "size": {
+         "width": 1280,
+         "height": 720
+      },
+      "compact_mode": {
+         "enabled": false
+      },
+      "floating_status_bar": true,
+      "layer_shell": {
+         "enabled": true
+      },
+      "material": "blur"
+   },
+   "favorites": [
+      "@mattisssa/store.raycast.spotify-player:nowPlaying",
+      "@EvanZhouDev/store.raycast.raycast-gemini:aiChat",
+      "@gebeto/store.raycast.translate:quick-translate",
+      "@dagimg-dot/store.vicinae.player-pilot:player-pilot",
+      "@rithvikvibhu/store.vicinae.arch-packages:search-arch-packages",
+      "@kuro/kotoba:kotoba",
+      "@vimtor/store.raycast.video-downloader:index",
+      "@talha_balaj/store.raycast.image-search:search-images",
+      "@kuro/jotoba-anki:jotoba",
+      "@thomaslombart/store.raycast.github:my-issues",
+      "@timrogers/store.raycast.github-copilot:copilot-usage",
+      "@maggie/store.raycast.todo-list:index",
+      "@josephschmitt/store.raycast.gif-search:search",
+      "@clnhs/store.raycast.jotoba:index"
+   ],
+   "providers": {
+      "@gebeto/store.raycast.translate": {
+         "preferences": {
+            "langFrom": "auto",
+            "lang1": "es",
+            "lang2": "ja",
+            "autoInput": true,
+            "defaultAction": "copy",
+            "prioritizeCrossLanguage": false
+         }
+      },
+      "@kuro/kotoba": {
+         "entrypoints": {
+            "kotoba": {
+               "preferences": {
+                  "addAudioNote": false,
+                  "ankiPort": "8765",
+                  "autoLoadText": false,
+                  "elevenlabsAiVoiceId": "Vt0Vg2uCO8fyNxSNCHTb",
+                  "elevenlabsVoiceId": "QsAQbwLjj42cienasfhu",
+                  "geminiAiLanguage": "Spanish",
+                  "geminiCustomPrompt": "",
+                  "geminiModel": "gemini-2.5-flash",
+                  "showFurigana": true,
+                  "userLanguage": "Spanish"
+               }
+            }
+         }
+      },
+      "clipboard": {
+         "enabled": false,
+         "preferences": {
+            "monitoring": false
+         }
+      }
+   }
 }
-
