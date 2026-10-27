@@ -1,6 +1,6 @@
 background-opacity = 0.80
 background-blur = 20
-window-decoration = client
+window-decoration = none
 
 window-theme = ghostty
 
@@ -27,7 +27,8 @@ cursor-color = 7465a1
 selection-background = 7465a1
 selection-foreground = f3f6f9
 
-font-family = "Iosevka Nerd Font"
+font-family = IosevkaTerm NF
+font-family = Segoe UI Emoji
 font-codepoint-map = U+1F1E6-U+1F1FF=Noto Color Emoji
 font-size = 18
 window-padding-color = extend
