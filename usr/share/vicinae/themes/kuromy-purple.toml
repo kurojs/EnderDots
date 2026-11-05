@@ -1,28 +1,28 @@
-# Kuromy - Pure Black, Cool Gray & Soft Mauve (Borderless Edition)
-# Pure black background, cool gray text, very soft desaturated mauve primary, muted purple accents
+# Kuromy - Pure Black, Cool Gray & Violet (Borderless Edition)
+# Pure black background, cool gray text, violet primary taken from the kuromy-green palette
 
 [meta]
 version = 1
 name = "kuromy-purple"
-description = "Clean borderless theme with pure black background, cool gray text, very soft desaturated mauve primary, and muted purple accents"
+description = "Clean borderless theme with pure black background, cool gray text, violet primary, and muted purple accents"
 variant = "dark"
 
 [colors.core]
 background = "#000000"           # Pure pitch black background
 foreground = "#d4d8dc"           # Cool neutral light gray (crisp & soft)
-secondary_background = "#131118" # Subtle deep dark layer with a faint violet hint (no borders)
+secondary_background = "#120f1c" # Subtle deep dark layer with a violet hint (no borders)
 border = "transparent"           # Borders completely removed
-accent = "#c7bcd9"               # Primary accent: very soft grayish mauve
+accent = "#7c59cf"               # Primary accent: violet (same as kuromy-green purple)
 
 [colors.accents]
 green = "#1db954"                # Semantic green kept for success/online states
-magenta = "#cdc3da"              # Barely-tinted pastel mauve
+magenta = "#6b52a8"              # Deep violet (same as kuromy-green magenta)
 orange = "#e09060"               # Muted warm orange
-purple = "#b3a9c7"               # Muted grayish lavender
+purple = "#7c59cf"               # Violet
 red = "#e05252"                  # Soft clean red
 yellow = "#e0cb73"               # Muted warm yellow
-cyan = "#c7bcd9"                 # Mapped to the primary soft mauve
+cyan = "#7c59cf"                 # Mapped to violet
 
 [colors.list.item.selection]
-background = "#1e1b26"           # Very muted violet-gray selection background
-secondary_background = "#2b2735" # Highlighted item background
+background = "#1a1428"           # Deep violet selection background
+secondary_background = "#271e3d" # Highlighted item background
