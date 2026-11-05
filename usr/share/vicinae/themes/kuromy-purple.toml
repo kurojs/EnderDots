@@ -1,28 +1,28 @@
-# Kuromy - Pure Black, Cool Gray & Pastel Lavender (Borderless Edition)
-# Pure black background, cool gray text, soft pastel lavender-pink primary, muted purple accents
+# Kuromy - Pure Black, Cool Gray & Soft Mauve (Borderless Edition)
+# Pure black background, cool gray text, very soft desaturated mauve primary, muted purple accents
 
 [meta]
 version = 1
 name = "kuromy-purple"
-description = "Clean borderless theme with pure black background, cool gray text, soft pastel lavender primary, and muted purple accents"
+description = "Clean borderless theme with pure black background, cool gray text, very soft desaturated mauve primary, and muted purple accents"
 variant = "dark"
 
 [colors.core]
 background = "#000000"           # Pure pitch black background
 foreground = "#d4d8dc"           # Cool neutral light gray (crisp & soft)
-secondary_background = "#141019" # Subtle deep dark layer with a hint of violet (no borders)
+secondary_background = "#131118" # Subtle deep dark layer with a faint violet hint (no borders)
 border = "transparent"           # Borders completely removed
-accent = "#b8a1e3"               # Primary accent: soft pastel lavender with a pink lean
+accent = "#c7bcd9"               # Primary accent: very soft grayish mauve
 
 [colors.accents]
 green = "#1db954"                # Semantic green kept for success/online states
-magenta = "#c6b0d8"              # Desaturated pastel pink-lavender
+magenta = "#cdc3da"              # Barely-tinted pastel mauve
 orange = "#e09060"               # Muted warm orange
-purple = "#a893cf"               # Muted lavender purple
+purple = "#b3a9c7"               # Muted grayish lavender
 red = "#e05252"                  # Soft clean red
 yellow = "#e0cb73"               # Muted warm yellow
-cyan = "#b8a1e3"                 # Mapped to the primary pastel lavender
+cyan = "#c7bcd9"                 # Mapped to the primary soft mauve
 
 [colors.list.item.selection]
-background = "#1c1726"           # Deep muted violet selection background
-secondary_background = "#2a2338" # Highlighted item background
+background = "#1e1b26"           # Very muted violet-gray selection background
+secondary_background = "#2b2735" # Highlighted item background
