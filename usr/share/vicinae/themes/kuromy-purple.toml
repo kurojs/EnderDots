@@ -1,28 +1,82 @@
-# Kuromy - Pure Black, Cool Gray & Violet (Borderless Edition)
-# Pure black background, cool gray text, violet primary taken from the kuromy-green palette
+# Kuromy - Pure Black, Cool Gray & Pure Violet (Borderless Edition)
+# Every accent is defined explicitly so nothing is inherited from Vicinae's default
+# palette (whose magenta/purple defaults are lavender-pink).
 
 [meta]
 version = 1
 name = "kuromy-purple"
-description = "Clean borderless theme with pure black background, cool gray text, violet primary, and muted purple accents"
+description = "Clean borderless theme with pure black background, cool gray text, and pure violet accents"
 variant = "dark"
 
 [colors.core]
-background = "#000000"           # Pure pitch black background
-foreground = "#d4d8dc"           # Cool neutral light gray (crisp & soft)
-secondary_background = "#120f1c" # Subtle deep dark layer with a violet hint (no borders)
-border = "transparent"           # Borders completely removed
-accent = "#7c59cf"               # Primary accent: violet (same as kuromy-green purple)
+accent = "#7c59cf"                # Pure violet
+accent_foreground = "#0b0714"
+background = "#000000"            # Pure pitch black
+foreground = "#d4d8dc"            # Cool neutral gray
+secondary_background = "#120f1c"  # Faint violet-tinted layer
+border = "transparent"            # No borders
+
+[colors.main_window]
+border = "transparent"
+footer = { background = "colors.core.secondary_background" }
+
+[colors.settings_window]
+border = "transparent"
 
 [colors.accents]
-green = "#1db954"                # Semantic green kept for success/online states
-magenta = "#6b52a8"              # Deep violet (same as kuromy-green magenta)
-orange = "#e09060"               # Muted warm orange
-purple = "#7c59cf"               # Violet
-red = "#e05252"                  # Soft clean red
-yellow = "#e0cb73"               # Muted warm yellow
-cyan = "#7c59cf"                 # Mapped to violet
+blue = "#6b52a8"                  # Deep violet (no true blue)
+green = "#1db954"                 # Semantic success
+magenta = "#6b52a8"               # Deep violet (no pink)
+orange = "#e09060"                # Muted warm orange
+red = "#e05252"                   # Soft clean red
+yellow = "#e0cb73"                # Muted warm yellow
+cyan = "#7c59cf"                  # Violet
+purple = "#7c59cf"                # Violet
+
+[colors.shortcut]
+border = "colors.core.border"
+
+[colors.text]
+default = "colors.core.foreground"
+muted = "#9aa0a6"
+danger = "#e05252"
+success = "#1db954"
+placeholder = "#6e7479"
+selection = { background = "#7c59cf", foreground = "#000000" }
+
+[colors.text.links]
+default = "#a689e8"               # Light violet
+visited = "#7c59cf"               # Violet
+
+[colors.input]
+border = "transparent"
+border_focus = "#7c59cf"
+border_error = "#e05252"
+
+[colors.button.primary]
+background = "#1a1428"
+foreground = "#e8e2f5"
+hover = { background = "#241a3a" }
+focus = { outline = "colors.core.accent" }
+
+[colors.list.item.hover]
+foreground = "#ffffff"
+secondary_foreground = "#d4d8dc"
 
 [colors.list.item.selection]
-background = "#1a1428"           # Deep violet selection background
-secondary_background = "#271e3d" # Highlighted item background
+background = "#1a1428"
+foreground = "#ffffff"
+secondary_background = "#271e3d"
+secondary_foreground = "#e8e2f5"
+
+[colors.grid.item]
+background = "#120f1c"
+hover = { outline = "#7c59cf" }
+selection = { outline = "#7c59cf" }
+
+[colors.scrollbars]
+background = "#2a2440"
+
+[colors.loading]
+bar = "#7c59cf"
+spinner = "#b9a3e6"
