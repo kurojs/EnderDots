@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "context7": {
+      "args": [
+        "-y",
+        "--package=@upstash/context7-mcp@2.2.5",
+        "--",
+        "context7-mcp"
+      ],
+      "command": "npx"
+    },
+    "elevenlabs-tts": {
+      "command": "node",
+      "args": [
+        "/home/kuro/Documents/elevenlabs-mcp-tts/src/server.js"
+      ]
+    }
+  }
+}
