@@ -76,21 +76,17 @@ EnderDots is a comprehensive collection of dotfiles featuring a modern desktop e
 
 ```plaintext
 EnderDots/
-├── .config/
-│   ├── fish/                   # Fish shell aliases and functions
-│   ├── ghostty/                # Ghostty terminal configuration
-│   ├── nvim/                   # Complete Neovim setup
-│   ├── opencode/               # AI-first IDE configuration
-│   ├── quickshell/             # Custom desktop interface
-│   ├── tilda/                  # Drop-down terminal settings
-│   ├── zed/                    # Zed editor configuration
-│   ├── starship.toml           # Universal shell prompt
-│   ├── kwinrc & kwinrulesrc    # KDE Window management rules
-│   └── kuromy.kksrc            # KDE shortcut configuration
+├── .config/                    # fish, ghostty, nvim, opencode, zed, tilda, vicinae, starship
 ├── .local/bin/                 # Custom user scripts and executables
 ├── Docs/                       # Additional documentation
 ├── home/ & usr/                # System-level file overlays
 ```
+
+## Branches
+
+- `main` — general dotfiles (shell, editors, terminal, vicinae, zen)
+- `kde` — complete KDE Plasma config (panels, plasmoids, themes, kwin, shortcuts)
+- `hypr` — complete Hyprland config (hypr, quickshell, caelestia)
 
 ---
 
