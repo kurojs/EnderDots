@@ -1,0 +1,140 @@
+{
+    "appearance": {
+        "font": {
+            "body": {
+                "family": "Nagino"
+            },
+            "clock": "Nagino",
+            "headline": {
+                "family": "Nagino"
+            },
+            "label": {
+                "family": "Nagino"
+            },
+            "mono": {
+                "family": "Nagino"
+            },
+            "title": {
+                "family": "Nagino"
+            },
+            "workspaces": "Nagino"
+        },
+        "transparency": {
+            "base": 0.7,
+            "enabled": true,
+            "layers": 0.4
+        }
+    },
+    "background": {
+        "wallpaperEnabled": true
+    },
+    "bar": {
+        "clock": {
+            "background": false,
+            "showDate": false,
+            "showIcon": false,
+            "showSeconds": false
+        },
+        "dragThreshold": 20,
+        "persistent": true,
+        "popouts": {
+            "tray": true
+        },
+        "scrollActions": {
+            "brightness": false
+        },
+        "showOnHover": true,
+        "statusIcons": [
+            {
+                "enabled": false,
+                "id": "lockStatus"
+            },
+            {
+                "enabled": false,
+                "id": "audio"
+            },
+            {
+                "enabled": false,
+                "id": "microphone"
+            },
+            {
+                "enabled": false,
+                "id": "kbLayout"
+            },
+            {
+                "enabled": false,
+                "id": "kbLayout"
+            },
+            {
+                "enabled": true,
+                "id": "network"
+            },
+            {
+                "enabled": false,
+                "id": "bluetooth"
+            },
+            {
+                "enabled": false,
+                "id": "battery"
+            }
+        ],
+        "tray": {
+            "background": false,
+            "compact": true,
+            "iconSubs": [
+                {
+                    "icon": "spotify-client",
+                    "id": "spotify-client",
+                    "image": ""
+                }
+            ],
+            "recolour": false
+        },
+        "workspaces": {
+            "activeIndicator": false,
+            "activeLabel": "",
+            "activeTrail": false,
+            "displayType": "Text",
+            "label": "",
+            "maxWindowIcons": 0,
+            "occupiedBg": false,
+            "occupiedLabel": "",
+            "perMonitor": true,
+            "showUnoccupied": true,
+            "showWindows": false,
+            "showWindowsOnSpecialWorkspaces": true,
+            "shown": 5
+        }
+    },
+    "dashboard": {
+        "enabled": true
+    },
+    "general": {
+        "apps": {
+            "explorer": [
+                "dolphin"
+            ],
+            "terminal": [
+                "/home/kuro/.local/bin/ghostty",
+                "--gtk-single-instance=false"
+            ]
+        },
+        "logo": "/home/kuro/Desktop/ファイル/アイコン/gif.png"
+    },
+    "launcher": {
+        "enabled": true,
+        "maxShown": 10,
+        "maxWallpapers": 9,
+        "showOnHover": true,
+        "useFuzzy": {
+            "apps": false
+        }
+    },
+    "services": {
+        "smartScheme": true,
+        "weatherUnits": "Celsius"
+    },
+    "sidebar": {
+        "enabled": true
+    }
+}

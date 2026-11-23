@@ -1,0 +1,1 @@
+/etc/xdg/quickshell/caelestia/modules/bar/components/workspaces/GapMarkers.qml

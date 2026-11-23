@@ -1,0 +1,139 @@
+#!/usr/bin/env python3
+"""Mirror the system Caelestia shell into ~/.config/quickshell/caelestia.
+
+The AUR package installs the shell under /etc/xdg/quickshell/caelestia, which
+pacman owns and overwrites on update. Quickshell prefers a user config at
+$XDG_CONFIG_HOME/quickshell/<name>/, so this script builds an overlay there:
+
+  * every entry that is not customised is a symlink to the packaged file, so
+    package updates apply without any manual step;
+  * a file listed in OVERRIDES is a real file owned by the user.
+
+The overlay only needs new directories when a package update adds files below
+a path that contains an override, so it runs at Hyprland config load.
+
+Usage: caelestia-overlay-sync [--check]
+"""
+
+import os
+import shutil
+import sys
+
+SRC = "/etc/xdg/quickshell/caelestia"
+DST = os.path.expanduser("~/.config/quickshell/caelestia")
+
+# Files customised by the user. A real copy is kept in the overlay; everything
+# else stays a symlink to the packaged original.
+OVERRIDES = {
+    "modules/bar/components/ActiveWindow.qml",
+    "modules/bar/components/Clock.qml",
+    "modules/bar/components/OsIcon.qml",
+    "modules/bar/components/Power.qml",
+    "modules/bar/components/StatusIcons.qml",
+    "modules/bar/components/Tray.qml",
+    "modules/bar/components/TrayItem.qml",
+    "modules/bar/components/workspaces/Workspace.qml",
+    "modules/bar/components/workspaces/Workspaces.qml",
+    "utils/SysInfo.qml",
+}
+
+changed = False
+
+
+def report(action: str, rel: str) -> None:
+    global changed
+    changed = True
+    print(f"{action} {rel}")
+
+
+def needed(rel: str) -> bool:
+    """True when rel is an override or contains one."""
+    return any(o == rel or o.startswith(rel + "/") for o in OVERRIDES)
+
+
+def sync_dir(rel: str) -> None:
+    src_dir = os.path.join(SRC, rel) if rel else SRC
+    dst_dir = os.path.join(DST, rel) if rel else DST
+
+    # A directory that holds an override cannot stay a symlink to the packaged
+    # tree, otherwise the override would be written into /etc/xdg.
+    if os.path.islink(dst_dir):
+        os.unlink(dst_dir)
+        report("- unlink dir", rel or ".")
+
+    os.makedirs(dst_dir, exist_ok=True)
+
+    for entry in sorted(os.listdir(src_dir)):
+        child = os.path.join(rel, entry) if rel else entry
+        src_path = os.path.join(SRC, child)
+        dst_path = os.path.join(DST, child)
+
+        if os.path.isdir(src_path) and not os.path.islink(src_path):
+            if needed(child):
+                sync_dir(child)
+            else:
+                place_link(src_path, dst_path, child)
+        else:
+            if child in OVERRIDES:
+                # Bootstrap the user copy, but never overwrite an existing one:
+                # the real file is where the customisation lives.
+                if os.path.islink(dst_path):
+                    os.unlink(dst_path)
+                if not os.path.lexists(dst_path):
+                    shutil.copy2(src_path, dst_path)
+                    report("+ override", child)
+                continue
+            place_link(src_path, dst_path, child)
+
+
+def place_link(src_path: str, dst_path: str, rel: str) -> None:
+    if os.path.islink(dst_path):
+        if os.readlink(dst_path) == src_path:
+            return
+        os.unlink(dst_path)
+    elif os.path.lexists(dst_path):
+        # A real file or directory where the package has one: keep it, it is a
+        # user override this script does not know about.
+        return
+
+    os.symlink(src_path, dst_path)
+    report("+ link", rel)
+
+
+def prune(rel: str = "") -> None:
+    """Drop symlinks whose packaged target is gone. Real files are untouched."""
+    dst_dir = os.path.join(DST, rel) if rel else DST
+    if not os.path.isdir(dst_dir):
+        return
+
+    for entry in sorted(os.listdir(dst_dir)):
+        child = os.path.join(rel, entry) if rel else entry
+        dst_path = os.path.join(DST, child)
+        src_path = os.path.join(SRC, child)
+
+        if os.path.islink(dst_path):
+            if not os.path.exists(src_path):
+                os.unlink(dst_path)
+                report("- stale", child)
+        elif os.path.isdir(dst_path) and needed(child) and os.path.isdir(src_path):
+            prune(child)
+
+
+def main() -> int:
+    if not os.path.isdir(SRC):
+        print(f"missing packaged shell: {SRC}", file=sys.stderr)
+        return 1
+
+    sync_dir("")
+    prune()
+
+    if "--check" in sys.argv:
+        print("up to date" if not changed else "out of date")
+        return 0 if not changed else 2
+
+    print("overlay ready" if not changed else "overlay synced")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

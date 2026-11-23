@@ -1,0 +1,13 @@
+#!/bin/sh
+# Rebuild the user overlay from the packaged Caelestia shell, then launch it.
+#
+# Quickshell loads ~/.config/quickshell/caelestia instead of the packaged tree,
+# and that overlay only contains user overrides plus symlinks. A package update
+# can add or remove files, so the overlay is refreshed right before every start
+# (normal login, restart keybind, lock restore).
+#
+# The sync is best effort: if it fails, the shell still starts with the overlay
+# it already has.
+
+"$HOME/.local/bin/caelestia-overlay-sync" >/dev/null 2>&1 || true
+exec /usr/bin/caelestia shell "$@"
