@@ -85,8 +85,21 @@ EnderDots/
 ## Branches
 
 - `main` — general dotfiles (shell, editors, terminal, vicinae, zen)
-- `kde` — complete KDE Plasma config (panels, plasmoids, themes, kwin, shortcuts)
-- `hypr` — complete Hyprland config (hypr, quickshell, caelestia)
+- `kde` — KDE Plasma config only (panels, plasmoids, themes, kwin, shortcuts)
+- `hypr` — Hyprland config only (hypr, caelestia, quickshell)
+
+`kde` and `hypr` are orphan branches: they contain only the files specific to
+that desktop, no copy of `main`. Restore `main` first, then overlay the desktop
+branch:
+
+```bash
+git clone -b main https://github.com/kurojs/EnderDots.git
+cd EnderDots
+git fetch origin kde        # or hypr
+git checkout origin/kde -- .
+cp -r .config/* ~/.config/
+cp -r .local/share/* ~/.local/share/
+```
 
 ---
 
