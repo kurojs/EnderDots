@@ -1,6 +1,14 @@
 # Hyprland — Install
 
-Restore: copy `.config/hypr`, `.config/caelestia`, `.config/quickshell` → `~/.config/`, and `.local/bin/caelestia-*` → `~/.local/bin/`. Then run `caelestia-overlay-sync`.
+This is an overlay branch: it holds only Hyprland-specific files. Apply `main` first.
+
+```bash
+git clone -b main https://github.com/kurojs/EnderDots.git && cd EnderDots
+git fetch origin hypr && git checkout origin/hypr -- .
+cp -r .config/* ~/.config/
+cp -r .local/bin/* ~/.local/bin/
+~/.local/bin/caelestia-overlay-sync
+```
 
 ## Packages
 
