@@ -19,11 +19,14 @@
    "font": {
       "rendering": "native",
       "normal": {
-         "family": "JetBrainsMonoNL Nerd Font",
-         "size": 24
+         "family": "IosevkaTerm Nerd Font",
+         "size": 22
       }
    },
    "theme": {
+      "light": {
+         "name": "kuromy-purple"
+      },
       "dark": {
          "name": "kuromy",
          "icon_theme": "Breeze"
@@ -52,19 +55,25 @@
       "material": "blur"
    },
    "favorites": [
-      "@mattisssa/store.raycast.spotify-player:nowPlaying",
+      "@kuro/takoba:takoba",
+      "@talha_balaj/store.raycast.image-search:search-images",
       "@EvanZhouDev/store.raycast.raycast-gemini:aiChat",
+      "@djpowers/store.raycast.devdocs:search-docsets",
+      "@thomaslombart/store.raycast.github:my-issues",
+      "@maggie/store.raycast.todo-list:index",
+      "@mattisssa/store.raycast.spotify-player:nowPlaying",
+      "@josephschmitt/store.raycast.gif-search:search",
+      "@FurkanTRN/store.vicinae.jetbrains-recent-projects:jetbrains-projects",
+      "@knoopx/store.vicinae.github:issues",
+      "@nino-mau/store.vicinae.hypr:keybinds",
+      "@ridemountainpig/store.raycast.google-lens:search-image-with-google-lens",
       "@gebeto/store.raycast.translate:quick-translate",
       "@dagimg-dot/store.vicinae.player-pilot:player-pilot",
       "@rithvikvibhu/store.vicinae.arch-packages:search-arch-packages",
       "@kuro/kotoba:kotoba",
       "@vimtor/store.raycast.video-downloader:index",
-      "@talha_balaj/store.raycast.image-search:search-images",
       "@kuro/jotoba-anki:jotoba",
-      "@thomaslombart/store.raycast.github:my-issues",
       "@timrogers/store.raycast.github-copilot:copilot-usage",
-      "@maggie/store.raycast.todo-list:index",
-      "@josephschmitt/store.raycast.gif-search:search",
       "@clnhs/store.raycast.jotoba:index"
    ],
    "providers": {
@@ -92,6 +101,23 @@
                   "geminiModel": "gemini-2.5-flash",
                   "showFurigana": true,
                   "userLanguage": "Spanish"
+               }
+            }
+         }
+      },
+      "@kuro/takoba": {
+         "entrypoints": {
+            "takoba": {
+               "preferences": {
+                  "ankiPort": "8765",
+                  "userLanguage": "Spanish",
+                  "autoLoadText": false,
+                  "geminiModel": "gemini-2.5-flash",
+                  "geminiCustomPrompt": "",
+                  "geminiAiLanguage": "English",
+                  "elevenlabsAiVoiceId": "21m00Tcm4TlvDq8ikWAM",
+                  "showFurigana": true,
+                  "addAudioNote": true
                }
             }
          }
