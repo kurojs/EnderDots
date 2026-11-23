@@ -1,0 +1,82 @@
+/*
+    SPDX-FileCopyrightText: 2024 Vjatcheslav V. Kolchkov <akl334@protonmail.ch>
+
+    SPDX-License-Identifier: MIT
+*/
+
+import QtQuick;
+import org.kde.kwin;
+
+Item {
+    id: dbus;
+
+    function getDBusExists(){
+        return dbusExists
+    }
+    DBusCall {
+        id: dbusExists;
+
+        service: "org.kde.KWin";
+        path: "/KWin";
+        dbusInterface: "org.kde.KWin";
+        method: "activeOutputName";
+    }
+
+    function getDBusMoveMouseToFocus() {
+        return moveMouseToFocus;
+    }
+    DBusCall {
+        id: moveMouseToFocus;
+
+        service: "org.kde.kglobalaccel";
+        path: "/component/kwin";
+        dbusInterface: "org.kde.kglobalaccel.Component";
+        method: "invokeShortcut";
+        arguments: ["MoveMouseToFocus",];
+    }
+
+    function getDBusMoveMouseToCenter() {
+        return moveMouseToCenter;
+    }
+    DBusCall {
+        id: moveMouseToCenter;
+
+        service: "org.kde.kglobalaccel";
+        path: "/component/kwin";
+        dbusInterface: "org.kde.kglobalaccel.Component";
+        method: "invokeShortcut";
+        arguments: ["MoveMouseToCenter",];
+
+    }
+
+    /* Separate from moveMouseToCenter: this object has no finished handler, so
+     * the pointer stays on the screen center instead of being forwarded to the
+     * focused window afterwards. */
+    function getDBusMoveMouseToScreenCenter() {
+        return moveMouseToScreenCenter;
+    }
+    DBusCall {
+        id: moveMouseToScreenCenter;
+
+        service: "org.kde.kglobalaccel";
+        path: "/component/kwin";
+        dbusInterface: "org.kde.kglobalaccel.Component";
+        method: "invokeShortcut";
+        arguments: ["MoveMouseToCenter",];
+
+    }
+
+    function getDBusVirtualKeyboardVisible() {
+        return virtualKeyboardVisibleCall;
+    }
+    DBusCall {
+        id: virtualKeyboardVisibleCall;
+
+        service: "org.kde.KWin";
+        path: "/VirtualKeyboard";
+        dbusInterface: "org.freedesktop.DBus.Properties";
+        method: "Get";
+        arguments: ["org.kde.kwin.VirtualKeyboard", "visible"];
+    }
+
+}

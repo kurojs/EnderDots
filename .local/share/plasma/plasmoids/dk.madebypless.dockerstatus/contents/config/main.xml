@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+  <kcfgfile name=""/>
+  <group name="General">
+    <entry name="context" type="String">
+      <label>Docker context to show; empty means docker's current context</label>
+      <default></default>
+    </entry>
+    <entry name="pollInterval" type="Int">
+      <label>Seconds between checks</label>
+      <default>15</default>
+      <min>5</min>
+      <max>600</max>
+    </entry>
+    <entry name="showFailedInPanel" type="Bool">
+      <label>Show the failed (exited with an error) badge in the panel</label>
+      <default>true</default>
+    </entry>
+    <entry name="showUnhealthyInPanel" type="Bool">
+      <label>Show the unhealthy badge in the panel</label>
+      <default>true</default>
+    </entry>
+    <entry name="showRestartingInPanel" type="Bool">
+      <label>Show the restarting badge in the panel</label>
+      <default>true</default>
+    </entry>
+    <entry name="showPausedInPanel" type="Bool">
+      <label>Show the paused badge in the panel</label>
+      <default>true</default>
+    </entry>
+    <entry name="showStoppedInPanel" type="Bool">
+      <label>Show the stopped badge in the panel</label>
+      <default>true</default>
+    </entry>
+    <entry name="showRunningInPanel" type="Bool">
+      <label>Show the running badge in the panel</label>
+      <default>true</default>
+    </entry>
+    <entry name="showZeroInPanel" type="Bool">
+      <label>Show badges for states with no containers</label>
+      <default>false</default>
+    </entry>
+    <entry name="showTotalInPanel" type="Bool">
+      <label>Show the total number of containers after the badges</label>
+      <default>false</default>
+    </entry>
+    <entry name="notifyOnProblem" type="Bool">
+      <label>Send a desktop notification when a container fails or becomes unhealthy</label>
+      <default>true</default>
+    </entry>
+    <entry name="showImages" type="Bool">
+      <label>Show an Images section in the popup, with a delete button for images no container uses</label>
+      <default>true</default>
+    </entry>
+    <entry name="collapsedGroups" type="StringList">
+      <label>Groups collapsed in the popup</label>
+      <default></default>
+    </entry>
+  </group>
+  <group name="Appearance">
+    <entry name="useSharedLook" type="Bool">
+      <label>Follow the shared look (same for all madebypless widgets) instead of this widget's own appearance settings, once a shared look has been saved</label>
+      <default>true</default>
+    </entry>
+    <entry name="showLogo" type="Bool">
+      <label>Show a logo in front of the badges in the panel</label>
+      <default>false</default>
+    </entry>
+    <entry name="logoIcon" type="String">
+      <label>Icon name or image file for the logo; empty means the widget's own icon</label>
+      <default></default>
+    </entry>
+    <entry name="badgeSpacing" type="Int">
+      <label>Gap in pixels between the logo and the badges</label>
+      <default>4</default>
+    </entry>
+    <entry name="logoSpacing" type="Int">
+      <label>Extra gap in pixels between the logo and the first badge</label>
+      <default>0</default>
+    </entry>
+    <entry name="badgeStyle" type="String">
+      <label>Badge style: square or rounded</label>
+      <default>square</default>
+    </entry>
+    <entry name="colorFailed" type="Color">
+      <label>Failed badge colour</label>
+      <default>#d71920</default>
+    </entry>
+    <entry name="colorUnhealthy" type="Color">
+      <label>Unhealthy badge colour</label>
+      <default>#e5534b</default>
+    </entry>
+    <entry name="colorRestarting" type="Color">
+      <label>Restarting badge colour</label>
+      <default>#ff9800</default>
+    </entry>
+    <entry name="colorPaused" type="Color">
+      <label>Paused badge colour</label>
+      <default>#2a72d6</default>
+    </entry>
+    <entry name="colorStopped" type="Color">
+      <label>Stopped badge colour</label>
+      <default>#8a8a8a</default>
+    </entry>
+    <entry name="colorRunning" type="Color">
+      <label>Running badge colour</label>
+      <default>#7ba700</default>
+    </entry>
+    <entry name="colorCountBackground" type="Color">
+      <label>Count background badge colour</label>
+      <default>#2b2f33</default>
+    </entry>
+  </group>
+</kcfg>

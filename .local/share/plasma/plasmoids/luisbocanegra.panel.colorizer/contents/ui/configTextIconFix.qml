@@ -1,0 +1,274 @@
+pragma ComponentBehavior: Bound
+import QtCore
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import "code/utils.js" as Utils
+import "components" as Components
+import org.kde.kcmutils as KCM
+import org.kde.kirigami as Kirigami
+import org.kde.plasma.plasmoid
+
+KCM.SimpleKCM {
+    id: root
+
+    property alias cfg_isEnabled: headerComponent.isEnabled
+    property string cfg_panelWidgets
+    property bool clearing: false
+    property string cfg_forceForegroundColor
+    property var config: JSON.parse(cfg_forceForegroundColor)
+    property var forceFgConfig
+    property bool loaded: false
+    property bool isDirty: false
+    property string configDir: StandardPaths.writableLocation(StandardPaths.HomeLocation).toString().substring(7) + "/.config/panel-colorizer/"
+    property string importCmd: "cat '" + configDir + "forceForegroundColor.json'"
+    property string crateConfigDirCmd: "mkdir -p " + configDir
+
+    function updateConfig() {
+        console.log("updateConfig()");
+        for (let i = 0; i < widgetsModel.count; i++) {
+            // console.error(widget)
+
+            const widget = widgetsModel.get(i);
+            const id = widget.id;
+            const name = widget.name;
+            const method = widget.method;
+            const reload = widget.reload;
+            const keepOriginal = widget.keepOriginal;
+            const cfgIndex = Utils.getWidgetConfigIdx(id, name, forceFgConfig);
+            if (method.mask || method.multiEffect || reload || keepOriginal) {
+                if (cfgIndex !== -1) {
+                    forceFgConfig[cfgIndex].method = method;
+                    forceFgConfig[cfgIndex].reload = reload;
+                    forceFgConfig[cfgIndex].keepOriginal = keepOriginal;
+                } else {
+                    forceFgConfig.push({
+                        "name": name,
+                        "id": id,
+                        "method": method,
+                        "reload": reload,
+                        "keepOriginal": keepOriginal
+                    });
+                }
+            } else {
+                forceFgConfig.splice(i);
+            }
+        }
+        console.log(JSON.stringify(forceFgConfig));
+        config.widgets = forceFgConfig;
+        cfg_forceForegroundColor = JSON.stringify(config, null, null);
+    }
+
+    function importConfig(newConfig) {
+        loaded = false;
+        // ignore 1.2.0- old config format
+        forceFgConfig = Utils.clearOldWidgetConfig(newConfig.widgets);
+        config.reloadInterval = newConfig.reloadInterval;
+        updateWidgetsModel();
+        loaded = true;
+        updateConfig();
+    }
+
+    function initWidgets() {
+        console.log("initWidgets()");
+        widgetsModel.clear();
+        const object = JSON.parse(cfg_panelWidgets);
+        for (const widget of object) {
+            const id = widget.id;
+            const name = widget.name;
+            const title = widget.title;
+            const icon = widget.icon;
+            const inTray = widget.inTray;
+            widgetsModel.append({
+                "id": id,
+                "name": name,
+                "title": title,
+                "icon": icon,
+                "inTray": inTray,
+                "method": {
+                    "mask": false,
+                    "multiEffect": false
+                },
+                "reload": false,
+                "keepOriginal": false
+            });
+        }
+    }
+
+    function updateWidgetsModel() {
+        console.log("updateWidgetsModel()");
+        for (let i = 0; i < widgetsModel.count; i++) {
+            const widget = widgetsModel.get(i);
+            const id = widget.id;
+            const name = widget.name;
+            let index = Utils.getWidgetConfigIdx(id, name, forceFgConfig);
+            if (index !== -1) {
+                const cfg = forceFgConfig[index];
+                widgetsModel.set(i, {
+                    "method": cfg.method,
+                    "reload": cfg.reload,
+                    "keepOriginal": cfg.keepOriginal ?? false
+                });
+            } else {
+                widgetsModel.set(i, {
+                    "method": {
+                        "mask": false,
+                        "multiEffect": false
+                    },
+                    "reload": false,
+                    "keepOriginal": false
+                });
+            }
+        }
+        loaded = true;
+    }
+
+    function restoreSettings() {
+        importConfig({
+            "widgets": [],
+            "reloadInterval": 250
+        });
+    }
+
+    Component.onCompleted: {
+        // ignore 1.2.0- old config format
+        forceFgConfig = Utils.clearOldWidgetConfig(config.widgets);
+        console.log(JSON.stringify(forceFgConfig, null, null));
+        initWidgets();
+        updateWidgetsModel();
+    }
+
+    ListModel {
+        id: widgetsModel
+    }
+
+    RunCommand {
+        id: runCommand
+    }
+
+    Connections {
+        function onExited(cmd, exitCode, exitStatus, stdout, stderr) {
+            if (exitCode !== 0)
+                return;
+
+            if (cmd.startsWith("cat")) {
+                const content = stdout.trim();
+                try {
+                    console.log(content);
+                    const newConfig = JSON.parse(content);
+                    root.importConfig(newConfig);
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+        }
+
+        target: runCommand
+    }
+
+    Connections {
+        // https://invent.kde.org/plasma/plasma-desktop/-/blob/6ddedc3e53b066960be84eb447f9e02f31d45271/desktoppackage/contents/configuration/AppletConfiguration.qml#L422
+        target: applyButton
+        function onEnabledChanged() {
+            if (applyButton.enabled) {
+                root.isDirty = true;
+            }
+        }
+    }
+
+    ColumnLayout {
+        enabled: root.cfg_isEnabled
+
+        RowLayout {
+            Button {
+                text: i18n("Restore default (removes all icon and text fixes)")
+                icon.name: "kt-restore-defaults-symbolic"
+                onClicked: {
+                    root.restoreSettings();
+                }
+                Layout.fillWidth: true
+            }
+        }
+
+        Components.WidgetTextIconFixHint {
+            Layout.alignment: Qt.AlignHCenter
+        }
+
+        Components.SettingImportExport {
+            onExportConfirmed: {
+                runCommand.exec(root.crateConfigDirCmd);
+                runCommand.exec("echo '" + root.cfg_forceForegroundColor + "' > '" + root.configDir + "forceForegroundColor.json'");
+            }
+            onImportConfirmed: runCommand.exec(root.importCmd)
+        }
+
+        Kirigami.FormLayout {
+            Kirigami.Separator {
+                Kirigami.FormData.isSection: true
+                Kirigami.FormData.label: i18n("Force Text/Icon color")
+            }
+
+            SpinBox {
+                Kirigami.FormData.label: i18n("Refresh interval:")
+                from: 16
+                to: 1000
+                stepSize: 50
+                value: root.config.reloadInterval
+                onValueModified: {
+                    root.config.reloadInterval = value;
+                    root.updateConfig();
+                }
+            }
+        }
+
+        Label {
+            Layout.fillWidth: true
+            text: i18n("Fix text and icon colors/font for widgets where the normal method doesn't work or is reset by the widget.<br> <strong>Mask</strong>: Force color on SVG icons, useful for symbolic icons.<br><strong>Color Effect</strong>: Force color on text and icons using post-processing effect, useful for non-symbolic icons.<br><strong>Refresh</strong>: Re-apply color/font at a fixed interval, useful for widgets that recreate or recolor content themselves.<br><strong>Keep original</strong>: Do not change the text/icon color, useful for widgets that manage their own colors.")
+        }
+
+        ColumnLayout {
+            id: widgetCards
+            Layout.alignment: Qt.AlignHCenter
+            Repeater {
+                model: widgetsModel
+
+                delegate: Components.WidgetCardTextIconFixes {
+                    onUpdateWidget: (maskEnabled, effectEnabled, reload, keepOriginal) => {
+                        if (!root.loaded)
+                            return;
+
+                        widgetsModel.set(index, {
+                            "method": {
+                                "mask": maskEnabled,
+                                "multiEffect": effectEnabled
+                            },
+                            "reload": reload,
+                            "keepOriginal": keepOriginal
+                        });
+                        root.updateConfig();
+                    }
+                }
+            }
+        }
+    }
+
+    header: ColumnLayout {
+        Components.Header {
+            id: headerComponent
+        }
+        Kirigami.InlineMessage {
+            Layout.fillWidth: true
+            visible: root.isDirty
+            type: Kirigami.MessageType.Warning
+            Layout.margins: Kirigami.Units.mediumSpacing
+            text: i18n("Apply the changes and restart plasmashell for changes to take full effect.")
+            actions: [
+                Kirigami.Action {
+                    icon.name: "system-reboot-symbolic"
+                    text: i18n("Restart plasmashell")
+                    onTriggered: runCommand.exec("systemctl restart --user plasma-plasmashell")
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+    <kcfgfile name=""/>
+    <!-- Stored in kwinrc, group [Script-osd-desk-snake]. The only place defaults are written:
+         tools/gen_config_ui.py turns them into contents/ui/schema.js. -->
+    <group name="">
+        <!-- Behavior -->
+        <entry name="ShowDelay" type="Int"><default>0</default></entry>
+        <entry name="FadeInDuration" type="Int"><default>250</default></entry>
+        <entry name="DisplayDuration" type="Int"><default>1000</default></entry>
+        <entry name="FadeOutDuration" type="Int"><default>250</default></entry>
+        <!-- 0 fade, 1 fade + zoom -->
+        <entry name="AppearEffect" type="Int"><default>0</default></entry>
+        <!-- 0 slides with the switch and swipes, 1 once the switch is done (cross-fade), 2 fades along with the switch -->
+        <entry name="HighlightMotion" type="Int"><default>0</default></entry>
+        <entry name="AnimationDuration" type="Int"><default>200</default></entry>
+        <!-- 0 linear, 1 smooth, 2 overshoot, 3 ease in and out -->
+        <entry name="AnimationEasing" type="Int"><default>1</default></entry>
+        <entry name="HideWithSingleDesktop" type="Bool"><default>true</default></entry>
+        <!-- 0 none, 1 above, 2 below -->
+        <entry name="Caption" type="Int"><default>0</default></entry>
+
+        <!-- Position: 0 anchor, 1 free (percent of the area) -->
+        <entry name="PositionMode" type="Int"><default>0</default></entry>
+        <!-- 0 top-left, 1 top, 2 top-right, 3 left, 4 center, 5 right, 6 bottom-left, 7 bottom, 8 bottom-right -->
+        <entry name="Anchor" type="Int"><default>7</default></entry>
+        <entry name="Margin" type="Int"><default>110</default></entry>
+        <entry name="OffsetX" type="Int"><default>0</default></entry>
+        <entry name="OffsetY" type="Int"><default>0</default></entry>
+        <entry name="PercentX" type="Double"><default>50</default></entry>
+        <entry name="PercentY" type="Double"><default>85</default></entry>
+        <!-- Dragging the indicator (settings app open): snap to the nearest anchor -->
+        <entry name="SnapToAnchors" type="Bool"><default>true</default></entry>
+        <entry name="SnapDistance" type="Int"><default>48</default></entry>
+        <entry name="AvoidPanels" type="Bool"><default>true</default></entry>
+
+        <!-- Layout: 0 follow KWin grid, 1 single row, 2 single column -->
+        <entry name="Layout" type="Int"><default>0</default></entry>
+        <entry name="Spacing" type="Int"><default>8</default></entry>
+        <entry name="Padding" type="Int"><default>10</default></entry>
+
+        <!-- Size of the whole indicator, %: multiplies every size in px except the position ones -->
+        <entry name="Zoom" type="Int"><default>100</default></entry>
+        <!-- Style: 0 pills, 1 labels, 2 icons, 3 tasks -->
+        <entry name="Style" type="Int"><default>0</default></entry>
+        <!-- Highlight: 0 full, 1 square, 2 line, 3 full + line -->
+        <entry name="Highlight" type="Int"><default>0</default></entry>
+        <entry name="MarkOccupied" type="Bool"><default>true</default></entry>
+        <!-- Dot under occupied desktops (labels, icons): diameter and gap under the label or icon, px -->
+        <entry name="MarkSize" type="Int"><default>4</default></entry>
+        <entry name="MarkOffset" type="Int"><default>1</default></entry>
+        <entry name="MarkOpacity" type="Int"><default>80</default></entry>
+        <entry name="InactiveOpacity" type="Int"><default>45</default></entry>
+
+        <!-- 0 pill, 1 circle, 2 square, 3 diamond, 4 bar -->
+        <entry name="PillShape" type="Int"><default>0</default></entry>
+        <!-- Pills with windows: 0 ring around the pill, 1 dot in the middle (MarkSize, MarkOpacity) -->
+        <entry name="PillMark" type="Int"><default>0</default></entry>
+        <!-- Ring thickness and gap to the pill inside it, px -->
+        <entry name="RingWidth" type="Int"><default>2</default></entry>
+        <entry name="RingGap" type="Int"><default>0</default></entry>
+        <entry name="PillWidth" type="Int"><default>14</default></entry>
+        <entry name="PillHeight" type="Int"><default>14</default></entry>
+        <entry name="PillActiveWidth" type="Int"><default>44</default></entry>
+        <entry name="PillActiveHeight" type="Int"><default>14</default></entry>
+        <entry name="PillRadius" type="Int"><default>7</default></entry>
+
+        <!-- 0 rounded, 1 circle, 2 square -->
+        <entry name="CellShape" type="Int"><default>0</default></entry>
+        <entry name="CellWidth" type="Int"><default>40</default></entry>
+        <entry name="CellHeight" type="Int"><default>36</default></entry>
+        <entry name="CellRadius" type="Int"><default>8</default></entry>
+        <entry name="SquareSize" type="Int"><default>28</default></entry>
+        <entry name="LineWidth" type="Int"><default>20</default></entry>
+        <entry name="LineHeight" type="Int"><default>4</default></entry>
+        <!-- Gap between the label or icon and the line highlight under it, px -->
+        <entry name="LineOffset" type="Int"><default>3</default></entry>
+
+        <!-- Label source: 0 number, 1 desktop name, 2 template, 3 custom list -->
+        <entry name="LabelSource" type="Int"><default>0</default></entry>
+        <entry name="LabelTemplate" type="String"><default>D%d</default></entry>
+        <entry name="LabelList" type="String"><default></default></entry>
+        <entry name="FontSize" type="Int"><default>0</default></entry>
+        <entry name="Bold" type="Bool"><default>false</default></entry>
+        <entry name="ActiveBold" type="Bool"><default>true</default></entry>
+
+        <entry name="IconList" type="String"><default></default></entry>
+        <entry name="IconFallback" type="String"><default>virtual-desktops</default></entry>
+        <entry name="IconSize" type="Int"><default>22</default></entry>
+
+        <entry name="TaskIconSize" type="Int"><default>18</default></entry>
+        <entry name="MaxTaskIcons" type="Int"><default>3</default></entry>
+
+        <!-- Colors -->
+        <entry name="UseThemeColors" type="Bool"><default>true</default></entry>
+        <entry name="ActiveColor" type="Color"><default>#3daee9</default></entry>
+        <entry name="InactiveColor" type="Color"><default>#fcfcfc</default></entry>
+        <entry name="TextColor" type="Color"><default>#fcfcfc</default></entry>
+        <entry name="ActiveTextColor" type="Color"><default>#fcfcfc</default></entry>
+        <entry name="OccupiedColor" type="Color"><default>#fcfcfc</default></entry>
+
+        <!-- Background: 0 Plasma, 1 Plasma solid, 2 transparent, 3 custom color -->
+        <entry name="BackgroundMode" type="Int"><default>0</default></entry>
+        <entry name="BackgroundColor" type="Color"><default>#dc202225</default></entry>
+        <entry name="BackgroundRadius" type="Int"><default>12</default></entry>
+        <entry name="BackgroundOpacity" type="Int"><default>0</default></entry>
+    </group>
+</kcfg>

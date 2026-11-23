@@ -1,0 +1,1425 @@
+import QtQuick 2.15
+import QtQuick.Controls
+import QtQuick.Layouts
+import org.kde.kirigami as Kirigami
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.plasmoid
+import org.kde.plasma.extras as PlasmaExtras
+import org.kde.plasma.plasma5support as Plasma5Support
+
+PlasmoidItem {
+    id: root
+
+    property var listModelController;
+    property var promptArray: [];
+    property bool isLoading: false
+    property bool isAtBottom: true
+    property var chatModel: null
+    property string currentPlayingHash: ""
+
+    hideOnWindowDeactivate: !Plasmoid.configuration.pin
+
+    property var pendingTTSJobs: ({})
+    property var pendingFuncCmd: null
+    property var currentFuncSource: null
+
+    // Models this widget no longer offers (see modelOptions in ConfigAppearance.qml), mapped to the
+    // successor that replaced them. The API still answers a retired id by redirecting it, so a
+    // configuration saved by an older version keeps working, but it would keep sending a model that
+    // is absent from the picker. Repair it once, before the user can send anything.
+    readonly property var retiredModels: ({
+        "gemini-3.5-flash": "gemini-3.6-flash",
+        "gemini-3.7-flash": "gemini-3.8-flash",
+        "gemini-2.5-flash": "gemini-3.5-flash-lite",
+        "gemini-2.5-pro": "gemini-3.8-flash",
+        "gemini-3.1-flash-lite-preview": "gemini-3.1-flash-lite",
+        "gemini-omni-1.1-flash": "gemini-omni-1.2-flash",
+        "gemini-omni-flash-preview": "gemini-omni-1.2-flash",
+        "deep-research-pro-preview-12-2025": "deep-research-preview-04-2026"
+    })
+
+    Component.onCompleted: {
+        var storedModel = Plasmoid.configuration.selectedModel;
+        if (storedModel && retiredModels[storedModel])
+            Plasmoid.configuration.selectedModel = retiredModels[storedModel];
+    }
+
+    Plasma5Support.DataSource {
+        id: executable
+        engine: "executable"
+        connectedSources: []
+        onNewData: function(sourceName, data) {
+            var exitCode = data["exit code"];
+            for (var key in pendingTTSJobs) {
+                if (pendingTTSJobs[key].command === sourceName) {
+                    var job = pendingTTSJobs[key];
+                    delete pendingTTSJobs[key];
+                    if (job.kind === "play" && job.key === currentPlayingHash) {
+                        currentPlayingHash = "";
+                        if (exitCode !== 0) reportTTSError(exitCode, job.provider);
+                    } else if (job.kind === "dsnote" && job.key === currentPlayingHash) {
+                        currentPlayingHash = "";
+                    }
+                    break;
+                }
+            }
+            disconnectSource(sourceName);
+        }
+    }
+
+    property int currentFuncMsgIndex: -1
+
+    // Strips ANSI escape codes and keeps the tail of command output capped at the limit.
+    function formatTerminalOutput(rawOut, maxChars) {
+        if (!rawOut) return "";
+        var DEFAULT_TERMINAL_LIMIT = 8000;
+        var limit = maxChars || DEFAULT_TERMINAL_LIMIT;
+        var slice = rawOut;
+        if (slice.length > limit * 2) {
+            slice = slice.substring(slice.length - limit * 2);
+        }
+        var cleaned = slice.replace(/\u001b\[[0-9;]*[a-zA-Z]/g, "");
+        if (cleaned.length > limit) {
+            cleaned = "... [earlier output truncated]\n" + cleaned.substring(cleaned.length - limit);
+        } else if (rawOut.length > cleaned.length && rawOut.length > limit * 2) {
+            cleaned = "... [earlier output truncated]\n" + cleaned;
+        }
+        return cleaned;
+    }
+
+    Plasma5Support.DataSource {
+        id: funcExec
+        engine: "executable"
+        interval: 0
+        connectedSources: []
+        onNewData: function(sourceName, data) {
+            if (!pendingFuncCmd || pendingFuncCmd.command !== sourceName) {
+                disconnectSource(sourceName);
+                return;
+            }
+
+            var stdout = data["stdout"] || "";
+            var stderr = data["stderr"] || "";
+            var combinedOut = stdout + (stderr ? "\n" + stderr : "");
+            var exitCode = data["exit code"];
+
+            disconnectSource(sourceName);
+
+            var cb = pendingFuncCmd.callback;
+            pendingFuncCmd = null;
+            currentFuncSource = null;
+            currentFuncMsgIndex = -1;
+
+            cb(combinedOut, exitCode);
+        }
+    }
+    
+    SyntaxHighlighter {
+        id: syntaxHighlighter
+    }
+    
+    SessionManager {
+        id: sessionManager
+        Component.onCompleted: {
+            if (Plasmoid.configuration.enablePersistence) {
+                init()
+            }
+        }
+    }
+    
+    Connections {
+        target: Plasmoid.configuration
+        function onPinChanged() {
+            root.hideOnWindowDeactivate = !Plasmoid.configuration.pin
+        }
+        function onEnablePersistenceChanged() {
+            if (Plasmoid.configuration.enablePersistence) {
+                sessionManager.init()
+            }
+        }
+    }
+    
+    function getConfigColors() {
+        return {
+            codeBackgroundColor: Plasmoid.configuration.codeBackgroundColor,
+            codeBackgroundOpacity: Plasmoid.configuration.codeBackgroundOpacity,
+            codeFontFamily: Plasmoid.configuration.codeFontFamily,
+            codeKeywordColor: Plasmoid.configuration.codeKeywordColor,
+            codeStringColor: Plasmoid.configuration.codeStringColor,
+            codeCommentColor: Plasmoid.configuration.codeCommentColor,
+            codeFunctionColor: Plasmoid.configuration.codeFunctionColor,
+            codeNumberColor: Plasmoid.configuration.codeNumberColor,
+            codeTypeColor: Plasmoid.configuration.codeTypeColor,
+            linkColor: Plasmoid.configuration.useCustomLinkColor ? 
+                      Plasmoid.configuration.linkColor : "#4a9eff"
+        };
+    }
+
+    function stripHtml(html) {
+        var text = String(html).replace(/<[^>]*>/g, '');
+        text = text.replace(/&nbsp;/g, ' ');
+        text = text.replace(/&lt;/g, '<');
+        text = text.replace(/&gt;/g, '>');
+        text = text.replace(/&quot;/g, '"');
+        text = text.replace(/&#39;/g, "'");
+        text = text.replace(/&amp;/g, '&');
+        return text;
+    }
+
+    function shellQuote(value) {
+        return "'" + String(value).replace(/'/g, "'\\''") + "'";
+    }
+
+    function hashString(str) {
+        var hash = 0;
+        for (var i = 0; i < str.length; i++) {
+            var charCode = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + charCode;
+            hash = hash & hash;
+        }
+        return Math.abs(hash).toString();
+    }
+
+    function escapeJsonString(str) {
+        return str
+            .replace(/\\/g, '\\\\')
+            .replace(/"/g, '\\"')
+            .replace(/\n/g, '\\n')
+            .replace(/\r/g, '\\r')
+            .replace(/\t/g, '\\t');
+    }
+
+    function utf8ToB64(str) {
+        var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+        var bytes = [];
+        for (var i = 0; i < str.length; i++) {
+            var c = str.charCodeAt(i);
+            if (c < 128) bytes.push(c);
+            else if (c < 2048) bytes.push(192 | (c >> 6), 128 | (c & 63));
+            else bytes.push(224 | (c >> 12), 128 | ((c >> 6) & 63), 128 | (c & 63));
+        }
+        var result = "";
+        for (var i = 0; i < bytes.length; i += 3) {
+            var a = bytes[i], b = bytes[i+1] || 0, c2 = bytes[i+2] || 0;
+            result += chars.charAt(a >> 2);
+            result += chars.charAt(((a & 3) << 4) | (b >> 4));
+            result += chars.charAt(((b & 15) << 2) | (c2 >> 6));
+            result += chars.charAt(c2 & 63);
+        }
+        var pad = bytes.length % 3;
+        if (pad === 1) result = result.slice(0, -2) + "==";
+        else if (pad === 2) result = result.slice(0, -1) + "=";
+        return result;
+    }
+
+    function getToolsDef() {
+        return [{
+            functionDeclarations: [{
+                name: "list_directory",
+                description: "Lists files and directories at the given absolute path. Returns one entry per line.",
+                parameters: {
+                    type: "object",
+                    properties: { path: { type: "string", description: "Absolute path to directory" } },
+                    required: ["path"]
+                }
+            }, {
+                name: "read_text_file",
+                description: "Reads the content of a text or code file. Returns up to 50000 characters.",
+                parameters: {
+                    type: "object",
+                    properties: { path: { type: "string", description: "Absolute path to file" } },
+                    required: ["path"]
+                }
+            }, {
+                name: "write_text_file",
+                description: "Writes or overwrites a text file, creating parent directories if needed.",
+                parameters: {
+                    type: "object",
+                    properties: {
+                        path: { type: "string", description: "Absolute path where to write" },
+                        content: { type: "string", description: "Text content to write" }
+                    },
+                    required: ["path", "content"]
+                }
+            }, {
+                name: "run_command",
+                description: "Runs any shell command and returns its output.",
+                parameters: {
+                    type: "object",
+                    properties: { command: { type: "string", description: "Shell command to execute" } },
+                    required: ["command"]
+                }
+            }]
+        }];
+    }
+
+    function handleFunctionCall(fc, listModel) {
+        if (!Plasmoid.configuration.enableFileOps) return;
+        var funcMsgIndex = -1;
+        if (Plasmoid.configuration.showFunctionMessages) {
+            var msg = fc.name;
+            switch (fc.name) {
+                case "list_directory": msg = Plasmoid.configuration.msgListDirectory; break;
+                case "read_text_file": msg = Plasmoid.configuration.msgReadTextFile; break;
+                case "write_text_file": msg = Plasmoid.configuration.msgWriteTextFile; break;
+                case "run_command":
+                    if (Plasmoid.configuration.showTerminalOutput && fc.args && fc.args.command) {
+                        msg = Plasmoid.configuration.msgRunCommand + " <code>" + syntaxHighlighter.escapeHtml(fc.args.command) + "</code>";
+                    } else {
+                        msg = Plasmoid.configuration.msgRunCommand;
+                    }
+                    break;
+            }
+            listModel.append({
+                name: "Function",
+                number: msg,
+                terminalCmd: (fc.name === "run_command" && fc.args && fc.args.command) ? fc.args.command : "",
+                terminalOut: "",
+                exitCode: 0
+            });
+            funcMsgIndex = listModel.count - 1;
+        }
+        executeNow(fc, listModel, funcMsgIndex);
+    }
+
+    function executeNow(fc, listModel, funcMsgIndex) {
+        var cmd;
+        if (fc.name === "list_directory") {
+            cmd = 'ls -1a "' + fc.args.path + '" 2>&1 | head -100';
+        } else if (fc.name === "read_text_file") {
+            cmd = 'cat "' + fc.args.path + '" 2>&1 | head -c 50000';
+        } else if (fc.name === "write_text_file") {
+            var b64 = utf8ToB64(fc.args.content || "");
+            var p = fc.args.path;
+            cmd = 'echo ' + b64 + ' | base64 -d > /tmp/gemini_write.tmp 2>&1 && mkdir -p "$(dirname "' + p + '")" 2>&1 && cp /tmp/gemini_write.tmp "' + p + '" 2>&1';
+        } else if (fc.name === "run_command") {
+            cmd = fc.args.command + ' 2>&1';
+        }
+        if (cmd) {
+            currentFuncSource = cmd;
+            currentFuncMsgIndex = funcMsgIndex;
+            isLoading = true;
+            pendingFuncCmd = { command: cmd, callback: function(out, code) {
+                currentFuncSource = null;
+                currentFuncMsgIndex = -1;
+                if (Plasmoid.configuration.showFunctionMessages && Plasmoid.configuration.showTerminalOutput && fc.name === "run_command") {
+                    if (funcMsgIndex !== undefined && funcMsgIndex >= 0 && funcMsgIndex < listModel.count) {
+                        var item = listModel.get(funcMsgIndex);
+                        if (item && item.name === "Function") {
+                            var escapedCmd = syntaxHighlighter.escapeHtml((fc.args && fc.args.command) || "");
+                            var displayOut = formatTerminalOutput(out);
+                            if (!displayOut.trim()) {
+                                displayOut = "(no output)";
+                            }
+                            var statusBadge = (code === 0) 
+                                ? "" 
+                                : ' <span style="color:#ff5555; font-weight:bold;">[Exit ' + code + ']</span>';
+                            var headerMsg = Plasmoid.configuration.msgRunCommand + ' <code>' + escapedCmd + '</code>' + statusBadge;
+                            listModel.set(funcMsgIndex, {
+                                name: "Function",
+                                number: headerMsg,
+                                terminalCmd: (fc.args && fc.args.command) ? fc.args.command : "",
+                                terminalOut: displayOut,
+                                exitCode: code
+                            });
+                        }
+                    }
+                }
+                try {
+                    var result = code === 0 ? { output: out } : { error: out, exit_code: code };
+                    promptArray.push({ role: "user", parts: [{ functionResponse: { name: fc.name, response: result } }] });
+                    sendApiRequest(listModel);
+                } catch(e) {
+                    promptArray.push({ role: "user", parts: [{ functionResponse: { name: fc.name, response: { error: "Callback error: " + e } } }] });
+                    sendApiRequest(listModel);
+                }
+            }};
+            funcExec.connectSource(cmd);
+        }
+    }
+
+    function cancelCurrentCommand() {
+        pendingFuncCmd = null;
+        currentFuncMsgIndex = -1;
+        try {
+            if (currentFuncSource) {
+                funcExec.disconnectSource(currentFuncSource);
+                currentFuncSource = null;
+            }
+        } catch(e) {}
+        try {
+            if (promptArray.length > 0) {
+                var last = promptArray[promptArray.length - 1];
+                if (last.role === "model" && last.parts && last.parts[0] && last.parts[0].functionCall) {
+                    promptArray.pop();
+                }
+            }
+        } catch(e) {}
+        try {
+            if (listModel.count > 0) {
+                var lastItem = listModel.get(listModel.count - 1);
+                if (lastItem.name === "Function") {
+                    listModel.remove(listModel.count - 1);
+                }
+            }
+        } catch(e) {}
+        isLoading = false;
+    }
+
+    function getSafeContents() {
+        var c = promptArray;
+        if (Plasmoid.configuration.useCustomPrompt && Plasmoid.configuration.customSystemPrompt.trim() !== "") {
+            c = [{ role: "user", parts: [{ text: Plasmoid.configuration.customSystemPrompt }] },
+                 { role: "model", parts: [{ text: "Understood. I will follow these instructions." }] },
+                 ...promptArray];
+        }
+        return c;
+    }
+
+    function emptyResponseMessage(response, candidate) {
+        if (response && response.promptFeedback && response.promptFeedback.blockReason)
+            return "The request was blocked (" + response.promptFeedback.blockReason + "). Try rephrasing your message.";
+        if (candidate && candidate.finishReason && candidate.finishReason !== "STOP")
+            return "The model returned no content (" + candidate.finishReason + "). Try rephrasing your message.";
+        return "The model returned an empty response. Try sending your message again.";
+    }
+
+    function sendApiRequest(listModel) {
+        isLoading = true;
+        var selectedModel = Plasmoid.configuration.selectedModel || "gemini-2.5-flash";
+        var url = "https://generativelanguage.googleapis.com/v1beta/models/" + selectedModel + ":generateContent";
+        var body = { contents: getSafeContents() };
+        if (Plasmoid.configuration.enableFileOps) body.tools = getToolsDef();
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("x-goog-api-key", Plasmoid.configuration.apiKey);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    // A 200 response is not guaranteed to carry usable content: `candidates` can be
+                    // absent (blocked prompt), `content` can lack `parts`, and `parts[0]` can hold
+                    // neither `text` nor `functionCall` (observed with finishReason STOP). Reading
+                    // those blindly threw inside this handler and left `isLoading` stuck forever, so
+                    // every path below must end with it reset.
+                    try {
+                        var response = JSON.parse(xhr.responseText);
+                        var candidate = (response.candidates && response.candidates.length > 0)
+                            ? response.candidates[0] : null;
+                        var part = (candidate && candidate.content && candidate.content.parts
+                            && candidate.content.parts.length > 0)
+                            ? candidate.content.parts[0] : null;
+
+                        if (part && part.functionCall) {
+                            if (!Plasmoid.configuration.enableFileOps) {
+                                listModel.append({ name: "Assistant", number: "<i>File operations are disabled. Enable them in widget settings first.</i>" });
+                                isLoading = false;
+                            } else {
+                                // Replay the raw part as returned by the API: it carries `thoughtSignature`,
+                                // which the API now requires on functionCall parts sent back (HTTP 400 otherwise).
+                                promptArray.push({ role: "model", parts: [part] });
+                                handleFunctionCall(part.functionCall, listModel);
+                            }
+                        } else if (part && part.text) {
+                            var formatted = syntaxHighlighter.formatText(part.text, getConfigColors());
+                            listModel.append({ name: "Assistant", number: formatted });
+                            promptArray.push({ role: "model", parts: [{ text: part.text }] });
+                            isLoading = false;
+                            if (Plasmoid.configuration.enablePersistence)
+                                sessionManager.saveSession(selectedModel, promptArray);
+                        } else {
+                            listModel.append({ name: "Assistant", number: "<i>" + emptyResponseMessage(response, candidate) + "</i>" });
+                            isLoading = false;
+                        }
+                    } catch (e) {
+                        listModel.append({ name: "Assistant", number: "<b>Error:</b> <i>Could not read the model response.</i>" });
+                        isLoading = false;
+                    }
+                } else {
+                    var msg = "<b>Error " + xhr.status + ":</b> ";
+                    if (xhr.status === 404) msg += "The Gemini model is not available.";
+                    else if (xhr.status === 401) msg += "Invalid API key. Check settings.";
+                    else if (xhr.status === 403) msg += "Access forbidden. Check API key permissions.";
+                    else if (xhr.status === 429) msg += "Rate limit exceeded. Try again later.";
+                    else if (xhr.status >= 500) msg += "Google AI service unavailable.";
+                    else {
+                        msg += xhr.statusText;
+                        try {
+                            var err = JSON.parse(xhr.responseText);
+                            if (err.error && err.error.message) msg += "<br><i>" + err.error.message + "</i>";
+                        } catch(e) {
+                            if (xhr.responseText && xhr.responseText.length < 200) msg += "<br><i>" + xhr.responseText + "</i>";
+                        }
+                    }
+            listModel.append({ name: "Assistant", number: msg });
+                    isLoading = false;
+                }
+            }
+        };
+        xhr.send(JSON.stringify(body));
+    }
+
+    function ttsKey(text) {
+        var provider = Plasmoid.configuration.ttsProvider || "elevenlabs";
+        return hashString(provider + "|" + text);
+    }
+
+    function ttsTargetPath(key, provider) {
+        var ext = (provider === "elevenlabs" || provider === "openai") ? "mp3" : "wav";
+        return "/tmp/tts_" + key + "." + ext;
+    }
+
+    function getTTSGenerator(cleanText, key) {
+        var provider = Plasmoid.configuration.ttsProvider || "elevenlabs";
+        var outputPath = ttsTargetPath(key, provider);
+        var cmd;
+
+        if (provider === "elevenlabs") {
+            var apiKey = (Plasmoid.configuration.elevenlabsApiKey || "").trim();
+            var voiceId = (Plasmoid.configuration.elevenlabsVoiceId || "").trim() || "pNInz6obpgDQGcFmaJgB";
+            if (!apiKey) return null;
+            var body = '{"text":"' + escapeJsonString(cleanText) + '","model_id":"eleven_multilingual_v2"}';
+            cmd = "curl -fsS --max-time 120 -X POST "
+                + shellQuote("https://api.elevenlabs.io/v1/text-to-speech/" + voiceId + "/stream?optimize_streaming_latency=3")
+                + " -H " + shellQuote("xi-api-key: " + apiKey)
+                + " -H 'Content-Type: application/json'"
+                + " -d " + shellQuote(body)
+                + " -o " + shellQuote(outputPath);
+        } else if (provider === "openai") {
+            var openaiKey = (Plasmoid.configuration.openaiApiKey || "").trim();
+            var voice = (Plasmoid.configuration.openaiVoice || "alloy").trim();
+            var model = (Plasmoid.configuration.openaiModel || "tts-1").trim();
+            if (!openaiKey) return null;
+            var openaiBody = '{"model":"' + escapeJsonString(model) + '","input":"'
+                + escapeJsonString(cleanText) + '","voice":"' + escapeJsonString(voice) + '"}';
+            cmd = "curl -fsS --max-time 120 -X POST 'https://api.openai.com/v1/audio/speech'"
+                + " -H " + shellQuote("Authorization: Bearer " + openaiKey)
+                + " -H 'Content-Type: application/json'"
+                + " -d " + shellQuote(openaiBody)
+                + " -o " + shellQuote(outputPath);
+        } else if (provider === "espeak") {
+            var espeakVoice = (Plasmoid.configuration.espeakVoice || "en").trim() || "en";
+            var speed = Plasmoid.configuration.espeakSpeed || 175;
+            var pitch = Plasmoid.configuration.espeakPitch || 50;
+            cmd = "espeak-ng -v " + shellQuote(espeakVoice)
+                + " -s " + speed + " -p " + pitch
+                + " -w " + shellQuote(outputPath)
+                + " " + shellQuote(cleanText);
+        } else if (provider === "piper") {
+            var modelPath = (Plasmoid.configuration.piperModelPath || "").trim();
+            if (!modelPath) return null;
+            cmd = "printf '%s' " + shellQuote(cleanText)
+                + " | piper --model " + shellQuote(modelPath)
+                + " --output_file " + shellQuote(outputPath);
+        } else {
+            return null;
+        }
+
+        return { command: cmd, path: outputPath };
+    }
+
+    readonly property var ttsPlayers: [
+        { bin: "pw-play", args: "" },
+        { bin: "paplay", args: "" },
+        { bin: "ffplay", args: "-nodisp -autoexit -loglevel error" },
+        { bin: "mpv", args: "--no-video --really-quiet" }
+    ]
+
+    function ttsPlayerChain(target) {
+        var chain = [];
+        for (var i = 0; i < ttsPlayers.length; i++) {
+            var player = ttsPlayers[i];
+            var args = player.args ? player.args + " " : "";
+            chain.push("if command -v " + player.bin + " >/dev/null 2>&1; then exec "
+                + player.bin + " " + args + target + "; fi");
+        }
+        chain.push("exit 5");
+        return chain.join("; ");
+    }
+
+    function reportTTSError(exitCode, provider) {
+        var detail;
+        if (exitCode === -1) {
+            detail = i18n("speech is not configured for the selected provider. Check the widget settings.");
+        } else if (exitCode === 2) {
+            detail = i18n("the speech request was rejected. Check the API key, the voice and your quota in the widget settings.");
+        } else if (exitCode === 5) {
+            detail = i18n("no audio player was found. Install pipewire (pw-play) or pulseaudio-utils (paplay).");
+        } else if (exitCode === 127) {
+            detail = i18n("a command needed to generate the audio is not installed.");
+        } else {
+            detail = i18n("audio playback failed (exit code %1).", exitCode);
+        }
+        console.warn("Gemini-Kchat TTS:", provider || "", "exit", exitCode, detail);
+        if (root.chatModel)
+            root.chatModel.append({ name: "Assistant", number: "<b>TTS error:</b> <i>" + detail + "</i>" });
+    }
+
+    function stopTTS() {
+        if (!currentPlayingHash) return;
+        var key = currentPlayingHash;
+        currentPlayingHash = "";
+        delete pendingTTSJobs[key];
+
+        if ((Plasmoid.configuration.ttsProvider || "elevenlabs") === "dsnote") {
+            var dsnoteCmd = (Plasmoid.configuration.dsnoteCommand || "").trim();
+            if (dsnoteCmd) executable.connectSource(dsnoteCmd + " --action cancel");
+            return;
+        }
+
+        // The dotted file name is matched with a bracketed dot so the pkill command line
+        // itself does not match, and only this message's player and shell are stopped.
+        executable.connectSource("pkill -f 'tts_" + key + "[.]mp3'; pkill -f 'tts_" + key + "[.]wav'; true");
+    }
+
+    function playTTS(text) {
+        if (!Plasmoid.configuration.enableTTS) return;
+
+        var key = ttsKey(text);
+        if (currentPlayingHash === key) {
+            stopTTS();
+            return;
+        }
+        stopTTS();
+
+        var cleanText = stripHtml(text).trim();
+        if (!cleanText) return;
+
+        var provider = Plasmoid.configuration.ttsProvider || "elevenlabs";
+        currentPlayingHash = key;
+
+        if (provider === "dsnote") {
+            var dsnoteCmd = (Plasmoid.configuration.dsnoteCommand || "").trim();
+            if (!dsnoteCmd) {
+                currentPlayingHash = "";
+                reportTTSError(-1, provider);
+                return;
+            }
+            var dsnoteRun = dsnoteCmd + " --action start-reading-text --text " + shellQuote(cleanText);
+            pendingTTSJobs[key] = { kind: "dsnote", command: dsnoteRun, key: key, provider: provider };
+            executable.connectSource(dsnoteRun);
+            return;
+        }
+
+        var generator = getTTSGenerator(cleanText, key);
+        if (!generator) {
+            currentPlayingHash = "";
+            reportTTSError(-1, provider);
+            return;
+        }
+
+        var command = "f=" + shellQuote(generator.path)
+            + '; if [ ! -s "$f" ]; then ' + generator.command + " || exit 2; fi"
+            + "; " + ttsPlayerChain('"$f"');
+        pendingTTSJobs[key] = { kind: "play", command: command, key: key, provider: provider };
+        executable.connectSource(command);
+    }
+
+    function request(messageField, listModel, prompt) {
+        if (!Plasmoid.configuration.apiKey || Plasmoid.configuration.apiKey.trim() === '') {
+            listModel.append({
+                "name": "Assistant",
+                "number": "<b>Error:</b> Please configure your Google AI Studio API Key in the widget settings."
+            });
+            return;
+        }
+
+        if (!prompt || prompt.trim() === '') return;
+
+        listModel.append({ "name": "User", "number": prompt });
+        promptArray.push({ "role": "user", "parts": [{ "text": prompt }] });
+
+        sendApiRequest(listModel);
+    }
+
+    Plasmoid.contextualActions: [
+        PlasmaCore.Action {
+            text: i18n("Keep Open")
+            icon.name: "window-pin"
+            checkable: true
+            checked: Plasmoid.configuration.pin
+            onTriggered: {
+                Plasmoid.configuration.pin = checked
+                root.hideOnWindowDeactivate = !checked
+            }
+        },
+        PlasmaCore.Action {
+            text: i18n("Clear chat")
+            icon.name: "edit-clear"
+            onTriggered: {
+                listModelController.clear();
+                promptArray = [];
+            }
+        }
+    ]
+
+    compactRepresentation: CompactRepresentation {}
+
+    fullRepresentation: ColumnLayout {
+        Layout.preferredHeight: 400
+        Layout.preferredWidth: 350
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            color: Plasmoid.configuration.useCustomBackgroundColor ? 
+                   Qt.rgba(Plasmoid.configuration.backgroundColor.r,
+                           Plasmoid.configuration.backgroundColor.g,
+                           Plasmoid.configuration.backgroundColor.b,
+                           Plasmoid.configuration.backgroundOpacity) : "transparent"
+            
+            ColumnLayout {
+                anchors.fill: parent
+                spacing: 0
+
+        PlasmaExtras.PlasmoidHeading {
+            Layout.fillWidth: true
+            visible: Plasmoid.configuration.showPinButton || Plasmoid.configuration.showClearButton || Plasmoid.configuration.enablePersistence
+
+            contentItem: RowLayout {
+                Layout.fillWidth: true
+
+                PlasmaComponents.Button {
+                    id: pinButton
+                    visible: Plasmoid.configuration.showPinButton
+                    checkable: true
+                    checked: Plasmoid.configuration.pin
+                    onToggled: {
+                        Plasmoid.configuration.pin = checked
+                        root.hideOnWindowDeactivate = !checked
+                    }
+                    icon.name: checked ? "window-pin" : "window-unpin"
+
+                    display: PlasmaComponents.AbstractButton.IconOnly
+                    text: checked ? i18n("Unpin") : i18n("Keep Open")
+
+                    PlasmaComponents.ToolTip.text: text
+                    PlasmaComponents.ToolTip.delay: Kirigami.Units.toolTipDelay
+                    PlasmaComponents.ToolTip.visible: hovered
+                }
+                
+                PlasmaComponents.ComboBox {
+                    id: sessionSelector
+                    visible: Plasmoid.configuration.enablePersistence
+                    Layout.fillWidth: true
+                    textRole: "title"
+                    valueRole: "id"
+                    
+                    model: {
+                        var filtered = []
+                        for (var i = 0; i < sessionManager.sessions.length; i++) {
+                            var sess = sessionManager.sessions[i]
+                            if (sess.id !== sessionManager.currentSessionId || (promptArray && promptArray.length > 0)) {
+                                filtered.push(sess)
+                            }
+                        }
+                        return filtered
+                    }
+                    
+                    displayText: {
+                        if (!sessionManager.currentSessionId || promptArray.length === 0) {
+                            return ""
+                        }
+                        for (var i = 0; i < sessionManager.sessions.length; i++) {
+                            if (sessionManager.sessions[i].id === sessionManager.currentSessionId) {
+                                return sessionManager.sessions[i].title
+                            }
+                        }
+                        return ""
+                    }
+                    
+                    onActivated: function(index) {
+                        var filtered = []
+                        for (var i = 0; i < sessionManager.sessions.length; i++) {
+                            var sess = sessionManager.sessions[i]
+                            if (sess.id !== sessionManager.currentSessionId || (promptArray && promptArray.length > 0)) {
+                                filtered.push(sess)
+                            }
+                        }
+                        
+                        if (index >= 0 && index < filtered.length) {
+                            var session = sessionManager.loadSession(filtered[index].id)
+                            if (session) {
+                                listModelController.clear()
+                                promptArray = session.messages
+                                
+                            for (var i = 0; i < session.messages.length; i++) {
+                                var msg = session.messages[i]
+                                if (!msg.parts[0].text) continue
+                                var displayText = msg.parts[0].text
+                                
+                                if (msg.role === "model") {
+                                    displayText = syntaxHighlighter.formatText(displayText, getConfigColors())
+                                }
+                                
+                                listModelController.append({
+                                    "name": msg.role === "user" ? "User" : "Assistant",
+                                    "number": displayText
+                                })
+                            }
+                            }
+                        }
+                    }
+                    
+                    Connections {
+                        target: sessionManager
+                        function onSessionsUpdated() {
+                            sessionSelector.model = Qt.binding(function() {
+                                var filtered = []
+                                for (var i = 0; i < sessionManager.sessions.length; i++) {
+                                    var sess = sessionManager.sessions[i]
+                                    if (sess.id !== sessionManager.currentSessionId || (promptArray && promptArray.length > 0)) {
+                                        filtered.push(sess)
+                                    }
+                                }
+                                return filtered
+                            })
+                        }
+                    }
+                }
+                
+                PlasmaComponents.Button {
+                    visible: Plasmoid.configuration.enablePersistence
+                    icon.name: "document-edit"
+                    display: PlasmaComponents.AbstractButton.IconOnly
+                    text: i18n("Edit session title")
+                    enabled: sessionManager.currentSessionId !== ""
+                    
+                    onClicked: {
+                        editDialog.open()
+                    }
+                    
+                    PlasmaComponents.ToolTip.text: text
+                    PlasmaComponents.ToolTip.delay: Kirigami.Units.toolTipDelay
+                    PlasmaComponents.ToolTip.visible: hovered
+                }
+                
+                PlasmaComponents.Button {
+                    visible: Plasmoid.configuration.enablePersistence
+                    icon.name: "delete"
+                    display: PlasmaComponents.AbstractButton.IconOnly
+                    text: i18n("Delete session")
+                    enabled: sessionManager.currentSessionId !== ""
+                    
+                    onClicked: {
+                        deleteDialog.open()
+                    }
+                    
+                    PlasmaComponents.ToolTip.text: text
+                    PlasmaComponents.ToolTip.delay: Kirigami.Units.toolTipDelay
+                    PlasmaComponents.ToolTip.visible: hovered
+                }
+                
+                PlasmaComponents.Button {
+                    visible: Plasmoid.configuration.enablePersistence
+                    icon.name: "list-add"
+                    display: PlasmaComponents.AbstractButton.IconOnly
+                    text: i18n("New session")
+                    
+                    onClicked: {
+                        listModelController.clear()
+                        promptArray = []
+                        sessionManager.createSession()
+                    }
+                    
+                    PlasmaComponents.ToolTip.text: text
+                    PlasmaComponents.ToolTip.delay: Kirigami.Units.toolTipDelay
+                    PlasmaComponents.ToolTip.visible: hovered
+                }
+
+                Item {
+                    Layout.fillWidth: !sessionSelector.visible
+                    visible: !sessionSelector.visible
+                }
+
+                PlasmaComponents.Button {
+                    visible: Plasmoid.configuration.showClearButton && !Plasmoid.configuration.enablePersistence
+                    icon.name: "edit-clear-symbolic"
+                    text: i18n("Clear chat")
+                    display: PlasmaComponents.AbstractButton.IconOnly
+                    enabled: !isLoading
+                    hoverEnabled: !isLoading
+
+                    onClicked: {
+                        listModelController.clear();
+                        promptArray = [];
+                    }
+
+                    PlasmaComponents.ToolTip.text: text
+                    PlasmaComponents.ToolTip.delay: Kirigami.Units.toolTipDelay
+                    PlasmaComponents.ToolTip.visible: hovered
+                }
+            }
+        }
+        
+        PlasmaComponents.Dialog {
+            id: editDialog
+            title: i18n("Edit Title")
+            x: (parent.width - width) / 2
+            y: (parent.height - height) / 2
+            width: 300
+            
+            standardButtons: PlasmaComponents.Dialog.Ok | PlasmaComponents.Dialog.Cancel
+            
+            onAccepted: {
+                var newTitle = titleField.text.trim()
+                sessionManager.updateSessionTitle(sessionManager.currentSessionId, newTitle)
+                titleField.text = ""
+            }
+            
+            onRejected: {
+                titleField.text = ""
+            }
+            
+            ColumnLayout {
+                width: parent.width
+                spacing: Kirigami.Units.largeSpacing
+                
+                PlasmaComponents.TextField {
+                    id: titleField
+                    Layout.fillWidth: true
+                    placeholderText: i18n("Enter title")
+                    
+                    Component.onCompleted: {
+                        if (editDialog.visible) {
+                            titleField.text = sessionManager.getCurrentSessionTitle()
+                            titleField.selectAll()
+                        }
+                    }
+                    
+                    Connections {
+                        target: editDialog
+                        function onVisibleChanged() {
+                            if (editDialog.visible) {
+                                titleField.text = sessionManager.getCurrentSessionTitle()
+                                titleField.forceActiveFocus()
+                                titleField.selectAll()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        PlasmaComponents.Dialog {
+            id: deleteDialog
+            title: i18n("Delete Session")
+            x: (parent.width - width) / 2
+            y: (parent.height - height) / 2
+            width: 300
+            
+            standardButtons: PlasmaComponents.Dialog.Yes | PlasmaComponents.Dialog.No
+            
+            onAccepted: {
+                sessionManager.deleteSession(sessionManager.currentSessionId)
+                listModelController.clear()
+                promptArray = []
+            }
+            
+            ColumnLayout {
+                width: parent.width
+                spacing: Kirigami.Units.largeSpacing
+                
+                PlasmaComponents.Label {
+                    Layout.fillWidth: true
+                    text: i18n("Delete this session?")
+                    wrapMode: Text.WordWrap
+                }
+            }
+        }
+
+        ScrollView {
+            id: chatScrollView
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.minimumHeight: 150
+            
+            clip: true
+            
+            ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+            ScrollBar.vertical.policy: Plasmoid.configuration.hideScrollBar ? ScrollBar.AlwaysOff : ScrollBar.AsNeeded
+            
+            ListView {
+                id: listView
+                implicitWidth: chatScrollView.availableWidth
+                
+                spacing: Kirigami.Units.smallSpacing
+                
+                boundsBehavior: Flickable.StopAtBounds
+                interactive: true
+                flickableDirection: Flickable.VerticalFlick
+                
+                onMovingChanged: {
+                    if (!moving) {
+                        updateIsAtBottom();
+                    }
+                }
+                
+                onContentYChanged: {
+                    if (!moving && !dragging) {
+                        updateIsAtBottom();
+                    }
+                }
+                
+                function updateIsAtBottom() {
+                    var atEnd = contentHeight <= height ? true : (contentY + height >= contentHeight - 10);
+                    isAtBottom = atEnd;
+                }
+
+                Kirigami.PlaceholderMessage {
+                    anchors.centerIn: parent
+                    width: parent.width - (Kirigami.Units.largeSpacing * 4)
+                    visible: listView.count === 0 && Plasmoid.configuration.showEmptyPlaceholder
+                    text: {
+                        if (!Plasmoid.configuration.apiKey || Plasmoid.configuration.apiKey.trim() === '') {
+                            return i18n("Please configure your Google AI Studio API Key in the widget settings first.");
+                        }
+                        if (Plasmoid.configuration.useCustomPlaceholders && Plasmoid.configuration.emptyPlaceholder.trim() !== '') {
+                            return Plasmoid.configuration.emptyPlaceholder;
+                        }
+                        return i18n("I am waiting for your questions...");
+                    }
+                }
+
+                model: ListModel {
+                    id: listModel
+                    dynamicRoles: true
+
+                    Component.onCompleted: {
+                        listModelController = listModel;
+                        root.chatModel = listModel;
+                    }
+                }
+
+                delegate: Kirigami.AbstractCard {
+                    id: messageCard
+                    width: listView.width
+                    implicitHeight: textMessage.implicitHeight + (terminalLoader.active && terminalLoader.item ? terminalLoader.item.height + 6 : 0) + 16
+                    
+                    background: Rectangle {
+                        color: {
+                            if (name === "User" && Plasmoid.configuration.useCustomUserMessageColor) {
+                                return Qt.rgba(Plasmoid.configuration.userMessageColor.r,
+                                             Plasmoid.configuration.userMessageColor.g,
+                                             Plasmoid.configuration.userMessageColor.b,
+                                             Plasmoid.configuration.userMessageOpacity);
+                            } else if (name === "Assistant" && Plasmoid.configuration.useCustomAssistantMessageColor) {
+                                return Qt.rgba(Plasmoid.configuration.assistantMessageColor.r,
+                                             Plasmoid.configuration.assistantMessageColor.g,
+                                             Plasmoid.configuration.assistantMessageColor.b,
+                                             Plasmoid.configuration.assistantMessageOpacity);
+                            } else if (name === "Function" && Plasmoid.configuration.useCustomFunctionMessageColor) {
+                                return Qt.rgba(Plasmoid.configuration.functionMessageColor.r,
+                                             Plasmoid.configuration.functionMessageColor.g,
+                                             Plasmoid.configuration.functionMessageColor.b,
+                                             Plasmoid.configuration.functionMessageOpacity);
+                            }
+                            return Kirigami.Theme.backgroundColor;
+                        }
+                        radius: 5
+                    }
+
+                    contentItem: Column {
+                        id: cardContent
+                        spacing: 6
+                        width: parent ? parent.width : undefined
+
+                        TextEdit {
+                            id: textMessage
+
+                            topPadding: 8
+                            bottomPadding: 8
+                            leftPadding: 8
+                            rightPadding: 8
+                            readOnly: true
+                            wrapMode: Text.WordWrap
+                            text: number
+                            textFormat: TextEdit.RichText
+                            width: parent.width
+                            color: {
+                                if (name === "User" && Plasmoid.configuration.useCustomUserTextColor) {
+                                    return Plasmoid.configuration.userTextColor;
+                                } else if (name === "Assistant" && Plasmoid.configuration.useCustomAssistantTextColor) {
+                                    return Plasmoid.configuration.assistantTextColor;
+                                } else if (name === "Function" && Plasmoid.configuration.useCustomFunctionTextColor) {
+                                    return Plasmoid.configuration.functionTextColor;
+                                }
+                                return name === "User" ? Kirigami.Theme.disabledTextColor : Kirigami.Theme.textColor;
+                            }
+                            selectByMouse: true
+                            selectionColor: Plasmoid.configuration.useCustomSelectionColor ?
+                                           Qt.rgba(Plasmoid.configuration.selectionColor.r,
+                                                 Plasmoid.configuration.selectionColor.g,
+                                                 Plasmoid.configuration.selectionColor.b,
+                                                 Plasmoid.configuration.selectionOpacity) :
+                                           Kirigami.Theme.highlightColor
+                            
+                            font.family: Plasmoid.configuration.useCustomFont ? 
+                                        Plasmoid.configuration.customFontFamily : Kirigami.Theme.defaultFont.family
+                            font.pointSize: Plasmoid.configuration.useCustomFont ? 
+                                           Plasmoid.configuration.customFontSize : Kirigami.Theme.defaultFont.pointSize
+                            
+                            onLinkActivated: function(link) {
+                                Qt.openUrlExternally(link);
+                            }
+                            
+                            onLinkHovered: function(link) {
+                                if (link) {
+                                    textMessage.cursorShape = Qt.PointingHandCursor;
+                                } else {
+                                    textMessage.cursorShape = Qt.IBeamCursor;
+                                }
+                            }
+
+                            PlasmaComponents.Button {
+                                anchors.right: parent.right
+                                anchors.bottom: parent.bottom
+                                anchors.rightMargin: (name === "Assistant" && Plasmoid.configuration.enableTTS && Plasmoid.configuration.showCopyButton ? 40 : 0)
+                                visible: name !== "Function" && Plasmoid.configuration.showCopyButton && hoverHandler.hovered
+
+                                icon.name: "edit-copy-symbolic"
+                                text: i18n("Copy")
+                                display: PlasmaComponents.AbstractButton.IconOnly
+                                
+                                onClicked: {
+                                    textMessage.selectAll();
+                                    textMessage.copy();
+                                    textMessage.deselect();
+                                }
+
+                                PlasmaComponents.ToolTip.text: text
+                                PlasmaComponents.ToolTip.delay: Kirigami.Units.toolTipDelay
+                                PlasmaComponents.ToolTip.visible: hovered
+                            }
+
+                            PlasmaComponents.Button {
+                                anchors.right: parent.right
+                                anchors.bottom: parent.bottom
+                                visible: name === "Assistant" && Plasmoid.configuration.enableTTS && hoverHandler.hovered
+
+                                icon.name: currentPlayingHash === ttsKey(number) ? "media-playback-stop" : "audio-volume-high"
+                                text: currentPlayingHash === ttsKey(number) ? i18n("Stop") : i18n("Play")
+                                display: PlasmaComponents.AbstractButton.IconOnly
+                                
+                                onClicked: {
+                                    playTTS(number);
+                                }
+
+                                PlasmaComponents.ToolTip.text: text
+                                PlasmaComponents.ToolTip.delay: Kirigami.Units.toolTipDelay
+                                PlasmaComponents.ToolTip.visible: hovered
+                            }
+
+                            PlasmaComponents.Button {
+                                anchors.right: parent.right
+                                anchors.bottom: parent.bottom
+                                visible: name === "Function" && root.isLoading && hoverHandler.hovered
+
+                                icon.name: "process-stop"
+                                text: i18n("Cancel")
+                                display: PlasmaComponents.AbstractButton.IconOnly
+
+                                onClicked: {
+                                    root.cancelCurrentCommand();
+                                }
+
+                                PlasmaComponents.ToolTip.text: text
+                                PlasmaComponents.ToolTip.delay: Kirigami.Units.toolTipDelay
+                                PlasmaComponents.ToolTip.visible: hovered
+                            }
+
+                            HoverHandler {
+                                id: hoverHandler
+                            }
+                        }
+
+                        Loader {
+                            id: terminalLoader
+                            width: parent.width
+                            property string terminalOutput: model.terminalOut || ""
+                            active: name === "Function" && Boolean(model.terminalOut)
+                            visible: active
+                            sourceComponent: Rectangle {
+                                id: termBox
+                                width: parent ? parent.width : 200
+                                readonly property int maxH: Plasmoid.configuration.terminalOutputMaxHeight > 0 ? Plasmoid.configuration.terminalOutputMaxHeight : 200
+                                height: Math.min(maxH, Math.max(36, termFlickable.contentHeight + 12))
+                                color: {
+                                    var cfg = getConfigColors();
+                                    return syntaxHighlighter.colorToRgba(cfg.codeBackgroundColor, cfg.codeBackgroundOpacity);
+                                }
+                                radius: 4
+                                border.color: Qt.rgba(Kirigami.Theme.textColor.r, Kirigami.Theme.textColor.g, Kirigami.Theme.textColor.b, 0.15)
+                                border.width: 1
+                                clip: true
+
+                                Flickable {
+                                    id: termFlickable
+                                    anchors.fill: parent
+                                    anchors.margins: 4
+                                    contentWidth: Math.max(width, termText.paintedWidth + 8)
+                                    contentHeight: termText.paintedHeight + 8
+                                    clip: true
+                                    boundsBehavior: Flickable.StopAtBounds
+
+                                    TextEdit {
+                                        id: termText
+                                        width: Math.max(termFlickable.width, paintedWidth)
+                                        readOnly: true
+                                        selectByMouse: true
+                                        wrapMode: Text.NoWrap
+                                        text: terminalLoader.terminalOutput
+                                        textFormat: TextEdit.PlainText
+                                        font.family: {
+                                            var cfg = getConfigColors();
+                                            return cfg.codeFontFamily || 'Monospace';
+                                        }
+                                        font.pointSize: (Plasmoid.configuration.useCustomFont ? Plasmoid.configuration.customFontSize : Kirigami.Theme.defaultFont.pointSize) * 0.9
+                                        color: {
+                                            if (Plasmoid.configuration.useCustomFunctionTextColor) {
+                                                return Plasmoid.configuration.functionTextColor;
+                                            }
+                                            return Kirigami.Theme.textColor;
+                                        }
+                                        selectionColor: Plasmoid.configuration.useCustomSelectionColor ?
+                                                       Qt.rgba(Plasmoid.configuration.selectionColor.r,
+                                                             Plasmoid.configuration.selectionColor.g,
+                                                             Plasmoid.configuration.selectionColor.b,
+                                                             Plasmoid.configuration.selectionOpacity) :
+                                                       Kirigami.Theme.highlightColor
+
+                                        onTextChanged: {
+                                            if (root.isLoading && name === "Function") {
+                                                termFlickable.contentY = Math.max(0, termFlickable.contentHeight - termFlickable.height);
+                                            }
+                                        }
+                                    }
+
+                                    WheelHandler {
+                                        onWheel: (event) => {
+                                            if (event.angleDelta.y !== 0) {
+                                                termFlickable.contentY = Math.max(0, Math.min(termFlickable.contentHeight - termFlickable.height, termFlickable.contentY - event.angleDelta.y));
+                                            }
+                                            if (event.angleDelta.x !== 0) {
+                                                termFlickable.contentX = Math.max(0, Math.min(termFlickable.contentWidth - termFlickable.width, termFlickable.contentX - event.angleDelta.x));
+                                            }
+                                        }
+                                    }
+
+                                    PlasmaComponents.ScrollBar {
+                                        id: vbar
+                                        anchors.top: parent.top
+                                        anchors.right: parent.right
+                                        anchors.bottom: parent.bottom
+                                        orientation: Qt.Vertical
+                                        size: termFlickable.visibleArea.heightRatio
+                                        position: termFlickable.visibleArea.yPosition
+                                        active: termFlickable.moving || termFlickable.contentHeight > termFlickable.height
+                                    }
+
+                                    PlasmaComponents.ScrollBar {
+                                        id: hbar
+                                        anchors.left: parent.left
+                                        anchors.right: parent.right
+                                        anchors.bottom: parent.bottom
+                                        orientation: Qt.Horizontal
+                                        size: termFlickable.visibleArea.widthRatio
+                                        position: termFlickable.visibleArea.xPosition
+                                        active: termFlickable.moving || termFlickable.contentWidth > termFlickable.width
+                                    }
+                                }
+
+                                PlasmaComponents.Button {
+                                    anchors.top: parent.top
+                                    anchors.right: parent.right
+                                    anchors.margins: 4
+                                    width: 24
+                                    height: 24
+                                    visible: Plasmoid.configuration.showCopyButton && termBoxHover.hovered
+                                    icon.name: "edit-copy-symbolic"
+                                    text: i18n("Copy output")
+                                    display: PlasmaComponents.AbstractButton.IconOnly
+                                    z: 10
+
+                                    onClicked: {
+                                        termText.selectAll();
+                                        termText.copy();
+                                        termText.deselect();
+                                    }
+
+                                    PlasmaComponents.ToolTip.text: text
+                                    PlasmaComponents.ToolTip.delay: Kirigami.Units.toolTipDelay
+                                    PlasmaComponents.ToolTip.visible: hovered
+                                }
+
+                                HoverHandler {
+                                    id: termBoxHover
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                PlasmaComponents.Button {
+                    id: scrollToBottomButton
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    anchors.rightMargin: 10
+                    anchors.bottomMargin: 10
+                    visible: Plasmoid.configuration.showScrollToBottomButton && !isAtBottom && listView.count > 0
+                    icon.name: "go-down"
+                    display: PlasmaComponents.AbstractButton.IconOnly
+                    text: i18n("Scroll to bottom")
+                    z: 999
+                    
+                    onClicked: {
+                        listView.positionViewAtEnd();
+                    }
+                    
+                    PlasmaComponents.ToolTip.text: text
+                    PlasmaComponents.ToolTip.delay: Kirigami.Units.toolTipDelay
+                    PlasmaComponents.ToolTip.visible: hovered
+                }
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+
+            Item {
+                Layout.fillWidth: true
+                Layout.minimumHeight: 40
+                Layout.maximumHeight: 120
+                
+                Rectangle {
+                    anchors.fill: parent
+                    color: Plasmoid.configuration.useCustomInputColor ?
+                           Qt.rgba(Plasmoid.configuration.inputBackgroundColor.r,
+                                  Plasmoid.configuration.inputBackgroundColor.g,
+                                  Plasmoid.configuration.inputBackgroundColor.b,
+                                  Plasmoid.configuration.inputOpacity) : 
+                           Kirigami.Theme.backgroundColor
+                    radius: 5
+                }
+                
+                ScrollView {
+                    id: messageScrollView
+                    anchors.fill: parent
+                    clip: true
+                    
+                    ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+                    ScrollBar.vertical.policy: ScrollBar.AlwaysOff
+                    
+                    background: Item {}
+
+                    TextArea {
+                        id: messageField
+                        width: messageScrollView.availableWidth
+
+                        enabled: !isLoading
+                        hoverEnabled: !isLoading
+                        visible: !isLoading
+                        placeholderText: {
+                            if (!Plasmoid.configuration.showInputPlaceholder) {
+                                return "";
+                            }
+                            if (Plasmoid.configuration.useCustomPlaceholders && Plasmoid.configuration.inputPlaceholder.trim() !== '') {
+                                return Plasmoid.configuration.inputPlaceholder;
+                            }
+                            return i18n("Type here what you want to ask...");
+                        }
+                        wrapMode: TextArea.Wrap
+                        selectByMouse: true
+                        color: Plasmoid.configuration.useCustomInputTextColor ?
+                               Plasmoid.configuration.inputTextColor : Kirigami.Theme.textColor
+                        placeholderTextColor: Plasmoid.configuration.useCustomInputTextColor ?
+                               Qt.rgba(Plasmoid.configuration.inputTextColor.r,
+                                      Plasmoid.configuration.inputTextColor.g,
+                                      Plasmoid.configuration.inputTextColor.b,
+                                      0.5) : Qt.rgba(Kirigami.Theme.textColor.r,
+                                                    Kirigami.Theme.textColor.g,
+                                                    Kirigami.Theme.textColor.b,
+                                                    0.5)
+                        selectionColor: Plasmoid.configuration.useCustomSelectionColor ?
+                                       Qt.rgba(Plasmoid.configuration.selectionColor.r,
+                                             Plasmoid.configuration.selectionColor.g,
+                                             Plasmoid.configuration.selectionColor.b,
+                                             Plasmoid.configuration.selectionOpacity) :
+                                       Kirigami.Theme.highlightColor
+                        
+                        font.family: Plasmoid.configuration.useCustomFont ? 
+                                    Plasmoid.configuration.customFontFamily : Kirigami.Theme.defaultFont.family
+                        font.pointSize: Plasmoid.configuration.useCustomFont ? 
+                                       Plasmoid.configuration.customFontSize : Kirigami.Theme.defaultFont.pointSize
+                        
+                        background: Item {}
+
+                        Keys.onReturnPressed: {
+                            if (event.modifiers & Qt.ControlModifier) {
+                                messageField.text = messageField.text + "\n";
+                            } else {
+                                request(messageField, listModel, messageField.text);
+                                event.accepted = true;
+                            }
+                        }
+                        
+                        onVisibleChanged: {
+                            if (visible) {
+                                messageField.text = '';
+                                messageField.cursorPosition = 0;
+                            }
+                        }
+                    }
+                }
+                
+                BusyIndicator {
+                    id: indicator
+                    anchors.centerIn: parent
+                    running: isLoading
+                    visible: isLoading
+                }
+            }
+
+            PlasmaComponents.Button {
+                visible: Plasmoid.configuration.showPasteButton
+                Layout.alignment: Qt.AlignVCenter
+                icon.name: "edit-paste-symbolic"
+                display: PlasmaComponents.AbstractButton.IconOnly
+                text: i18n("Paste")
+                hoverEnabled: !isLoading
+                enabled: !isLoading
+
+                ToolTip.delay: 1000
+                ToolTip.visible: hovered
+                ToolTip.text: "Paste from clipboard"
+                
+                onClicked: {
+                    messageField.paste();
+                }
+            }
+
+            PlasmaComponents.Button {
+                visible: Plasmoid.configuration.showSendButton
+                Layout.alignment: Qt.AlignVCenter
+                icon.name: "document-send"
+                display: PlasmaComponents.AbstractButton.IconOnly
+                text: i18n("Send")
+                hoverEnabled: !isLoading
+                enabled: !isLoading
+
+                ToolTip.delay: 1000
+                ToolTip.visible: hovered
+                ToolTip.text: "Enter to send, CTRL+Enter for new line"
+                
+                onClicked: {
+                    request(messageField, listModel, messageField.text);
+                }
+            }
+        }
+            }
+        }
+    }
+}

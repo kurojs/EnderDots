@@ -1,0 +1,23 @@
+{
+    "KPlugin": {
+        "Id": "cl.moxwel.keepawake",
+        "Name": "Keep Awake",
+        "Description": "Shows and toggles KDE's \"block sleep and screen locking\" setting",
+        "Description[es]": "Muestra y alterna la opción de KDE \"bloquear la suspensión y el bloqueo de pantalla\"",
+        "Description[nl]": "Toont en schakelt de instelling \"slaap en schermvergrendeling blokkeren\" van KDE",
+        "Icon": "system-suspend-inhibited",
+        "Category": "System Information",
+        "License": "GPL-3.0-or-later",
+        "Version": "1.0.1",
+        "Authors": [
+            {
+                "Name": "moxwel",
+                "Email": "moxwelderg@gmail.com"
+            }
+        ],
+        "Website": "https://github.com/moxwel/keepawake-plasmoid",
+        "BugReportUrl": "https://github.com/moxwel/keepawake-plasmoid/issues"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0",
+    "KPackageStructure": "Plasma/Applet"
+}

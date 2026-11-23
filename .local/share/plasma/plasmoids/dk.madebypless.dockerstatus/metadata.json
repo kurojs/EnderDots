@@ -1,0 +1,21 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "Jakob Pless",
+                "Email": "pless84@gmail.com"
+            }
+        ],
+        "Category": "System Information",
+        "Description": "Docker container states as status badges, with start, stop and restart per container and per Compose stack",
+        "Icon": "folder-docker",
+        "Id": "dk.madebypless.dockerstatus",
+        "License": "GPL-2.0-or-later",
+        "Name": "Docker Status",
+        "Version": "1.15",
+        "Website": "https://github.com/pless84/plasma-widgets",
+        "BugReportUrl": "https://github.com/pless84/plasma-widgets/issues"
+    },
+    "KPackageStructure": "Plasma/Applet",
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

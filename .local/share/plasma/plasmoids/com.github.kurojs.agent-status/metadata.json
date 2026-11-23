@@ -1,0 +1,14 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [{ "Email": "kuuro.js@gmail.com", "Name": "kuro" }],
+        "Category": "System Information",
+        "Description": "Real-time text status of opencode and pi agents (same state files as the YASB widget)",
+        "Icon": "utilities-terminal",
+        "Id": "com.github.kurojs.agent-status",
+        "License": "MIT",
+        "Name": "Agent Status",
+        "Version": "0.1.0"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

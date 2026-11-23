@@ -1,0 +1,28 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "Dhruvesh Surolia",
+                "Email": "dhruv8sh@proton.me"
+            },
+            {
+                "Name": "kurojs (pulse animation)"
+            }
+        ],
+        "BugReportUrl": "https://github.com/dhruv8sh/kara/issues",
+        "Category": "Windows and Tasks",
+        "Description": "Desktop switching utility (with active workspace pulse animation).",
+        "EnabledByDefault": false,
+        "FormFactors": [
+            "desktop"
+        ],
+        "Icon": "virtual-desktops",
+        "Id": "org.dhruv8sh.kara",
+        "License": "GPL-3.0+",
+        "Name": "kara",
+        "Version": "1.0.0-pulse",
+        "Website": "https://github.com/dhruv8sh/kara"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

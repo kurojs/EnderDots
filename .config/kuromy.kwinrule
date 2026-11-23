@@ -1,0 +1,130 @@
+[Settings for keyviz]
+Description=Settings for keyviz
+above=true
+aboverule=2
+desktops=dc481913-8758-4ec8-a665-65b81bc4b969
+desktopsrule=2
+noborder=true
+noborderrule=2
+position=1400,700
+positionrule=2
+size=520,400
+sizerule=2
+skiptaskbar=true
+skiptaskbarrule=2
+wmclass=keyviz
+wmclasscomplete=true
+wmclassmatch=1
+
+[Settings for waydroid.(1-1)-Window{4200e94 alpha=1.0 fl=}#107]
+Description=Settings for waydroid.(1-1)-Window{4200e94 alpha=1.0 fl=}#107
+skiptaskbar=true
+skiptaskbarrule=2
+wmclass=waydroid.(1-1)-Window{4200e94 alpha=1.0 fl=}#107
+wmclassmatch=1
+
+[Settings for waydroid.(2-2)-Window{6e177f3 alpha=1.0 fl=}#333]
+Description=Settings for waydroid.(2-2)-Window{6e177f3 alpha=1.0 fl=}#333
+skiptaskbar=true
+skiptaskbarrule=2
+wmclass=waydroid.(2-2)-Window{6e177f3 alpha=1.0 fl=}#333
+wmclassmatch=1
+
+[Settings for waydroid.InputMethod]
+Description=Settings for waydroid.InputMethod
+skiptaskbar=true
+skiptaskbarrule=2
+wmclass=waydroid.InputMethod
+wmclassmatch=1
+
+[Window settings for Picture-in-Picture]
+Description=Window settings for Picture-in-Picture
+Enabled=false
+above=true
+aboverule=2
+desktops=\\0
+desktopsrule=2
+title=Picture-in-Picture
+titlematch=1
+types=66051
+wmclasscomplete=true
+
+[Window settings for Spotify]
+Description=Window settings for Spotify
+Enabled=false
+clientmachine=localhost
+noborder=true
+noborderrule=2
+title=Goldroom - Fifteen - Oxford Remix
+types=1
+windowrole=spotify
+windowrolematch=1
+wmclass=spotify Spotify
+wmclasscomplete=true
+wmclassmatch=1
+
+[Window settings for anki]
+Description=Window settings for anki
+noborder=true
+noborderrule=2
+size=600,800
+sizerule=3
+title=ユーザー 1 - Anki
+types=1
+wmclass=python3.13 anki
+wmclasscomplete=true
+wmclassmatch=1
+
+[Window settings for net.mkiol.SpeechNote]
+Description=Window settings for net.mkiol.SpeechNote
+Enabled=false
+minimize=true
+minimizerule=2
+skiptaskbar=true
+skiptaskbarrule=2
+title=Speech Note
+types=1
+wmclass=\snet.mkiol.SpeechNote
+wmclasscomplete=true
+wmclassmatch=1
+
+[Window settings for org.kde.okular]
+Description=Window settings for org.kde.okular
+noborder=true
+noborderrule=2
+size=1200,1000
+sizerule=2
+title=Okular
+types=1
+wmclass=okular org.kde.okular
+wmclasscomplete=true
+wmclassmatch=1
+
+[Window settings for org.nickvision.cavalier]
+Description=Window settings for org.nickvision.cavalier
+below=true
+belowrule=2
+position=0,810
+positionrule=2
+size=1920,200
+sizerule=2
+title=Cavalier
+types=1
+wmclass=\sorg.nickvision.cavalier
+wmclasscomplete=true
+wmclassmatch=1
+
+[Window settings for whatsdesk]
+Description=Window settings for whatsdesk
+Enabled=false
+clientmachine=localhost
+noborder=true
+noborderrule=2
+size=1200,900
+sizerule=2
+title=WhatsDesk
+types=1
+windowrole=browser-window
+windowrolematch=1
+wmclass=whatsdesk
+wmclassmatch=1

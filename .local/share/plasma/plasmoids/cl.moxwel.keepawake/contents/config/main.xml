@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+    <kcfgfile name=""/>
+    <group name="General">
+
+        <entry name="iconActive" type="String">
+            <label>Icon shown while sleep is blocked</label>
+            <default>system-suspend-inhibited</default>
+        </entry>
+
+        <entry name="iconInactive" type="String">
+            <label>Icon shown while sleep is allowed</label>
+            <default>system-suspend-uninhibited</default>
+        </entry>
+
+        <entry name="alwaysShowIcon" type="Bool">
+            <label>Keep the icon in the panel, even when sleep is allowed.</label>
+            <default>true</default>
+        </entry>
+
+    </group>
+</kcfg>

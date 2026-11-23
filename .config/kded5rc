@@ -1,0 +1,11 @@
+[Module-GtkConfig]
+autoload=false
+
+[Module-browserintegrationreminder]
+autoload=false
+
+[Module-device_automounter]
+autoload=false
+
+[Module-gtkconfig]
+autoload=false

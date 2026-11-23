@@ -1,0 +1,7 @@
+module Waywallen.DisplayEmbed
+linktarget waywallen-display-qml
+optional plugin waywallen-display-qml
+classname Waywallen_DisplayEmbedPlugin
+typeinfo waywallen-display-qml.qmltypes
+prefer :/Waywallen/DisplayEmbed/
+

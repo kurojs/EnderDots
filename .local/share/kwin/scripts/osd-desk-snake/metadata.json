@@ -1,0 +1,22 @@
+{
+    "KPackageStructure": "KWin/Script",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "rcspam"
+            }
+        ],
+        "Description": "Kara-style on-screen indicator shown when switching virtual desktops",
+        "Description[fr]": "Indicateur à l'écran façon Kara, affiché au changement de bureau virtuel",
+        "Icon": "virtual-desktops",
+        "Id": "osd-desk-snake",
+        "License": "GPL-3.0-or-later",
+        "Name": "OSD Desk Snake",
+        "Version": "0.2.1",
+        "Website": "https://github.com/rcspam/osd-desk-snake"
+    },
+    "X-Plasma-API": "declarativescript",
+    "X-Plasma-MainScript": "ui/main.qml",
+    "X-KDE-ConfigModule": "kwin/effects/configs/kcm_kwin4_genericscripted",
+    "X-KWin-Config-TranslationDomain": "osd-desk-snake"
+}

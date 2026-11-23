@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+  <kcfgfile name=""/>
+
+  <group name="General">
+    <entry name="apiKey" type="String">
+      <label>Google AI Studio API Key</label>
+      <default></default>
+    </entry>
+    <entry name="selectedModel" type="String">
+      <label>Gemini Model</label>
+      <default>gemini-flash-latest</default>
+    </entry>
+    <entry name="pin" type="Bool">
+      <label>Keep widget open</label>
+      <default>false</default>
+    </entry>
+    <entry name="customSystemPrompt" type="String">
+      <default></default>
+    </entry>
+    <entry name="useCustomPrompt" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="useCustomIcon" type="Bool">
+      <label>Use custom icon</label>
+      <default>false</default>
+    </entry>
+    <entry name="customIconPath" type="String">
+      <label>Custom icon path</label>
+      <default></default>
+    </entry>
+    <entry name="enableFileOps" type="Bool">
+      <label>Enable File Operations</label>
+      <default>false</default>
+    </entry>
+    <entry name="showFunctionMessages" type="Bool">
+      <label>Show function progress messages</label>
+      <default>true</default>
+    </entry>
+    <entry name="showTerminalOutput" type="Bool">
+      <label>Show command terminal output in chat</label>
+      <default>true</default>
+    </entry>
+    <entry name="terminalOutputMaxHeight" type="Int">
+      <label>Maximum terminal output height in pixels</label>
+      <default>200</default>
+    </entry>
+    <entry name="msgListDirectory" type="String">
+      <label>List directory message</label>
+      <default>⚙️ list_directory...</default>
+    </entry>
+    <entry name="msgReadTextFile" type="String">
+      <label>Read file message</label>
+      <default>⚙️ read_text_file...</default>
+    </entry>
+    <entry name="msgWriteTextFile" type="String">
+      <label>Write file message</label>
+      <default>⚙️ write_text_file...</default>
+    </entry>
+    <entry name="msgRunCommand" type="String">
+      <label>Run command message</label>
+      <default>⚙️ run_command...</default>
+    </entry>
+  </group>
+
+  <group name="Colors">
+    <entry name="useCustomBackgroundColor" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="backgroundColor" type="Color">
+      <default>#1e1e1e</default>
+    </entry>
+    <entry name="backgroundOpacity" type="Double">
+      <default>1.0</default>
+    </entry>
+    <entry name="useCustomUserMessageColor" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="userMessageColor" type="Color">
+      <default>#2a2a2a</default>
+    </entry>
+    <entry name="userMessageOpacity" type="Double">
+      <default>1.0</default>
+    </entry>
+    <entry name="useCustomUserTextColor" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="userTextColor" type="Color">
+      <default>#9e9e9e</default>
+    </entry>
+    <entry name="useCustomAssistantMessageColor" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="assistantMessageColor" type="Color">
+      <default>#2a2a2a</default>
+    </entry>
+    <entry name="assistantMessageOpacity" type="Double">
+      <default>1.0</default>
+    </entry>
+    <entry name="useCustomAssistantTextColor" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="assistantTextColor" type="Color">
+      <default>#ffffff</default>
+    </entry>
+    <entry name="useCustomFunctionMessageColor" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="functionMessageColor" type="Color">
+      <default>#2a2a2a</default>
+    </entry>
+    <entry name="functionMessageOpacity" type="Double">
+      <default>1.0</default>
+    </entry>
+    <entry name="useCustomFunctionTextColor" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="functionTextColor" type="Color">
+      <default>#ffffff</default>
+    </entry>
+    <entry name="useCustomInputColor" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="inputBackgroundColor" type="Color">
+      <default>#2a2a2a</default>
+    </entry>
+    <entry name="inputOpacity" type="Double">
+      <default>1.0</default>
+    </entry>
+    <entry name="useCustomInputTextColor" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="inputTextColor" type="Color">
+      <default>#ffffff</default>
+    </entry>
+    <entry name="useCustomSelectionColor" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="selectionColor" type="Color">
+      <default>#3a7fb8</default>
+    </entry>
+    <entry name="selectionOpacity" type="Double">
+      <default>0.5</default>
+    </entry>
+    <entry name="useCustomLinkColor" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="linkColor" type="Color">
+      <default>#4a9eff</default>
+    </entry>
+  </group>
+
+  <group name="UIVisibility">
+    <entry name="showPinButton" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="showClearButton" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="showCopyButton" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="showPasteButton" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="showSendButton" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="showScrollToBottomButton" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="hideScrollBar" type="Bool">
+      <default>false</default>
+    </entry>
+  </group>
+
+  <group name="Typography">
+    <entry name="useCustomFont" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="customFontFamily" type="String">
+      <default>Monospace</default>
+    </entry>
+    <entry name="customFontSize" type="Int">
+      <default>10</default>
+    </entry>
+  </group>
+
+  <group name="Placeholders">
+    <entry name="useCustomPlaceholders" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="inputPlaceholder" type="String">
+      <default>Type here what you want to ask...</default>
+    </entry>
+    <entry name="emptyPlaceholder" type="String">
+      <default>I am waiting for your questions...</default>
+    </entry>
+    <entry name="showInputPlaceholder" type="Bool">
+      <default>true</default>
+    </entry>
+    <entry name="showEmptyPlaceholder" type="Bool">
+      <default>true</default>
+    </entry>
+  </group>
+
+  <group name="CodeFormatting">
+    <entry name="codeBackgroundColor" type="Color">
+      <default>#1e1e1e</default>
+    </entry>
+    <entry name="codeBackgroundOpacity" type="Double">
+      <default>0.9</default>
+    </entry>
+    <entry name="codeFontFamily" type="String">
+      <default>Monospace</default>
+    </entry>
+    <entry name="codeKeywordColor" type="Color">
+      <default>#569cd6</default>
+    </entry>
+    <entry name="codeStringColor" type="Color">
+      <default>#ce9178</default>
+    </entry>
+    <entry name="codeCommentColor" type="Color">
+      <default>#6a9955</default>
+    </entry>
+    <entry name="codeFunctionColor" type="Color">
+      <default>#dcdcaa</default>
+    </entry>
+    <entry name="codeNumberColor" type="Color">
+      <default>#b5cea8</default>
+    </entry>
+    <entry name="codeTypeColor" type="Color">
+      <default>#4ec9b0</default>
+    </entry>
+  </group>
+
+  <group name="Persistence">
+    <entry name="enablePersistence" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="currentSessionId" type="String">
+      <default></default>
+    </entry>
+  </group>
+
+  <group name="TTS">
+    <entry name="enableTTS" type="Bool">
+      <default>false</default>
+    </entry>
+    <entry name="ttsProvider" type="String">
+      <default>elevenlabs</default>
+    </entry>
+    <entry name="elevenlabsApiKey" type="String">
+      <default></default>
+    </entry>
+    <entry name="elevenlabsVoiceId" type="String">
+      <default>pNInz6obpgDQGcFmaJgB</default>
+    </entry>
+    <entry name="openaiApiKey" type="String">
+      <default></default>
+    </entry>
+    <entry name="openaiVoice" type="String">
+      <default>alloy</default>
+    </entry>
+    <entry name="openaiModel" type="String">
+      <default>tts-1</default>
+    </entry>
+    <entry name="espeakVoice" type="String">
+      <default>en</default>
+    </entry>
+    <entry name="espeakSpeed" type="Int">
+      <default>175</default>
+    </entry>
+    <entry name="espeakPitch" type="Int">
+      <default>50</default>
+    </entry>
+    <entry name="piperModelPath" type="String">
+      <default></default>
+    </entry>
+    <entry name="dsnoteCommand" type="String">
+      <label>Speech Note command</label>
+      <default></default>
+    </entry>
+  </group>
+</kcfg>

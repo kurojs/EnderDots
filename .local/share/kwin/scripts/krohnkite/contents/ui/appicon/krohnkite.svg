@@ -1,0 +1,5 @@
+<!--
+    SPDX-FileCopyrightText: 2026 Krohnkite contributors
+    SPDX-License-Identifier: MIT
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M12 4H27A3 3 0 0 1 30 7V57A3 3 0 0 1 27 60H7A3 3 0 0 1 4 57V12Z" fill="#1B6EA8"/><rect x="34" y="4" width="26" height="26" rx="3" fill="#2FB3A6"/><rect x="34" y="34" width="26" height="26" rx="3" fill="#9BD45C"/></svg>

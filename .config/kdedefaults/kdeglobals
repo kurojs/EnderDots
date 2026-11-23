@@ -1,0 +1,8 @@
+[General]
+ColorScheme=KDEStoryBuccaneerBlueDarkColorScheme
+
+[Icons]
+Theme=Gradient-KDE-Story-Blue-Dark-Icons
+
+[KDE]
+widgetStyle=Breeze
