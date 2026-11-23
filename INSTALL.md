@@ -1,6 +1,15 @@
 # KDE — Install
 
-Restore: copy `.config/*` → `~/.config/` and `.local/share/*` → `~/.local/share/`, then log out/in.
+This is an overlay branch: it holds only KDE-specific files. Apply `main` first.
+
+```bash
+git clone -b main https://github.com/kurojs/EnderDots.git && cd EnderDots
+git fetch origin kde && git checkout origin/kde -- .
+cp -r .config/* ~/.config/
+cp -r .local/share/* ~/.local/share/
+```
+
+Then log out and back in.
 
 ## Packages (AUR)
 
