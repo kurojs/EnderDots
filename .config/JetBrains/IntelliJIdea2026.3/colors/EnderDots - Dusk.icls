@@ -1,0 +1,38 @@
+<scheme name="EnderDots - Dusk" version="142" parent_scheme="Darcula">
+  <option name="FONT_SCALE" value="1.0" />
+  <option name="LINE_SPACING" value="1.25" />
+  <option name="EDITOR_FONT_SIZE" value="34" />
+  <option name="EDITOR_FONT_NAME" value="IosevkaTerm NF" />
+  <option name="EDITOR_LIGATURES" value="true" />
+  <colors>
+    <option name="CARET_ROW_COLOR" value="25233B" />
+    <option name="FILESTATUS_ADDED" value="8BCF9B" />
+    <option name="FILESTATUS_DELETED" value="F7768E" />
+    <option name="FILESTATUS_MODIFIED" value="80CBC4" />
+    <option name="LINE_NUMBERS_COLOR" value="8588A8" />
+    <option name="SELECTION_BACKGROUND" value="3B514D" />
+  </colors>
+  <attributes>
+    <option name="MATCHED_BRACE_ATTRIBUTES">
+      <value>
+        <option name="BACKGROUND" value="3B514D" />
+        <option name="FONT_TYPE" value="1" />
+      </value>
+    </option>
+    <option name="RAINBOW_COLOR0">
+      <value><option name="FOREGROUND" value="7167E4" /></value>
+    </option>
+    <option name="RAINBOW_COLOR1">
+      <value><option name="FOREGROUND" value="55C7A5" /></value>
+    </option>
+    <option name="RAINBOW_COLOR2">
+      <value><option name="FOREGROUND" value="B597F6" /></value>
+    </option>
+    <option name="RAINBOW_COLOR3">
+      <value><option name="FOREGROUND" value="E5A76F" /></value>
+    </option>
+    <option name="RAINBOW_COLOR4">
+      <value><option name="FOREGROUND" value="84B8F3" /></value>
+    </option>
+  </attributes>
+</scheme>

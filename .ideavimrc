@@ -1,0 +1,14 @@
+source ~/.lazy-idea/lazy-idea.vim
+
+" Ctrl+S: guardar y volver a Normal mode (equivalente a :w en nvim)
+inoremap <C-s> <Esc>:w<CR>
+nnoremap <C-s> :w<CR>
+vnoremap <C-s> <Esc>:w<CR>
+
+" :w guarda SOLO el archivo actual, como en vim.
+" Default de IdeaVim es 'all' = Save All (guarda todos los buffers abiertos).
+set ideawrite=file
+
+" Comentar la seleccion con gc en Visual (accion nativa del IDE).
+" Nota: los mapeos a <Action> NO funcionan con noremap, por eso vmap y no vnoremap.
+vmap gc <Action>(CommentByLineComment)

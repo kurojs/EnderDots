@@ -76,8 +76,9 @@ EnderDots is a comprehensive collection of dotfiles featuring a modern desktop e
 
 ```plaintext
 EnderDots/
-├── .config/                    # fish, ghostty, nvim, opencode, zed, tilda, vicinae, starship
+├── .config/                    # fish, ghostty, JetBrains IDEs, nvim, opencode, zed, tilda, vicinae, starship
 ├── .local/bin/                 # Custom user scripts and executables
+├── .ideavimrc                  # IdeaVim configuration for IntelliJ IDEA
 ├── Docs/                       # Additional documentation
 ├── home/ & usr/                # System-level file overlays
 ```
@@ -136,12 +137,22 @@ The AUR package installs all config files under `/usr/share/ender-dots/` and pro
    ```bash
    cp -r .config/* ~/.config/
    cp -r .local/bin/* ~/.local/bin/
+   cp .ideavimrc ~/.ideavimrc
    ```
 
 3. Ensure your scripts are executable:
    ```bash
    chmod +x ~/.local/bin/*
    ```
+
+---
+
+## IntelliJ IDEA and IdeaVim
+
+- `.ideavimrc` stores local IdeaVim mappings and expects the external Lazy-Idea checkout at `~/.lazy-idea`; that dependency is not vendored.
+- `.config/JetBrains/IntelliJIdea2026.3/options/vim_settings.xml` stores the local IdeaVim key-conflict settings. Project jump history, credentials, license files, and Settings Sync state are excluded.
+- `colors/EnderDots - Dusk.icls` is an original Darcula-based editor color scheme. It uses the available dark-green `#3B514D` and KDE purple `#7167E4`; its remaining palette is original, not copied from a paid theme plugin.
+- The current Settings Sync scheme selector is left unchanged. Choose `EnderDots - Dusk` under **Settings → Editor → Color Scheme** when you want to use it. The manual source install copies `.config/*` and `.ideavimrc`; the AUR installer does not replace the full IntelliJ config directory.
 
 ---
 
