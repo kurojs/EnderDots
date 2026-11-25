@@ -1,0 +1,19 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "",
+                "Name": "doncsugar"
+            }
+        ],
+        "Category": "",
+        "Description": "",
+        "EnabledByDefault": true,
+        "Id": "sumac-night-accent-tasks",
+        "License": "GPLv3",
+        "Name": "Sumac Night Molten Glass (Accent Tasks)",
+        "Version": "0.9.2",
+        "Website": "https://www.pling.com/p/2321401/"
+    },
+    "X-Plasma-API": "5.0"
+}

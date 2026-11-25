@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 400 400">
+ <defs>
+  <style id="current-color-scheme" type="text/css">.ColorScheme-Text { color:#ffffff; }</style>
+ </defs>
+  <!-- focus -->
+  <rect id="focus-top" x="0" y="210" width="4" height="3" fill="#a855f7" fill-opacity="0.32" stroke="none"/>
+  <rect id="focus-center" x="0" y="213" width="4" height="4" fill="#a855f7" fill-opacity="0.32" stroke="none"/>
+  <rect id="focus-bottom" x="0" y="217" width="4" height="3" fill="#a855f7" fill-opacity="0.32" stroke="none"/>
+  <rect id="focus-hint-top-margin" x="0" y="222" width="3" height="3"/>
+  <rect id="focus-hint-bottom-margin" x="0" y="222" width="3" height="3"/>
+  <!-- focus-hover -->
+  <rect id="focus-hover-top" x="0" y="218" width="4" height="3" fill="#a855f7" fill-opacity="0.42" stroke="none"/>
+  <rect id="focus-hover-center" x="0" y="221" width="4" height="4" fill="#a855f7" fill-opacity="0.42" stroke="none"/>
+  <rect id="focus-hover-bottom" x="0" y="225" width="4" height="3" fill="#a855f7" fill-opacity="0.42" stroke="none"/>
+  <rect id="focus-hover-hint-top-margin" x="0" y="230" width="3" height="3"/>
+  <rect id="focus-hover-hint-bottom-margin" x="0" y="230" width="3" height="3"/>
+  <!-- normal -->
+  <rect id="normal-top" x="8" y="210" width="4" height="3" fill="#22c55e" fill-opacity="0.22" stroke="none"/>
+  <rect id="normal-center" x="8" y="213" width="4" height="4" fill="#22c55e" fill-opacity="0.22" stroke="none"/>
+  <rect id="normal-bottom" x="8" y="217" width="4" height="3" fill="#22c55e" fill-opacity="0.22" stroke="none"/>
+  <rect id="normal-hint-top-margin" x="8" y="222" width="3" height="3"/>
+  <rect id="normal-hint-bottom-margin" x="8" y="222" width="3" height="3"/>
+  <!-- normal-hover -->
+  <rect id="normal-hover-top" x="8" y="218" width="4" height="3" fill="#22c55e" fill-opacity="0.34" stroke="none"/>
+  <rect id="normal-hover-center" x="8" y="221" width="4" height="4" fill="#22c55e" fill-opacity="0.34" stroke="none"/>
+  <rect id="normal-hover-bottom" x="8" y="225" width="4" height="3" fill="#22c55e" fill-opacity="0.34" stroke="none"/>
+  <rect id="normal-hover-hint-top-margin" x="8" y="230" width="3" height="3"/>
+  <rect id="normal-hover-hint-bottom-margin" x="8" y="230" width="3" height="3"/>
+  <!-- attention -->
+  <rect id="attention-top" x="16" y="210" width="4" height="3" fill="#f59e0b" fill-opacity="0.38" stroke="none"/>
+  <rect id="attention-center" x="16" y="213" width="4" height="4" fill="#f59e0b" fill-opacity="0.38" stroke="none"/>
+  <rect id="attention-bottom" x="16" y="217" width="4" height="3" fill="#f59e0b" fill-opacity="0.38" stroke="none"/>
+  <rect id="attention-hint-top-margin" x="16" y="222" width="3" height="3"/>
+  <rect id="attention-hint-bottom-margin" x="16" y="222" width="3" height="3"/>
+  <!-- attention-hover -->
+  <rect id="attention-hover-top" x="16" y="218" width="4" height="3" fill="#f59e0b" fill-opacity="0.48" stroke="none"/>
+  <rect id="attention-hover-center" x="16" y="221" width="4" height="4" fill="#f59e0b" fill-opacity="0.48" stroke="none"/>
+  <rect id="attention-hover-bottom" x="16" y="225" width="4" height="3" fill="#f59e0b" fill-opacity="0.48" stroke="none"/>
+  <rect id="attention-hover-hint-top-margin" x="16" y="230" width="3" height="3"/>
+  <rect id="attention-hover-hint-bottom-margin" x="16" y="230" width="3" height="3"/>
+  <!-- minimized -->
+  <rect id="minimized-top" x="24" y="210" width="4" height="3" fill="#7167e4" fill-opacity="0.22" stroke="none"/>
+  <rect id="minimized-center" x="24" y="213" width="4" height="4" fill="#7167e4" fill-opacity="0.22" stroke="none"/>
+  <rect id="minimized-bottom" x="24" y="217" width="4" height="3" fill="#7167e4" fill-opacity="0.22" stroke="none"/>
+  <rect id="minimized-hint-top-margin" x="24" y="222" width="3" height="3"/>
+  <rect id="minimized-hint-bottom-margin" x="24" y="222" width="3" height="3"/>
+  <!-- minimized-hover -->
+  <rect id="minimized-hover-top" x="24" y="218" width="4" height="3" fill="#7167e4" fill-opacity="0.34" stroke="none"/>
+  <rect id="minimized-hover-center" x="24" y="221" width="4" height="4" fill="#7167e4" fill-opacity="0.34" stroke="none"/>
+  <rect id="minimized-hover-bottom" x="24" y="225" width="4" height="3" fill="#7167e4" fill-opacity="0.34" stroke="none"/>
+  <rect id="minimized-hover-hint-top-margin" x="24" y="230" width="3" height="3"/>
+  <rect id="minimized-hover-hint-bottom-margin" x="24" y="230" width="3" height="3"/>
+  <!-- hover -->
+  <rect id="hover-top" x="32" y="210" width="4" height="3" fill="#ffffff" fill-opacity="0.12" stroke="none"/>
+  <rect id="hover-center" x="32" y="213" width="4" height="4" fill="#ffffff" fill-opacity="0.12" stroke="none"/>
+  <rect id="hover-bottom" x="32" y="217" width="4" height="3" fill="#ffffff" fill-opacity="0.12" stroke="none"/>
+  <rect id="hover-hint-top-margin" x="32" y="222" width="3" height="3"/>
+  <rect id="hover-hint-bottom-margin" x="32" y="222" width="3" height="3"/>
+ <!-- progress bar: copied verbatim from the base theme -->
+<g
+       transform="matrix(0.99999906,0,0,0.49999951,-12.588218,57.219558)"
+       id="progress-bottom">
+      <path
+         id="rect1115"
+         style="stroke-width:1.26491"
+         class="ColorScheme-PositiveText"
+         d="M 156.08836 90.438973 C 155.25995 90.438973 154.58836 91.782115 154.58836 93.438976 C 154.58836 95.095836 155.25995 96.438979 156.08836 96.438979 L 192.0884 96.438979 C 192.91682 96.438979 193.5884 95.095836 193.5884 93.438976 C 193.5884 91.782115 192.91682 90.438973 192.0884 90.438973 L 156.08836 90.438973 z "
+         fill="currentColor" />
+      <g
+         transform="matrix(-4.8000047,0,0,-1.5384631,346.88855,118.90052)"
+         id="hover-left-2-1-4-5-5-2-2"
+        >
+        <rect
+           style="opacity:0.003;fill:#ff0101;fill-opacity:1;stroke:none;stroke-width:0.707107"
+           y="11.999992"
+           x="31"
+           height="6.4999957"
+           width="10"
+           id="rect4951-3-2-72-6-8-5-2-17-7-6" />
+      </g>
+    </g>
+<g
+       style="fill:#60cc9f"
+       transform="matrix(1,0,0,1.5000014,-12.588387,-32.969606)"
+       id="progress-center">
+      <rect
+         style="color:#3daee9;opacity:0.4;fill:url(#radialGradient1125);fill-opacity:1;stroke:none;stroke-width:1.46059"
+         y="79.939003"
+         x="150.08839"
+         height="9.9999924"
+         width="47.999992"
+         id="rect4957-0-0-7-0-4-5" />
+    </g>
+<g
+       style="fill:#f99133"
+       transform="translate(-12.588218,7.0000073)"
+       id="progress-top">
+      <path
+         style="opacity:0.003;fill:#000000;fill-opacity:1;stroke:none"
+         d="M 150.08838,78.439002 V 78.772334 79.439 h 22.5 v -0.666666 -0.333332 z"
+         id="rect4997-3-95-1-4-6-5"
+         />
+    </g>
+ <!-- group expander: copied verbatim from the base theme -->
+<g
+       transform="matrix(1.2222222,0,0,1.2222222,22,83.658168)"
+       id="group-expander-bottom">
+      <path
+         id="path1581"
+         style="opacity:0.003;stroke-width:1.20604"
+         d="m 216.00034,89.002501 h -9 v 13.090909 h 9 z"
+         fill="currentColor"
+         class="ColorScheme-Background"
+         />
+      <path
+         class="ColorScheme-Background"
+         fill="currentColor"
+         transform="matrix(0.81818183,0,0,0.81818183,79.363638,13.727273)"
+         d="m 161.5,92 a 5.4999946,5.5000003 0 0 0 -5.5,5.5 5.4999946,5.5000003 0 0 0 5.5,5.5 5.4999946,5.5000003 0 0 0 5.5,-5.5 5.4999946,5.5000003 0 0 0 -5.5,-5.5 z m 0,1 a 4.4999958,4.5000004 0 0 1 4.5,4.5 4.4999958,4.5000004 0 0 1 -4.5,4.5 4.4999958,4.5000004 0 0 1 -4.5,-4.5 4.4999958,4.5000004 0 0 1 4.5,-4.5 z"
+         style="opacity:0.2;stroke-width:1.22222"
+         id="path4927" />
+      <path
+         fill="currentColor"
+         d="m 211.50001,89.818184 a 3.6818164,3.6818182 0 0 0 -3.68182,3.681818 3.6818164,3.6818182 0 0 0 3.68182,3.681818 3.6818164,3.6818182 0 0 0 3.68182,-3.681818 3.6818164,3.6818182 0 0 0 -3.68182,-3.681818 z"
+         id="path4931"
+         class="ColorScheme-Text"
+         style="opacity:0.5" />
+      <path
+         style="opacity:0.6"
+         d="m 210.67561,91.045464 9.7e-4,1.630631 -1.63462,0.01145 0.007,1.626089 1.63908,0.0091 -0.006,1.634313 1.62575,-0.005 0.007,-1.631618 1.63976,-2.7e-5 v -1.632877 h -1.64636 l 0.0204,-1.642077 z"
+         id="path4930" />
+      <path
+         fill="#ffffff"
+         d="m 211.08482,91.454555 9.7e-4,1.630633 -1.63474,0.01145 0.007,0.807899 1.6392,0.0091 -0.006,1.634319 0.8077,-0.005 0.007,-1.631624 1.63951,-2.7e-5 v -0.814687 h -1.64611 l 0.0204,-1.642079 z"
+         id="path4949" />
+    </g>
+</svg>

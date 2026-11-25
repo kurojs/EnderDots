@@ -7,6 +7,8 @@ git clone -b main https://github.com/kurojs/EnderDots.git && cd EnderDots
 git fetch origin kde && git checkout origin/kde -- .
 cp -r .config/* ~/.config/
 cp -r .local/share/* ~/.local/share/
+mkdir -p ~/.local/bin
+cp -a .local/bin/* ~/.local/bin/
 ```
 
 Then log out and back in.
@@ -25,13 +27,15 @@ yay -S kwin-effects-glass-git qt6-m3shapes-git plasma6-applets-appgrid ttf-iosev
 
 ## Active theme
 
-- Widget style: Glass · Icons: Tela-purple · Cursor: Sweet-cursors · Decoration: Breeze
-- Color scheme: Alpha50Transparent · Look-and-feel: KDE-Story-Blue-Dark-Global-6 · Plasma theme: sumac-night-molten-glass-plasma
+- Widget style: Glass · Icons: Tela Purple Tahoe Apps (Tela-purple base with Tahoe apps and accent folders) · Cursor: Sweet-cursors · Decoration: Breeze
+- Color scheme: Alpha50Transparent · Look-and-feel: KDE-Story-Blue-Dark-Global-6 · Plasma theme: sumac-night-accent-tasks
 - KWin effects: glass, rounded corners (shapecorners)
 - Tiling: krohnkite · OSD: osd-desk-snake
 
 ## Notes
 
 - `Gemini-Kchat` plasmoid API keys are redacted — re-enter them in the widget settings.
+- After changing KDE's accent color, run `~/.local/bin/kde-tela-purple-accent-folders.sh` to recolor folder icons.
+- Task-manager styling comes from the Plasma desktop theme. The stock applet exposes no per-applet icon-size setting in this repo; icon size follows panel thickness, with a small theme inset applied here.
 - Active plasmoids included (11). Grid launcher = `plasma6-applets-appgrid`.
 - Wallpapers live in `~/Pictures` + Steam Workshop (not included).

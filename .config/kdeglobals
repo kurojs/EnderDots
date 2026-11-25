@@ -113,7 +113,7 @@ smallestReadableFont=Nagino,13,-1,5,500,0,0,0,0,0,0,0,0,0,0,1,Medium,0,0
 toolBarFont=Nagino,13,-1,5,500,0,0,0,0,0,0,0,0,0,0,1,Medium,0,0
 
 [Icons]
-Theme=Tela-purple
+Theme=Tela-purple-Tahoe-apps
 
 [KDE]
 LookAndFeelPackage=KDE-Story-Blue-Dark-Global-6
