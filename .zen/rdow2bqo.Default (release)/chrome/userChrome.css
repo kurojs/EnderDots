@@ -1,97 +1,9 @@
 /*
  * Zen Browser — PWA, Glassy Context Menus, Sidebar & PiP Transparency Fix for Linux
  *
- * 1. Fixes the gray opaque background in taskbar-tab (PWA) windows on Linux.
- *    - Zen's transparency rules only apply to #main-window[windowtype="navigator:browser"].
- *    - Taskbar-tab (PWA) windows lack these DOM attributes, so the background stays gray.
- *    - Solution: Make :root transparent, set --zen-main-browser-background to a semi-transparent
- *      dark color, and keep --zen-background-opacity at 1 so the rgba alpha works.
- *
- * 2. Transparent Sidebar & Web Panels.
- *    - Overrides solid background variables (--sidebar-background-color, --zen-sidebar-background)
- *      so the main window's native KWin blur shines through the sidebar.
- *
- * 3. Picture-in-Picture (PiP) Window Transparency.
- *    - Makes #picture-in-picture and window[windowtype="Toolkit:PictureInPicture"] translucent
- *      so KWin Glass applies blur when controls/menus appear (requires `zen` & `zen-bin` in
- *      Glass's Force Blur window class list).
- *
- * 4. Makes all internal context menus, submenus, and panels translucent (glassy) without
- *    shadow or arrowbox overflow.
- *    - Overrides --panel-background and --arrowpanel-background across #contentAreaContextMenu,
- *      menupopup, and panel containers without using `appearance: none` (which turns popups
- *      solid black on Wayland).
- *    - Uses `-moz-window-shadow: none`, `--panel-shadow-margin: 0px`, and hides `::part(arrowbox)`
- *      so Gecko does not allocate invisible shadow padding in the Wayland buffer.
- *
- * 5. Real Background Blur & Clean Edges on KDE Plasma Wayland (kwin-effects-glass):
- *    - Patch src/blur.cpp in kwin-effects-glass so xdg_popup windows bypass class filtering and
- *      clip blur to the visible area:
- *
- *      # 1. Install build dependencies (Arch Linux)
- *      sudo pacman -S --needed kwin kdecoration vulkan-headers extra-cmake-modules libepoxy qt6-tools kcmutils
- *
- *      # 2. Patch src/blur.cpp in kwin-effects-glass
- *      cd /home/kuro/Downloads/kwin-effects-glass/
- *      git checkout src/blur.cpp
- *
- *      sed -i 's/if ((m_whitelist && !matches) || (!m_whitelist && matches)) {/if (!w->isMenu() \&\& !w->isPopupMenu() \&\& !w->isPopupWindow() \&\& ((m_whitelist \&\& !matches) || (!m_whitelist \&\& matches))) {/' src/blur.cpp
- *
- *      python3 -c '
- *      with open("src/blur.cpp", "r") as f: code = f.read()
- *      old = """    if (
- *              (m_decorWhitelist == matches) &&
- *              !(
- *                  w->isDock() ||
- *                  w->isMenu() ||
- *                  w->isDropdownMenu() ||
- *                  w->isPopupMenu() ||
- *                  w->isPopupWindow()
- *              )
- *          ) {
- *      #ifdef GLASS_X11
- *              frame = BlurRegion(w->frameGeometry().translated(-w->x(), -w->y()).toRect());
- *      #else
- *              BlurRegion glass(Rect(w->frameGeometry().translated(-w->x(), -w->y()).toRect()));"""
- *
- *      new = """    const bool isZenPopup = w->isMenu() || w->isDropdownMenu() || w->isPopupMenu() || w->isPopupWindow();
- *          if (isZenPopup || ((m_decorWhitelist == matches) && !w->isDock())) {
- *      #ifdef GLASS_X11
- *              frame = BlurRegion(w->frameGeometry().translated(-w->x(), -w->y()).toRect());
- *      #else
- *              QRectF targetRect = w->frameGeometry().translated(-w->x(), -w->y());
- *              if (isZenPopup && targetRect.width() > 30 && targetRect.height() > 30) {
- *                  targetRect = targetRect.adjusted(10, 10, -10, -10);
- *              }
- *              BlurRegion glass(Rect(targetRect.toRect()));"""
- *      assert old in code, "Block not found"
- *      with open("src/blur.cpp", "w") as f: f.write(code.replace(old, new, 1))
- *      '
- *
- *      # 3. Build and install
- *      rm -rf build && mkdir build && cd build
- *      cmake .. -DCMAKE_INSTALL_PREFIX=/usr
- *      make -j$(nproc)
- *      sudo make install
- *
- *    - In System Settings > Desktop Effects > Glass:
- *      * Force blur: add `zen` and `zen-bin` to the window class list.
- *      * Refraction + Rim: check "Exclude menus" to prevent rim glow on popup shadow margins.
- *      * Rounded corners: check "Exclude menus" (CSS handles the 12px border-radius cleanly).
- *
- *    - Also add at the bottom of ~/.config/gtk-3.0/gtk.css (after @import lines):
- *      .csd.popup decoration, decoration { box-shadow: none !important; background-color: transparent !important; margin: 0px !important; }
- *
- * Install:
- *   Copy this file to:
- *     ~/.zen/<profile>/chrome/userChrome.css
- *
- *   Ensure these prefs are enabled in about:config:
- *     zen.widget.linux.transparency = true
- *     toolkit.legacyUserProfileCustomizations.stylesheets = true
- *
  * Tested on:
  *   Zen Browser 1.14.x — KDE Plasma (Wayland) — Arch Linux
+ *   Note: Run with `MOZ_ENABLE_WAYLAND=0 zen-browser` to get KWin blur on panels/menus.
  */
 
 /* --- 1. PWA / Taskbar-Tab Transparency Fix --- */
@@ -121,19 +33,20 @@ window[windowtype="Toolkit:PictureInPicture"] {
     background-color: rgba(15, 15, 20, 0.3) !important;
 }
 
-/* --- 4. Glassy Context Menus, Submenus & Popups (No Shadow Overflow) --- */
+/* --- 4. Glassy Context Menus, Submenus & Popups (Borderless & Shadowless) --- */
 :root,
 #contentAreaContextMenu,
 menupopup,
 panel,
 tooltip {
-    --panel-background: rgba(20, 20, 25, 0.45) !important;
-    --arrowpanel-background: rgba(20, 20, 25, 0.45) !important;
-    --panel-border-color: rgba(255, 255, 255, 0.14) !important;
-    --arrowpanel-border-color: rgba(255, 255, 255, 0.14) !important;
+    --panel-background: transparent !important;
+    --arrowpanel-background: transparent !important;
+    --panel-border-color: transparent !important;
+    --arrowpanel-border-color: transparent !important;
     --panel-border-radius: 12px !important;
     --arrowpanel-border-radius: 12px !important;
     --panel-shadow: none !important;
+    --arrowpanel-shadow: none !important;
     --panel-shadow-margin: 0px !important;
     --arrowpanel-shadow-margin: 0px !important;
     --panel-padding: 4px !important;
@@ -152,6 +65,8 @@ tooltip {
     -moz-window-shadow: none !important;
     margin: 0px !important;
     padding: 0px !important;
+    border: none !important;
+    outline: none !important;
     box-shadow: none !important;
     filter: none !important;
 }
@@ -162,17 +77,39 @@ panel::part(content),
 .menupopup-arrowscrollbox,
 panelview,
 .panel-subview-body {
-    background-color: rgba(20, 20, 25, 0.45) !important;
-    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    background-color: transparent !important;
+    background: transparent !important;
+    background-image: none !important;
+    border: none !important;
+    outline: none !important;
     border-radius: 12px !important;
     box-shadow: none !important;
     margin: 0px !important;
 }
 
-:is(menuitem, menu, .subviewbutton) {
-    border-radius: 6px !important;
+/* --- 5. Page Right-Click Context Menu (Solid Cool Gray Base + Deep Purple Accent) --- */
+#contentAreaContextMenu,
+#contentAreaContextMenu menupopup {
+--panel-background: rgba(32, 35, 44, 1) !important;
+--arrowpanel-background: rgba(32, 35, 44, 1) !important;
+background-color: rgba(32, 35, 44, 1) !important;
+background: rgba(32, 35, 44, 1) !important;
+border-radius: 12px !important;
 }
 
-:is(menuitem, menu, .subviewbutton):hover {
-    background-color: rgba(255, 255, 255, 0.12) !important;
+#contentAreaContextMenu::part(content),
+#contentAreaContextMenu .menupopup-arrowscrollbox,
+#contentAreaContextMenu menupopup::part(content),
+#contentAreaContextMenu menupopup .menupopup-arrowscrollbox {
+background-color: rgba(32, 35, 44, 1) !important;
+background: rgba(32, 35, 44, 1) !important;
+border: none !important;
+border-radius: 12px !important;
+}
+
+#contentAreaContextMenu :is(menuitem, menu):hover,
+#contentAreaContextMenu :is(menuitem, menu)[_moz-menuactive="true"] {
+background-color: rgba(124, 58, 237, 0.38) !important;
+background: rgba(124, 58, 237, 0.38) !important;
+color: #ede9fe !important;
 }
