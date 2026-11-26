@@ -6,56 +6,56 @@
   <rect id="focus-top" x="0" y="210" width="4" height="3" fill="#22c55e" fill-opacity="0.32" stroke="none"/>
   <rect id="focus-center" x="0" y="213" width="4" height="4" fill="#22c55e" fill-opacity="0.32" stroke="none"/>
   <rect id="focus-bottom" x="0" y="217" width="4" height="3" fill="#22c55e" fill-opacity="0.32" stroke="none"/>
-  <rect id="focus-hint-top-margin" x="0" y="222" width="3" height="3"/>
-  <rect id="focus-hint-bottom-margin" x="0" y="222" width="3" height="3"/>
+  <rect id="focus-hint-top-margin" x="0" y="222" width="4" height="4"/>
+  <rect id="focus-hint-bottom-margin" x="0" y="222" width="4" height="4"/>
   <!-- focus-hover (active hover) - now GREEN -->
   <rect id="focus-hover-top" x="0" y="218" width="4" height="3" fill="#22c55e" fill-opacity="0.42" stroke="none"/>
   <rect id="focus-hover-center" x="0" y="221" width="4" height="4" fill="#22c55e" fill-opacity="0.42" stroke="none"/>
   <rect id="focus-hover-bottom" x="0" y="225" width="4" height="3" fill="#22c55e" fill-opacity="0.42" stroke="none"/>
-  <rect id="focus-hover-hint-top-margin" x="0" y="230" width="3" height="3"/>
-  <rect id="focus-hover-hint-bottom-margin" x="0" y="230" width="3" height="3"/>
+  <rect id="focus-hover-hint-top-margin" x="0" y="230" width="4" height="4"/>
+  <rect id="focus-hover-hint-bottom-margin" x="0" y="230" width="4" height="4"/>
   <!-- normal (unfocused) - now PURPLE -->
   <rect id="normal-top" x="8" y="210" width="4" height="3" fill="#6661f2" fill-opacity="0.22" stroke="none"/>
   <rect id="normal-center" x="8" y="213" width="4" height="4" fill="#6661f2" fill-opacity="0.22" stroke="none"/>
   <rect id="normal-bottom" x="8" y="217" width="4" height="3" fill="#6661f2" fill-opacity="0.22" stroke="none"/>
-  <rect id="normal-hint-top-margin" x="8" y="222" width="3" height="3"/>
-  <rect id="normal-hint-bottom-margin" x="8" y="222" width="3" height="3"/>
+  <rect id="normal-hint-top-margin" x="8" y="222" width="4" height="4"/>
+  <rect id="normal-hint-bottom-margin" x="8" y="222" width="4" height="4"/>
   <!-- normal-hover (unfocused hover) - now PURPLE -->
   <rect id="normal-hover-top" x="8" y="218" width="4" height="3" fill="#6661f2" fill-opacity="0.34" stroke="none"/>
   <rect id="normal-hover-center" x="8" y="221" width="4" height="4" fill="#6661f2" fill-opacity="0.34" stroke="none"/>
   <rect id="normal-hover-bottom" x="8" y="225" width="4" height="3" fill="#6661f2" fill-opacity="0.34" stroke="none"/>
-  <rect id="normal-hover-hint-top-margin" x="8" y="230" width="3" height="3"/>
-  <rect id="normal-hover-hint-bottom-margin" x="8" y="230" width="3" height="3"/>
+  <rect id="normal-hover-hint-top-margin" x="8" y="230" width="4" height="4"/>
+  <rect id="normal-hover-hint-bottom-margin" x="8" y="230" width="4" height="4"/>
   <!-- attention -->
   <rect id="attention-top" x="16" y="210" width="4" height="3" fill="#f59e0b" fill-opacity="0.38" stroke="none"/>
   <rect id="attention-center" x="16" y="213" width="4" height="4" fill="#f59e0b" fill-opacity="0.38" stroke="none"/>
   <rect id="attention-bottom" x="16" y="217" width="4" height="3" fill="#f59e0b" fill-opacity="0.38" stroke="none"/>
-  <rect id="attention-hint-top-margin" x="16" y="222" width="3" height="3"/>
-  <rect id="attention-hint-bottom-margin" x="16" y="222" width="3" height="3"/>
+  <rect id="attention-hint-top-margin" x="16" y="222" width="4" height="4"/>
+  <rect id="attention-hint-bottom-margin" x="16" y="222" width="4" height="4"/>
   <!-- attention-hover -->
   <rect id="attention-hover-top" x="16" y="218" width="4" height="3" fill="#f59e0b" fill-opacity="0.48" stroke="none"/>
   <rect id="attention-hover-center" x="16" y="221" width="4" height="4" fill="#f59e0b" fill-opacity="0.48" stroke="none"/>
   <rect id="attention-hover-bottom" x="16" y="225" width="4" height="3" fill="#f59e0b" fill-opacity="0.48" stroke="none"/>
-  <rect id="attention-hover-hint-top-margin" x="16" y="230" width="3" height="3"/>
-  <rect id="attention-hover-hint-bottom-margin" x="16" y="230" width="3" height="3"/>
+  <rect id="attention-hover-hint-top-margin" x="16" y="230" width="4" height="4"/>
+  <rect id="attention-hover-hint-bottom-margin" x="16" y="230" width="4" height="4"/>
   <!-- minimized -->
   <rect id="minimized-top" x="24" y="210" width="4" height="3" fill="#7167e4" fill-opacity="0.22" stroke="none"/>
   <rect id="minimized-center" x="24" y="213" width="4" height="4" fill="#7167e4" fill-opacity="0.22" stroke="none"/>
   <rect id="minimized-bottom" x="24" y="217" width="4" height="3" fill="#7167e4" fill-opacity="0.22" stroke="none"/>
-  <rect id="minimized-hint-top-margin" x="24" y="222" width="3" height="3"/>
-  <rect id="minimized-hint-bottom-margin" x="24" y="222" width="3" height="3"/>
+  <rect id="minimized-hint-top-margin" x="24" y="222" width="4" height="4"/>
+  <rect id="minimized-hint-bottom-margin" x="24" y="222" width="4" height="4"/>
   <!-- minimized-hover -->
   <rect id="minimized-hover-top" x="24" y="218" width="4" height="3" fill="#7167e4" fill-opacity="0.34" stroke="none"/>
   <rect id="minimized-hover-center" x="24" y="221" width="4" height="4" fill="#7167e4" fill-opacity="0.34" stroke="none"/>
   <rect id="minimized-hover-bottom" x="24" y="225" width="4" height="3" fill="#7167e4" fill-opacity="0.34" stroke="none"/>
-  <rect id="minimized-hover-hint-top-margin" x="24" y="230" width="3" height="3"/>
-  <rect id="minimized-hover-hint-bottom-margin" x="24" y="230" width="3" height="3"/>
+  <rect id="minimized-hover-hint-top-margin" x="24" y="230" width="4" height="4"/>
+  <rect id="minimized-hover-hint-bottom-margin" x="24" y="230" width="4" height="4"/>
   <!-- hover -->
   <rect id="hover-top" x="32" y="210" width="4" height="3" fill="#ffffff" fill-opacity="0.12" stroke="none"/>
   <rect id="hover-center" x="32" y="213" width="4" height="4" fill="#ffffff" fill-opacity="0.12" stroke="none"/>
   <rect id="hover-bottom" x="32" y="217" width="4" height="3" fill="#ffffff" fill-opacity="0.12" stroke="none"/>
-  <rect id="hover-hint-top-margin" x="32" y="222" width="3" height="3"/>
-  <rect id="hover-hint-bottom-margin" x="32" y="222" width="3" height="3"/>
+  <rect id="hover-hint-top-margin" x="32" y="222" width="4" height="4"/>
+  <rect id="hover-hint-bottom-margin" x="32" y="222" width="4" height="4"/>
  <!-- progress bar: copied verbatim from the base theme -->
 <g
        transform="matrix(0.99999906,0,0,0.49999951,-12.588218,57.219558)"
